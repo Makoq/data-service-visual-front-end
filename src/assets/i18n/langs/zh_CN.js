@@ -21,6 +21,7 @@ const zh_CN = {
   navmenu: {
     data_management: '数据管理',
     my_visualization: '我的可视化',
+    my_workspace:"工作空间"
   },
 
   data_management: {
@@ -38,11 +39,21 @@ const zh_CN = {
     data: '数据文件',
     choose_data: '选取文件',
     upload_to_server: '上传到服务器',
+    workspace:'工作空间'
   },
   data: {
     check: '详情',
+    content:'内容',
     share: '分享',
     delete: '删除',
+
+  }, 
+  workspace:{
+    create_workspace:'创建工作空间',
+    name:'名称',
+    desc:'描述',
+    tags:'标签',
+    create:'创建'
 
   },
 

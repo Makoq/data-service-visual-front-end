@@ -17,20 +17,26 @@
           </el-table-column> -->
 
           <el-table-column prop="name" label="名称"></el-table-column>
+          <el-table-column prop="workSpaceName" label="工作空间"></el-table-column>
           <el-table-column prop="tags" label="标签"></el-table-column>
           <el-table-column prop="file" label="文件"></el-table-column>
+          
 
-          <el-table-column prop="datetime" label="上传时间">
+
+          
             <!-- <template slot-scope="scope">
               <span>{{ $dayjs(scope.row.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
             </template>-->
-          </el-table-column>
+          <!-- </el-table-column> -->
 
           <el-table-column label="操作">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
+              <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button>
+              
               <el-button type="text" size="small" @click="renameData(scope.row)">{{$t('data.share')}}</el-button>
-              <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id)">{{$t('data.delete')}}</el-button>
+              <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
+
             </template>
           </el-table-column>
         </el-table>
@@ -107,8 +113,11 @@ export default {
       //   })
       //   .catch(() => {});
 
-      httpUtils.get(this, urlUtils.get_source_list + "?type=" + type, data => {
+      httpUtils.get(this, urlUtils.get_source_list + "?type=" + type+"&username="+this.user.username+"&uid="+this.user.uid, data => {
         this.udxDataList = data;
+
+
+
       });
     },
 
@@ -117,10 +126,15 @@ export default {
       // this.$router.push("data/add");
     },
     detail(row){
-      //  console.log(row)
-       bus.$emit('id',row.id)
-       this.$router.replace('/console/data/udx-schema');
+      //  console.log("parent",this)
+      //  bus.$emit('id',row.id)
+       this.$router.push({path:'/console/data/udx-info',query:{id:row.id}});
 
+
+    },
+    content(row){
+        this.$router.push({path:'/console/data/udx-schema',query:{id:row.id,fileName:row.file}});
+        console.log(row.id)
 
     },
     renameData(row) {
@@ -152,12 +166,12 @@ export default {
       //   })
       //   .catch(() => {});
     },
-    deleteData(type, id) {
+    deleteData(type, id,workspace) {
 
       toolUtils.confirm(this, "是否删除当前数据源?", () => {
         httpUtils.get(
           this,
-          urlUtils.delete_source + "?id=" + id + "&type=" + type,
+          urlUtils.delete_source + "?id=" + id + "&type=" + type+"&username="+this.user.username+"&uid="+this.user.uid+"&workspace="+workspace,
           data => {
             this.$message({
               type: "success",

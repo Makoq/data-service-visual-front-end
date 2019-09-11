@@ -15,6 +15,7 @@ const en_US = {
   navmenu: {
     data_management: 'Data Management',
     my_visualization: 'My Visualization',
+    my_workspace:"workspace"
   },
   data_management: {
     add_data_source: 'New data source',
@@ -25,6 +26,13 @@ const en_US = {
     data_container_source: 'Original Source',
     configurable_source: 'Configurable Source',
   },
+  workspace:{
+    create_workspace:'Create WorkSpace',
+    name:'Nmae',
+    desc:'Describe',
+    tags:'Tags',
+    create:'CreateWorkSpace'
+  },
 
   addUdxSource: {
     name: 'UDX Name',
@@ -33,12 +41,13 @@ const en_US = {
     data: 'Data File',
     choose_data: 'Select File',
     upload_to_server: 'Upload',
-
+    workspace:'Work Space'
 
   },
   data: {
     check: 'Detail',
     share: 'Share',
+    content:'Content',
     delete: 'Delete',
 
   },

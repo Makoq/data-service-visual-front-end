@@ -3,22 +3,15 @@
     <el-row :gutter="20">
       <el-col :span="12">
         <el-form ref="ruleForm" label-width="100px" :hide-required-asterisk="true">
-          <!-- 工作空间 -->
-          <el-form-item :label="$t('addUdxSource.workspace')">
-            <el-select v-model="value"  placeholder="请选择工作空间">
-              <el-option  v-for="(item,ind) in form.myWokrspace" :label="item.name" :value="item.id" :key="ind"></el-option>
-              
-            </el-select>
-          </el-form-item>
           <!-- 名称 -->
-          <el-form-item :label="$t('addUdxSource.name')" prop="name">
+          <el-form-item :label="$t('workspace.name')" prop="name">
             <el-input v-model="form.name" placeholder="请输入数据源名称" style="width:220px;"></el-input>
           </el-form-item>
-          <el-form-item :label="$t('addUdxSource.desc')">
+          <el-form-item :label="$t('workspace.desc')">
             <el-input type="textarea" v-model="form.desc"></el-input>
           </el-form-item>
           <!-- 标签 -->
-          <el-form-item :label="$t('addUdxSource.tags')" prop="name">
+          <el-form-item :label="$t('workspace.tags')" prop="name">
             <el-tag
               :key="tag"
               v-for="tag in form.dynamicTags"
@@ -38,31 +31,16 @@
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加标签</el-button>
           </el-form-item>
           <!-- 上传UDX数据 -->
-          <el-form-item :label="$t('addUdxSource.data')">
-            <el-upload
-              ref="upload"
-              action="/"
-              :on-preview="handlePreview"
-              :on-remove="handleRemove"
-              :on-change="handleChange"
-              :on-exceed="handleExceed"
-              :auto-upload="false"
-              :file-list="fileList"
-              :multiple="false"
-            >
-              <el-button
-                slot="trigger"
-                size="small"
-                type="primary"
-              >{{$t('addUdxSource.choose_data')}}</el-button>
-              <el-button
+          <el-form-item :label="$t('workspace.create_workspace')">
+
+            <el-button
                 style="margin-left: 10px;"
                 size="small"
                 type="success"
                 @click="submitUpload"
-              >{{$t('addUdxSource.upload_to_server')}}</el-button>
-              <div slot="tip" style="color:red" class="el-upload__tip">只能上传zip文件，且不超过10MB</div>
-            </el-upload>
+              >{{$t('workspace.create')}}</el-button>
+
+
           </el-form-item>
           <!--  -->
         </el-form>
@@ -81,22 +59,20 @@ export default {
   props: ["user"],
   data() {
     return {
-      form: {
-        myWokrspace:[],
+
+      form:{
         name: "",
         // tag
         dynamicTags: ["UDX", "水文学"],
-        desc: ""
+        desc:''
       },
-      value:'',
+      
       inputVisible: false,
       inputValue: "",
 
       // 上传文件
-      fileList: [],
-
-      
-       
+      fileList: []
+      // udx_source_upload_url: urlUtils.udx_source_upload
     };
   },
   computed: {
@@ -110,9 +86,6 @@ export default {
     //   };
     //   return data;
     // }
-  },
-  mounted(){
-    this.myWokrspace("workspace")
   },
   methods: {
     submitUpload() {
@@ -128,44 +101,32 @@ export default {
       // }
 
       if (this.form.name.length <= 0) {
-        alert("必须填写数据源名称");
+        alert("必须填写工作空间名称");
         return;
       }
 
-      // 必须选择文件
-      if (this.fileList.length != 1) {
-        alert("当且仅当选择一个文件");
-        return;
-      }
+       
 
       let formData = new FormData();
-      formData.append("file", this.fileList[0].raw);
+      
       formData.append("name", this.form.name);
       formData.append("tags", this.form.dynamicTags);
       formData.append("desc", this.form.desc);
       formData.append("username", this.user.username);
       formData.append("uid", this.user.uid);
 
-      formData.append("workspace", this.value);
-     
-
-      this.form.myWokrspace.forEach((v)=>{
-        if(v.id===this.value){
-          
-          formData.append("workSpaceName", v.name);
-        }
-      })
 
 
-      console.log("workspace",this.value)
+      httpUtils.post(this, urlUtils.workspace_create, formData, data => {
 
-      httpUtils.post(this, urlUtils.udx_source_upload, formData, data => {
+
         this.$message({
           type: "success",
-          message: "保存成功"
+          message: "工作空间创建成功"
         });
-        this.$router.replace("/console/data");
+        this.$router.replace('/console/workspace');
       });
+
     },
     handleRemove(file, fileList) {
       console.log("remove", file, fileList);
@@ -180,6 +141,10 @@ export default {
     handleExceed(file) {
       console.log("exceed", file);
     },
+
+   
+
+    // tag
     handleClose(tag) {
       this.form.dynamicTags.splice(this.form.dynamicTags.indexOf(tag), 1);
     },
@@ -198,21 +163,7 @@ export default {
       }
       this.inputVisible = false;
       this.inputValue = "";
-    },
-
-    //用户的工作空间
-    myWokrspace(type){
-      httpUtils.get(this, urlUtils.get_source_list + "?type=" + type+"&username="+this.user.username+"&uid="+this.user.uid, data => {
-        this.form.myWokrspace = data;
-      });
-
-      console.log(this.form.myWokrspace)
-
-
     }
-
-
-
   }
 };
 </script>

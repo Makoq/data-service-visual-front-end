@@ -27,6 +27,20 @@ const router = new Router({
           },
         },
         {
+          path: 'workspace',
+          component: () => import('./views/Console/WorkSpace.vue'),
+          meta: {
+            title: 'Work Space',
+          },
+        },
+        {
+          path: 'workspaceInfo',
+          component: () => import('./views/Console/WoreSpaceCreate.vue'),
+          meta: {
+            title: 'Work Space Create',
+          },
+        },
+        {
           path: 'data/udx-source',
           component: () => import('./views/Console/AddUdxSource.vue'),
           meta: {
@@ -41,13 +55,21 @@ const router = new Router({
           },
         },
         {
-          path: 'data/udx-schema',
+          path: 'data/udx-info',
+          name:'udxinfo',
           component: () => import('./views/Console/DataInfo.vue'),
           meta: {
             title: 'Udx Schema Info',
           },
         },
-
+        {
+          path: 'data/udx-schema',
+          name:'schema',
+          component: () => import('./views/Console/UdxSchema.vue'),
+          meta: {
+            title: 'Udx Schema',
+          },
+        },
         {
           path: 'chart',
           component: () => import('./views/Console/Chart.vue'),
