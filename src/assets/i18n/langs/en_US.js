@@ -41,7 +41,10 @@ const en_US = {
     data: 'Data File',
     choose_data: 'Select File',
     upload_to_server: 'Upload',
-    workspace:'Work Space'
+    workspace:'Work Space',
+    local_path:'Local Path',
+    select_local_file:'File',
+    
 
   },
   data: {

@@ -39,7 +39,9 @@ const zh_CN = {
     data: '数据文件',
     choose_data: '选取文件',
     upload_to_server: '上传到服务器',
-    workspace:'工作空间'
+    workspace:'工作空间',
+    local_path:'连接参数',
+    select_local_file:'File',
   },
   data: {
     check: '详情',

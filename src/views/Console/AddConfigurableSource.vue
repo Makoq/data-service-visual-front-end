@@ -100,17 +100,18 @@ export default {
         multiple: false,
         data: [
           {
-            id: '00',
+            // id: '00',
             state: {
               disabled: true,
               selected: true,
+              opened:true
             },
             text: '工作台',
           },
           {
             children: [
               {
-                id: '0101',
+                // id: '0101',
                 text: '企业信息管理',
               },
               {
@@ -118,8 +119,12 @@ export default {
                 text: '企业证照管理',
               },
             ],
-            id: '01',
+            // id: '01',
             text: '企业管理',
+            state: {
+               
+              opened:true
+            },
           },
           {
             children: [
@@ -153,48 +158,7 @@ export default {
             id: '03',
             text: '企业管理',
           },
-          {
-            children: [
-              {
-                id: '0401',
-                state: {
-                  disabled: true,
-                  selected: true,
-                },
-                text: '修改密码',
-              },
-              {
-                id: '0402',
-                state: {
-                  disabled: true,
-                  selected: true,
-                },
-                text: '修改绑定手机',
-              },
-              {
-                id: '0403',
-                state: {
-                  disabled: true,
-                  selected: true,
-                },
-                text: '锁屏',
-              },
-              {
-                id: '0404',
-                state: {
-                  disabled: true,
-                  selected: true,
-                },
-                text: '退出',
-              },
-            ],
-            id: '04',
-            state: {
-              disabled: true,
-              selected: true,
-            },
-            text: '个人中心',
-          },
+         
         ],
         dblclick_toggle: false, // 禁用tree的双击展开
       },

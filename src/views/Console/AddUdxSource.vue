@@ -14,9 +14,11 @@
           <el-form-item :label="$t('addUdxSource.name')" prop="name">
             <el-input v-model="form.name" placeholder="请输入数据源名称" style="width:220px;"></el-input>
           </el-form-item>
+          <!-- 描述 -->
           <el-form-item :label="$t('addUdxSource.desc')">
             <el-input type="textarea" v-model="form.desc"></el-input>
           </el-form-item>
+
           <!-- 标签 -->
           <el-form-item :label="$t('addUdxSource.tags')" prop="name">
             <el-tag
@@ -37,9 +39,17 @@
             ></el-input>
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加标签</el-button>
           </el-form-item>
+          <!-- 连接参数 -->
+          <el-form-item :label="$t('addUdxSource.local_path')" prop="name">
+            <el-input v-model="form.selectPath" placeholder="" style="width:320px;">   
+              <template slot="prepend">Local Path:</template>
+            </el-input>
+            &nbsp;<el-button >{{$t('addUdxSource.select_local_file')}}
+                </el-button>
+          </el-form-item>
           <!-- 上传UDX数据 -->
           <el-form-item :label="$t('addUdxSource.data')">
-            <el-upload
+            <!-- <el-upload
               ref="upload"
               action="/"
               :on-preview="handlePreview"
@@ -54,15 +64,18 @@
                 slot="trigger"
                 size="small"
                 type="primary"
+                 @click.native="selectPath(this)"
               >{{$t('addUdxSource.choose_data')}}</el-button>
-              <el-button
+
+              
+              <div slot="tip" style="color:red" class="el-upload__tip">只能上传zip文件，且不超过10MB</div>
+            </el-upload> -->
+            <el-button
                 style="margin-left: 10px;"
                 size="small"
                 type="success"
                 @click="submitUpload"
               >{{$t('addUdxSource.upload_to_server')}}</el-button>
-              <div slot="tip" style="color:red" class="el-upload__tip">只能上传zip文件，且不超过10MB</div>
-            </el-upload>
           </el-form-item>
           <!--  -->
         </el-form>
@@ -86,7 +99,8 @@ export default {
         name: "",
         // tag
         dynamicTags: ["UDX", "水文学"],
-        desc: ""
+        desc: "",
+        localPath:''
       },
       value:'',
       inputVisible: false,
@@ -115,6 +129,10 @@ export default {
     this.myWokrspace("workspace")
   },
   methods: {
+    selectPath(obj){
+      console.log(obj)
+          // document.getElementById("text").innerHTML="获取文件域完整路径为："+file_url;
+    },
     submitUpload() {
       //this.$refs.upload.submit();
 
@@ -132,19 +150,21 @@ export default {
         return;
       }
 
-      // 必须选择文件
-      if (this.fileList.length != 1) {
-        alert("当且仅当选择一个文件");
-        return;
-      }
+      // // 必须选择文件
+      // if (this.fileList.length != 1) {
+      //   alert("当且仅当选择一个文件");
+      //   return;
+      // }
 
       let formData = new FormData();
-      formData.append("file", this.fileList[0].raw);
+      // formData.append("file", this.fileList[0].raw);
       formData.append("name", this.form.name);
       formData.append("tags", this.form.dynamicTags);
       formData.append("desc", this.form.desc);
       formData.append("username", this.user.username);
       formData.append("uid", this.user.uid);
+      //F:/udx/UdxServer/Server/tmp/testschema
+      formData.append("localpath", this.form.selectPath);
 
       formData.append("workspace", this.value);
      
