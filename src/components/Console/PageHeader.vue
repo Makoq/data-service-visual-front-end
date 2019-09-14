@@ -15,7 +15,7 @@
 <template>
   <div class="header">
     <div class="page-title">
-      <span>{{pageTitle}}</span>
+      <h2>{{pageTitle}}</h2>
     </div>
     <el-dropdown style="margin-right: 100px">
       <div class="language" id="lan">{{lan}}<i class="el-icon-arrow-down el-icon--right"></i></div>

@@ -13,9 +13,12 @@ const en_US = {
     login_success_info: 'Login successfully',
   },
   navmenu: {
+    service_status:'Service State',
     data_management: 'Data Management',
     my_visualization: 'My Visualization',
-    my_workspace:"workspace"
+    my_workspace:"workspace",
+    help:"Help"
+
   },
   data_management: {
     add_data_source: 'New data source',
@@ -44,14 +47,30 @@ const en_US = {
     workspace:'Work Space',
     local_path:'Local Path',
     select_local_file:'File',
-    
-
+  },
+  udx_schema:{
+    schema_tree:'Udx Schema Tree',
+    udx_data_list:'Udx Data List',
+    data_list:'data item'
   },
   data: {
     check: 'Detail',
     share: 'Share',
     content:'Content',
     delete: 'Delete',
+    name:'Name',
+    workspace:'Work Space',
+    tags:'Tags',
+    oper:'Operation',
+    date:'Date',
+    user:'User',
+    desc:'Description'
+
+  },
+  system_state:{
+    item:'Item',
+    cont:'Content',
+    oper:'Operation'
 
   },
 

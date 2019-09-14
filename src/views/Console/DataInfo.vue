@@ -6,13 +6,13 @@
          
          
         <el-table :data="schema_info" style="width: 100%">
-          <el-table-column prop="datetime" label="日期" width="180"></el-table-column>
-          <el-table-column prop="file" label="文件名" width="180"></el-table-column>
-          <el-table-column prop="name" label="名称"></el-table-column>
-          <el-table-column prop="describe" label="描述"></el-table-column>
+          <el-table-column prop="datetime" :label="$t('data.date')" width="180"></el-table-column>
+          <!-- <el-table-column prop="file" :label="$t('data.name')" width="180"></el-table-column> -->
+          <el-table-column prop="name" :label="$t('data.workspace')"></el-table-column>
+          <el-table-column prop="describe" :label="$t('data.desc')"></el-table-column>
 
-          <el-table-column prop="tags" label="标签"></el-table-column>
-          <el-table-column prop="username" label="用户"></el-table-column>
+          <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
+          <el-table-column prop="username" :label="$t('data.user')"></el-table-column>
         </el-table>
       </el-col>
     </el-row>

@@ -16,10 +16,10 @@
             </template>
           </el-table-column> -->
 
-          <el-table-column prop="name" label="名称"></el-table-column>
-          <el-table-column prop="workSpaceName" label="工作空间"></el-table-column>
-          <el-table-column prop="tags" label="标签"></el-table-column>
-          <el-table-column prop="file" label="文件"></el-table-column>
+          <el-table-column prop="name" :label="$t('data.name')"></el-table-column>
+          <el-table-column prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
+          <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
+          <!-- <el-table-column prop="file" label="文件"></el-table-column> -->
           
 
 
@@ -29,7 +29,7 @@
             </template>-->
           <!-- </el-table-column> -->
 
-          <el-table-column label="操作">
+          <el-table-column :label="$t('data.oper')">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
               <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button>

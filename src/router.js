@@ -27,12 +27,27 @@ const router = new Router({
           },
         },
         {
+          path: 'state',
+          component: () => import('./views/Console/SystemState.vue'),
+          meta: {
+            title: 'System State',
+          },
+        },
+        {
           path: 'workspace',
           component: () => import('./views/Console/WorkSpace.vue'),
           meta: {
             title: 'Work Space',
           },
         },
+        {
+          path: 'help',
+          component: () => import('./views/Console/Help.vue'),
+          meta: {
+            title: 'Help',
+          },
+        },
+
         {
           path: 'workspaceInfo',
           component: () => import('./views/Console/WoreSpaceCreate.vue'),

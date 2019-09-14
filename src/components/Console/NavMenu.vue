@@ -17,6 +17,11 @@ export default {
     return {
       menuList: [
         {
+          name: this.$t('navmenu.service_status'),
+          icon: 'el-icon-warning-outline',
+          path: '/console/state',
+        },
+        {
           name: this.$t('navmenu.my_workspace'),
           icon: 'el-icon-folder',
           path: '/console/workspace',
@@ -25,10 +30,16 @@ export default {
           name: this.$t('navmenu.data_management'),
           icon: 'el-icon-menu',
           path: '/console/data',
-        }, {
+        }, 
+        {
           name: this.$t('navmenu.my_visualization'),
           icon: 'el-icon-document',
           path: '/console/chart',
+        },
+        {
+          name: this.$t('navmenu.help'),
+          icon: 'el-icon-s-help',
+          path: '/console/help',
         },
       ],
     };

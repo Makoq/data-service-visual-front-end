@@ -10,11 +10,11 @@
     <el-row>
       <el-col :span="24">   
         <el-table :data="workspacelist" style="width: 100%">
-          <el-table-column prop="datetime" label="日期" width="180"></el-table-column>
-          <el-table-column prop="name" label="空间名称"></el-table-column>
-          <el-table-column prop="tags" label="标签"></el-table-column>
-          <el-table-column prop="username" label="用户"></el-table-column>
-          <el-table-column label="操作">
+          <el-table-column prop="datetime" :label="$t('data.date')" width="180"></el-table-column>
+          <el-table-column prop="name" :label="$t('data.workspace')"></el-table-column>
+          <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
+          <el-table-column prop="username" :label="$t('data.user')"></el-table-column>
+          <el-table-column :label="$t('data.oper')">
             <template slot-scope="scope">
                     <el-button type="text" size="small" @click="deleteWorkspace(scope.row.id)">{{$t('data.delete')}}</el-button>
             </template>

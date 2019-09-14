@@ -2,15 +2,33 @@
   <div>
     <el-row>
       <el-col :span="6">
-        <h2>Udx Schema Tree</h2>
+        <el-row>
+        <h3>{{$t('udx_schema.schema_tree')}}</h3>
         <!-- {{udx_schema}} -->
         <!-- <div v-for="(item,ind) in udx_schema" :key="ind"> -->
         <!-- {{ind}} -->
         <div id="treeview0" class="treeview"></div>
         <!-- </div> -->
+        </el-row>
+        
+
+        <el-row  >
+           <h3>{{$t('udx_schema.udx_data_list')}}</h3>
+              <el-table
+            :data="udx_schema_data"
+            style="width: 100%">
+            <el-table-column
+              prop="dataName"
+              :label="$t('udx_schema.data_list')"
+              width="180">
+            </el-table-column>
+            
+          </el-table>
+        </el-row>
       </el-col>
+      
       <el-col :span="18">
-        <h2>Udx Schema Operation</h2>
+        <h3>Udx Schema Operation</h3>
         <el-card style="height:400px">
           TODO
           <!-- TODO 右边部分功能面板 -->
@@ -30,7 +48,8 @@ export default {
   props: ["user"],
   data() {
     return {
-      udx_schema: []
+      udx_schema: [],
+      udx_schema_data:[]
     };
   },
   computed: {},
@@ -44,14 +63,21 @@ export default {
     getSchemaContent() {
       let id = this.$route.query.id;
       let file = this.$route.query.fileName;
-      console.log(this);
+       
       httpUtils.get(this, urlUtils.udx_node + "?id=" + id, data => {
-        this.udx_schema = data;
-        console.log(data);
-        console.log(this);
+         console.log("data",data)
+        this.udx_schema = data.schema;
+        data.udx_data.forEach((v)=>{
+          let o={
+            dataName:v
+          }
+          this.udx_schema_data.push(o)
+        })
+        // this.udx_schema_data=data.udx_data
+       
 
-        for (let i = 0; i < data.length; i++) {
-          let sch = this.json2tree(data[i]);
+        for (let i = 0; i < data.schema.length; i++) {
+          let sch = this.json2tree(data.schema[i]);
           this.schemaTree(sch, i);
         }
       });
@@ -67,6 +93,7 @@ export default {
           },
           children: []
         };
+     
 
         if ("$" in data.UdxDeclaration) {
           let $ = {
@@ -96,7 +123,7 @@ export default {
             children: []
           };
           declation.children.push(SemanticAttachment);
-
+          console.log("concep","Concepts" in data.UdxDeclaration.SemanticAttachment)
           if ("Concepts" in data.UdxDeclaration.SemanticAttachment) {
             let Concepts = {
               text: "Concepts",
@@ -109,8 +136,8 @@ export default {
                 }
               ]
             };
-
-            declation.children[2].children.push(Concepts);
+            console.log()
+            declation.children[1].children.push(Concepts);
           }
 
           if ("SpatialRefs" in data.UdxDeclaration.SemanticAttachment) {
@@ -126,7 +153,7 @@ export default {
               ]
             };
 
-            declation.children[2].children.push(SpatialRefs);
+            declation.children[1].children.push(SpatialRefs);
           }
 
           if ("Units" in data.UdxDeclaration.SemanticAttachment) {
@@ -142,7 +169,7 @@ export default {
               ]
             };
 
-            declation.children[2].children.push(Units);
+            declation.children[1].children.push(Units);
           }
 
           if ("DataTemplates" in data.UdxDeclaration.SemanticAttachment) {
@@ -158,12 +185,12 @@ export default {
               ]
             };
 
-            declation.children[2].children.push(DataTemplates);
+            declation.children[1].children.push(DataTemplates);
           }
 
           // if ("SpatialRefs" in data.UdxDeclaration.SemanticAttachment.Concepts)
         }
-
+        //移动下面代码位置，要改上面的declation.children[2].children.push(DataTemplates);
         if ("UdxNode" in data.UdxDeclaration) {
           let UdxNode = {
             text: "UdxNode",
@@ -175,10 +202,6 @@ export default {
 
           declation.children.push(UdxNode);
 
-
-
-
-
         }
 
 
@@ -189,12 +212,10 @@ export default {
       return obj;
     },
     DIGUInode(obj,arr){
-      for(let i=0;i<arr.length;i++){
+      // for(let i=0;i<arr.length;i++){
 
-        if("$" in arr[i]){
-          
-        }
-      }
+      //   if("$" in arr[i]){}
+      // }
 
 
 
