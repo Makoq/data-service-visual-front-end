@@ -17,6 +17,8 @@
           <el-table-column :label="$t('data.oper')">
             <template slot-scope="scope">
                     <el-button type="text" size="small" @click="deleteWorkspace(scope.row.id)">{{$t('data.delete')}}</el-button>
+                    <el-button type="text" size="small" @click="editeWorkspace(scope.row.id)">{{$t('workspace.edite')}}</el-button>
+
             </template>
           </el-table-column>
 
@@ -82,6 +84,10 @@ export default {
           }
         );
       });
+    },
+    editeWorkspace(id){
+         
+        this.$router.push({path:'workspaceInfo',query:{id:id,type:'edit'}})
     },
  
     test(){

@@ -4,10 +4,11 @@ const urls = {
 
   workspace_create:'/workspace',
   workspace_delete:'/delworkspace',
-
-
+  workspace_single:'/soloworkspace',
+  workspace_update:'workspaceupdate',
   
-
+  solo_udx_schema:'/soloudxschema',
+  update_udx_schema:'/updateschema',
   udx_source_upload: '/udxSource',
   udx_schema_info: '/udxSchemaInfo',
   udx_node:'/udxnode',

@@ -36,6 +36,8 @@
               
               <el-button type="text" size="small" @click="renameData(scope.row)">{{$t('data.share')}}</el-button>
               <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
+              <el-button type="text" size="small" @click="editData(scope.row.id)">{{$t('data.edit')}}</el-button>
+
 
             </template>
           </el-table-column>
@@ -207,6 +209,9 @@ export default {
       //     );
       //   })
       //   .catch(() => {});
+    },
+    editData(id){
+      this.$router.push({path:'data/udx-source',query:{id:id,type:'edit'}})
     },
 
     // 选择数据源类型

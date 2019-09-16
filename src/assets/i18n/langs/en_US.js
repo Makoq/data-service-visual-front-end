@@ -31,17 +31,20 @@ const en_US = {
   },
   workspace:{
     create_workspace:'Create WorkSpace',
+    update_workspace:'Update WorkSpace',
+
     name:'Nmae',
     desc:'Describe',
     tags:'Tags',
-    create:'CreateWorkSpace'
+    create:'CreateWorkSpace',
+    edite:'Edite'
   },
 
   addUdxSource: {
     name: 'UDX Name',
     desc: 'Description',
     tags: 'Tags',
-    data: 'Data File',
+    data: 'Submit',
     choose_data: 'Select File',
     upload_to_server: 'Upload',
     workspace:'Work Space',
@@ -58,6 +61,7 @@ const en_US = {
     share: 'Share',
     content:'Content',
     delete: 'Delete',
+    edit:'Edit',
     name:'Name',
     workspace:'Work Space',
     tags:'Tags',

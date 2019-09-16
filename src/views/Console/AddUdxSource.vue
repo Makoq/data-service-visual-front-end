@@ -100,7 +100,8 @@ export default {
         // tag
         dynamicTags: ["UDX", "水文学"],
         desc: "",
-        localPath:''
+        selectPath:'',
+        workspaceId:''
       },
       value:'',
       inputVisible: false,
@@ -108,6 +109,8 @@ export default {
 
       // 上传文件
       fileList: [],
+      //编辑数据
+      isEditType:false
 
       
        
@@ -126,9 +129,33 @@ export default {
     // }
   },
   mounted(){
+    if(this.$route.query.type==='edit'){
+      this.isEditType=true
+        this.initEdit(this.$route.query.id)
+    }else{
+        
+    }
     this.myWokrspace("workspace")
   },
   methods: {
+    initEdit(id){
+      
+      httpUtils.get(this,urlUtils.solo_udx_schema+"?id="+id,data=>{
+          
+          //  this.form.myWokrspace.push()
+         console.log(data)
+          this.value=data[0].workspace
+           this.form.name=data[0].name
+           this.form.dynamicTags=(data[0].tags).split(",")
+           this.form.desc=data[0].describe
+           this.form.selectPath=data[0].localPath
+           this.form.workspaceId=data[0].workspace
+          
+           
+           
+            
+      })
+    },
     selectPath(obj){
       console.log(obj)
           // document.getElementById("text").innerHTML="获取文件域完整路径为："+file_url;
@@ -178,14 +205,33 @@ export default {
 
 
       console.log("workspace",this.value)
+      if(this.isEditType){
+        //workspaceId
+        console.log(this.form)
+        let originalId=this.form.workspaceId;
+              formData.append("id",this.$route.query.id)
+              formData.append("originalWS",originalId)
 
-      httpUtils.post(this, urlUtils.udx_source_upload, formData, data => {
-        this.$message({
-          type: "success",
-          message: "保存成功"
-        });
-        this.$router.replace("/console/data");
-      });
+                httpUtils.post(this, urlUtils.update_udx_schema, formData, data => {
+                  this.$message({
+                    type: "success",
+                    message: "修改成功"
+                  });
+                  this.$router.replace("/console/data");
+                });
+      }else{
+          httpUtils.post(this, urlUtils.udx_source_upload, formData, data => {
+                  this.$message({
+                    type: "success",
+                    message: "保存成功"
+                  });
+                  this.$router.replace("/console/data");
+                });
+      }
+      
+
+
+
     },
     handleRemove(file, fileList) {
       console.log("remove", file, fileList);

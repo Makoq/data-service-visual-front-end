@@ -38,7 +38,7 @@ const zh_CN = {
     name: 'UDX名称',
     desc: '摘要',
     tags: '标签',
-    data: '数据文件',
+    data: '提交',
     choose_data: '选取文件',
     upload_to_server: '上传到服务器',
     workspace:'工作空间',
@@ -55,6 +55,8 @@ const zh_CN = {
     content:'内容',
     share: '分享',
     delete: '删除',
+    edit:'编辑',
+
     name:'名称',
     workspace:'工作空间',
     tags:'标签',
@@ -66,10 +68,14 @@ const zh_CN = {
   }, 
   workspace:{
     create_workspace:'创建工作空间',
+    update_workspace:'修改工作空间',
+
     name:'名称',
     desc:'描述',
     tags:'标签',
-    create:'创建'
+    create:'创建',
+    edite:'修改'
+
 
   },
   system_state:{
