@@ -13,11 +13,11 @@ const en_US = {
     login_success_info: 'Login successfully',
   },
   navmenu: {
-    service_status:'Service State',
+    service_status: 'Service State',
     data_management: 'Data Management',
     my_visualization: 'My Visualization',
-    my_workspace:"workspace",
-    help:"Help"
+    my_workspace: 'workspace',
+    help: 'Help',
 
   },
   data_management: {
@@ -29,15 +29,15 @@ const en_US = {
     data_container_source: 'Original Source',
     configurable_source: 'Configurable Source',
   },
-  workspace:{
-    create_workspace:'Create WorkSpace',
-    update_workspace:'Update WorkSpace',
+  workspace: {
+    create_workspace: 'Create WorkSpace',
+    update_workspace: 'Update WorkSpace',
 
-    name:'Nmae',
-    desc:'Describe',
-    tags:'Tags',
-    create:'CreateWorkSpace',
-    edite:'Edite'
+    name: 'Nmae',
+    desc: 'Describe',
+    tags: 'Tags',
+    create: 'CreateWorkSpace',
+    edite: 'Edite',
   },
 
   addUdxSource: {
@@ -47,34 +47,34 @@ const en_US = {
     data: 'Submit',
     choose_data: 'Select File',
     upload_to_server: 'Upload',
-    workspace:'Work Space',
-    local_path:'Local Path',
-    select_local_file:'File',
+    workspace: 'Work Space',
+    local_path: 'Local Path',
+    select_local_file: 'File',
   },
-  udx_schema:{
-    schema_tree:'Udx Schema Tree',
-    udx_data_list:'Udx Data List',
-    data_list:'data item'
+  udx_schema: {
+    schema_tree: 'Udx Schema Tree',
+    udx_data_list: 'Udx Data List',
+    data_list: 'data item',
   },
   data: {
     check: 'Detail',
     share: 'Share',
-    content:'Content',
+    content: 'Content',
     delete: 'Delete',
-    edit:'Edit',
-    name:'Name',
-    workspace:'Work Space',
-    tags:'Tags',
-    oper:'Operation',
-    date:'Date',
-    user:'User',
-    desc:'Description'
+    edit: 'Edit',
+    name: 'Name',
+    workspace: 'Work Space',
+    tags: 'Tags',
+    oper: 'Operation',
+    date: 'Date',
+    user: 'User',
+    desc: 'Description',
 
   },
-  system_state:{
-    item:'Item',
-    cont:'Content',
-    oper:'Operation'
+  system_state: {
+    item: 'Item',
+    cont: 'Content',
+    oper: 'Operation',
 
   },
 

@@ -8,7 +8,7 @@
     </el-row>
 
     <el-row>
-      <el-col :span="24">   
+      <el-col :span="24">
         <el-table :data="workspacelist" style="width: 100%">
           <el-table-column prop="datetime" :label="$t('data.date')" width="180"></el-table-column>
           <el-table-column prop="name" :label="$t('data.workspace')"></el-table-column>
@@ -38,68 +38,64 @@ import bus from '../../assets/eventBus';
 
 
 export default {
-    props: ["user"],
+  props: ['user'],
   data() {
     return {
-      workspacelist:[]
-      
+      workspacelist: [],
+
     };
   },
   computed: {
 
   },
-  create(){
-    
-  },
-  beforeMount(){
+  create() {
 
   },
-  mounted(){
-      this.getWorkSpaceList("workspace")
+  beforeMount() {
 
+  },
+  mounted() {
+    this.getWorkSpaceList('workspace');
   },
   methods: {
-      getWorkSpaceList(type){
-            httpUtils.get(this, urlUtils.get_source_list+ "?type=" + type+"&username="+this.user.username+"&uid="+this.user.uid, data => {
+    getWorkSpaceList(type) {
+      httpUtils.get(this, `${urlUtils.get_source_list}?type=${type}&username=${this.user.username}&uid=${this.user.uid}`, (data) => {
         this.workspacelist = data;
       });
-      },
-    createWorkspace(){
-        this.$router.push({path:'/console/workspaceInfo'})
     },
-    deleteWorkspace(id){
-        toolUtils.confirm(this, "是否删除当前工作空间?", () => {
+    createWorkspace() {
+      this.$router.push({ path: '/console/workspaceInfo' });
+    },
+    deleteWorkspace(id) {
+      toolUtils.confirm(this, '是否删除当前工作空间?', () => {
         httpUtils.get(
           this,
-          urlUtils.workspace_delete + "?id=" + id+"&username="+this.user.username+"&uid="+this.user.uid ,
-          data => {
+          `${urlUtils.workspace_delete}?id=${id}&username=${this.user.username}&uid=${this.user.uid}`,
+          (data) => {
             this.$message({
-              type: "success",
-              message: "已删除"
+              type: 'success',
+              message: '已删除',
             });
             setTimeout(() => {
-              this.getWorkSpaceList("workspace");
+              this.getWorkSpaceList('workspace');
             }, 100);
             // this.editChart(data._id);
-          }
+          },
         );
       });
     },
-    editeWorkspace(id){
-         
-        this.$router.push({path:'workspaceInfo',query:{id:id,type:'edit'}})
+    editeWorkspace(id) {
+      this.$router.push({ path: 'workspaceInfo', query: { id, type: 'edit' } });
     },
- 
-    test(){
-      console.log(this)
-      
 
-    }
+    test() {
+      console.log(this);
+    },
 
   },
-  destroyed(){
-     
-  }
+  destroyed() {
+
+  },
 };
 </script>
 <style lang="scss">
@@ -115,5 +111,5 @@ body {
 .el-container {
   height: 100%;
 }
- 
+
 </style>

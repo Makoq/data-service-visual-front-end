@@ -3,8 +3,8 @@
   <div>
     <el-row>
       <el-col :span="24">
-         
-         
+
+
         <el-table :data="schema_info" style="width: 100%">
           <el-table-column prop="datetime" :label="$t('data.date')" width="180"></el-table-column>
           <!-- <el-table-column prop="file" :label="$t('data.name')" width="180"></el-table-column> -->
@@ -32,36 +32,33 @@ export default {
     return {
       udx_schema_id: '', // 某一条udxSchema的id，
       schema_info: [],
-      
+
     };
   },
   computed: {
 
   },
-  create(){
-    
+  create() {
+
   },
-  beforeMount(){
-   
+  beforeMount() {
+
   },
-  mounted(){
+  mounted() {
     // console.log("idididi",this.$router.query.id)
-    
-   this.$data.udx_schema_id=this.$route.query.id
-   this.getUdxSchemaInfo()
+
+    this.$data.udx_schema_id = this.$route.query.id;
+    this.getUdxSchemaInfo();
     // console.log("origin",vue)
     // bus.$on('id', (msg) => {
     //       vue.$data.udx_schema_id = msg;// bus.$off('id')//销毁监听器
     //       vue.getUdxSchemaInfo(vue)
 
     // });
-
   },
   methods: {
-    getUdxSchemaInfo(){
-      
-     
-     this.$axios
+    getUdxSchemaInfo() {
+      this.$axios
         .get(`/api${urlUtils.udx_schema_info}`, {
           params: {
             id: this.$data.udx_schema_id,
@@ -70,27 +67,19 @@ export default {
           },
         })
         .then((res) => {
-          
-          this.$data.schema_info=res.data.data
-          
-        
-          
+          this.$data.schema_info = res.data.data;
         });
-
-
-
     },
-    test(){
-      console.log(this)
-      console.log(this.$data)
-      console.log(this.udx_schema_info)
-
-    }
+    test() {
+      console.log(this);
+      console.log(this.$data);
+      console.log(this.udx_schema_info);
+    },
 
   },
-  destroyed(){
-    bus.$off('id')
-  }
+  destroyed() {
+    bus.$off('id');
+  },
 };
 </script>
 <style lang="scss">
@@ -106,5 +95,5 @@ body {
 .el-container {
   height: 100%;
 }
- 
+
 </style>

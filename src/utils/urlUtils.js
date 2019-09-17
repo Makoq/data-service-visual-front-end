@@ -2,16 +2,16 @@ const urls = {
   get_source_list: '/dataSource', // ?type=xxx
   delete_source: '/deleteSource', // ?type=xxx&id=xxx
 
-  workspace_create:'/workspace',
-  workspace_delete:'/delworkspace',
-  workspace_single:'/soloworkspace',
-  workspace_update:'workspaceupdate',
-  
-  solo_udx_schema:'/soloudxschema',
-  update_udx_schema:'/updateschema',
+  workspace_create: '/workspace',
+  workspace_delete: '/delworkspace',
+  workspace_single: '/soloworkspace',
+  workspace_update: 'workspaceupdate',
+
+  solo_udx_schema: '/soloudxschema',
+  update_udx_schema: '/updateschema',
   udx_source_upload: '/udxSource',
   udx_schema_info: '/udxSchemaInfo',
-  udx_node:'/udxnode',
+  udx_node: '/udxnode',
 
   chart: '/chart', // 创建 chart
 

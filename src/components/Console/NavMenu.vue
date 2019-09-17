@@ -30,7 +30,7 @@ export default {
           name: this.$t('navmenu.data_management'),
           icon: 'el-icon-menu',
           path: '/console/data',
-        }, 
+        },
         {
           name: this.$t('navmenu.my_visualization'),
           icon: 'el-icon-document',

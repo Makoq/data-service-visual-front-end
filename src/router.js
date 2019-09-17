@@ -71,7 +71,7 @@ const router = new Router({
         },
         {
           path: 'data/udx-info',
-          name:'udxinfo',
+          name: 'udxinfo',
           component: () => import('./views/Console/DataInfo.vue'),
           meta: {
             title: 'Udx Schema Info',
@@ -79,7 +79,7 @@ const router = new Router({
         },
         {
           path: 'data/udx-schema',
-          name:'schema',
+          name: 'schema',
           component: () => import('./views/Console/UdxSchema.vue'),
           meta: {
             title: 'Udx Schema',

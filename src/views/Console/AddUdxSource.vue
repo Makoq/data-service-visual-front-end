@@ -7,7 +7,7 @@
           <el-form-item :label="$t('addUdxSource.workspace')">
             <el-select v-model="value"  placeholder="请选择工作空间">
               <el-option  v-for="(item,ind) in form.myWokrspace" :label="item.name" :value="item.id" :key="ind"></el-option>
-              
+
             </el-select>
           </el-form-item>
           <!-- 名称 -->
@@ -41,7 +41,7 @@
           </el-form-item>
           <!-- 连接参数 -->
           <el-form-item :label="$t('addUdxSource.local_path')" prop="name">
-            <el-input v-model="form.selectPath" placeholder="" style="width:320px;">   
+            <el-input v-model="form.selectPath" placeholder="" style="width:320px;">
               <template slot="prepend">Local Path:</template>
             </el-input>
             &nbsp;<el-button >{{$t('addUdxSource.select_local_file')}}
@@ -67,7 +67,7 @@
                  @click.native="selectPath(this)"
               >{{$t('addUdxSource.choose_data')}}</el-button>
 
-              
+
               <div slot="tip" style="color:red" class="el-upload__tip">只能上传zip文件，且不超过10MB</div>
             </el-upload> -->
             <el-button

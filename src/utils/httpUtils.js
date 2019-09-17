@@ -30,8 +30,8 @@ function post(that, url, data, solve) {
 
         // this.$router.push('/console/data');
         // this.editChart(data._id);
-      }else if (errno === 1){
-           solve(data)
+      } else if (errno === 1) {
+        solve(data);
       }
     })
     .catch(() => { });

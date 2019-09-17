@@ -104,7 +104,7 @@ export default {
             state: {
               disabled: true,
               selected: true,
-              opened:true
+              opened: true,
             },
             text: '工作台',
           },
@@ -122,8 +122,8 @@ export default {
             // id: '01',
             text: '企业管理',
             state: {
-               
-              opened:true
+
+              opened: true,
             },
           },
           {
@@ -158,7 +158,7 @@ export default {
             id: '03',
             text: '企业管理',
           },
-         
+
         ],
         dblclick_toggle: false, // 禁用tree的双击展开
       },

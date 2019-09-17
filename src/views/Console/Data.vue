@@ -20,10 +20,8 @@
           <el-table-column prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
           <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
           <!-- <el-table-column prop="file" label="文件"></el-table-column> -->
-          
 
 
-          
             <!-- <template slot-scope="scope">
               <span>{{ $dayjs(scope.row.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
             </template>-->
@@ -33,7 +31,7 @@
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
               <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button>
-              
+
               <el-button type="text" size="small" @click="renameData(scope.row)">{{$t('data.share')}}</el-button>
               <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
               <el-button type="text" size="small" @click="editData(scope.row.id)">{{$t('data.edit')}}</el-button>
