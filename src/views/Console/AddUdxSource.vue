@@ -100,7 +100,7 @@ export default {
         // tag
         dynamicTags: ["UDX", "水文学"],
         desc: "",
-        selectPath:'',
+        selectPath:'F:/udx/UdxServer/Server/data_dir/testschema',
         workspaceId:''
       },
       value:'',

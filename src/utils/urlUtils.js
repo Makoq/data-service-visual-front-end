@@ -11,7 +11,9 @@ const urls = {
   update_udx_schema: '/updateschema',
   udx_source_upload: '/udxSource',
   udx_schema_info: '/udxSchemaInfo',
+
   udx_node: '/udxnode',
+  default_udx_info:'/config',
 
   chart: '/chart', // 创建 chart
 

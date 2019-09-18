@@ -4,25 +4,31 @@
       <el-col :span="6">
         <el-row>
           <h3>{{$t('udx_schema.schema_tree')}}</h3>
-          <!-- {{udx_schema}} -->
-          <!-- <div v-for="(item,ind) in udx_schema" :key="ind"> -->
-          <!-- {{ind}} -->
-          <div id="treeview0" class="treeview"></div>
-          <!-- </div> -->
+
+          <el-select v-model="value" placeholder="请选择" @change="selectValue">
+            <el-option
+              v-for="item in configList"
+              :key="item.value"
+              :label="item.schema"
+              :value="item.schema"
+            ></el-option>
+          </el-select>
+
+          <div id="treeview" class="treeview"></div>
         </el-row>
 
         <el-row>
           <h3>{{$t('udx_schema.udx_data_list')}}</h3>
           <el-table :data="udx_schema_data" style="width: 100%">
-            <el-table-column prop="dataName" :label="$t('udx_schema.data_list')" width="180"></el-table-column>
+            <el-table-column prop="data" :label="$t('udx_schema.data_list')" width="180"></el-table-column>
           </el-table>
         </el-row>
       </el-col>
 
       <el-col :span="18">
         <h3>Udx Schema Operation</h3>
-        <el-card style="height:400px">
-          TODO
+        <el-card style="height:500px">
+          <iframe id="iframe"  src='http://localhost:8888/tree?token=7b164ec065ba71f57b37ad6d519276d8e6b9800cef02ec49' />
           <!-- TODO 右边部分功能面板 -->
         </el-card>
       </el-col>
@@ -31,19 +37,29 @@
 </template>
 
 <script>
-import draggable from 'vuedraggable';
-import httpUtils from '../../utils/httpUtils';
-import urlUtils from '../../utils/urlUtils';
+import draggable from "vuedraggable";
+import httpUtils from "../../utils/httpUtils";
+import urlUtils from "../../utils/urlUtils";
 
-import bus from '../../assets/eventBus';
-import tools from '../../utils/tools';
+import bus from "../../assets/eventBus";
+import tools from "../../utils/tools";
+import { constants, scrypt } from "crypto";
+import { thisExpression } from "babel-types";
 
 export default {
-  props: ['user'],
+  props: ["user"],
   data() {
     return {
       udx_schema: [],
       udx_schema_data: [],
+      jstree_node: [],
+      index: 1,
+      isfirst: true,
+
+      configList: [],
+      value: "",
+      tableObj: {},
+      jstree: []
     };
   },
   computed: {},
@@ -51,252 +67,90 @@ export default {
     // if (!this.user.uid) {
     //   this.logout();
     // }
-    
+    this.defaultSchemaInfo();
 
-    this.getSchemaContent();
+    this.initJsTree(null);
   },
   methods: {
-   
-    getSchemaContent() {
+    selectValue(v) {
+      this.udx_schema_data = this.tableObj[v];
+
+      this.getSchemaContent(v);
+    },
+    defaultSchemaInfo() {
       const { id } = this.$route.query;
-      const file = this.$route.query.fileName;
-      let _self=this
+      httpUtils.get(this, `${urlUtils.default_udx_info}?id=${id}`, data => {
+        this.configList = data;
+        this.value = data[0].schema;
+        this.getSchemaContent(this.value);
+        let tableList = new Object();
 
-      httpUtils.get(this, `${urlUtils.udx_node}?id=${id}`, (data) => {
-//         this.udx_schema = data.schema;
-
-//这一步是干嘛？这是这个列表
-        data.udx_data.forEach((v) => {
-          const o = {
-            dataName: v,
-          };
-          this.udx_schema_data.push(o);
-        });
-//         console.log("rrr",data.schema)
-
-        // function UdxNode() {
-        //   this.children = new Array();
-        // }
-        // for (let i = 0; i < data.schema.length; i++) {
-
-        // let sch = this.json2tree(data.schema[i]);
-        // this.schemaTree(sch, i);
-       
-        // const nodes = new tools.UdxNode();
-        console.log('data--', data.schema[0]);
-        console.log('node--', tools.udx_nodes.children);//这一开始应该为空吧？
-// console.log('aa',data.schema[0].UdxDeclaration.UdxNode)
-        // index = 1;\
-        // debugger
-        tools.trans_new(
-          {
-            UdxNode: data.schema[0].UdxDeclaration.UdxNode,
-          },
-          tools.udx_nodes
-        );
-        // tools.test(this)
-        // this.test(0)   
-        console.log('jstree', tools.udx_nodes.children);
-
-        // this.initJsTree(nodes.children);
-        // }
-      });
-
-    },
-    test(i){
-          if(i===4){
-            return
-          }else{
-            console.log("test",i)
-            this.test(++i)
+        for (let i = 0; i < data.length; i++) {
+          tableList[data[i].schema] = [];
+          for (let j = 0; j < data[i].data.length; j++) {
+            let obj = {};
+            obj["data"] = data[i].data[j];
+            tableList[data[i].schema].push(obj);
           }
+        }
+        this.tableObj = tableList;
+        this.udx_schema_data = tableList[this.value]; //初始化data table
+      });
     },
-
     initJsTree(data) {
-      console.log(data);
-      $('#treeview0').jstree({
+      $("#treeview").jstree({
         type: {
           default: {
-            icon: false,
-          },
+            icon: false
+          }
         },
         core: {
           multiple: false,
           data,
-          dblclick_toggle: false,
+          dblclick_toggle: false
         },
-        plugins: ['search'],
+        plugins: ["search"]
       });
     },
+    getSchemaContent(schema) {
+      const { id } = this.$route.query;
 
+      httpUtils.get(
+        this,
+        `${urlUtils.udx_node}?id=${id}` + "&schema=" + schema,
+        data => {
+          var nodes = new tools.UdxNode();
 
-    json2tree(data) {
-      const id = 1;
-      const obj = [];
-      if ('UdxDeclaration' in data) {
-        var declation = {
-          text: 'UdxDeclaration',
-          state: {
-            opened: true,
-          },
-          children: [],
-        };
-
-        if ('$' in data.UdxDeclaration) {
-          const $ = {
-            text: 'data info',
-            state: {
-              opened: true,
+          tools.trans_new(
+            {
+              UdxNode: data.UdxDeclaration.UdxNode
             },
-            children: [
-              {
-                text: data.UdxDeclaration.$.name,
-              },
-              {
-                text: data.UdxDeclaration.$.description,
-              },
-            ],
-          };
-
-          declation.children.push($);
-        }
-
-        if ('SemanticAttachment' in data.UdxDeclaration) {
-          const SemanticAttachment = {
-            text: 'SemanticAttachment',
-            state: {
-              opened: true,
-            },
-            children: [],
-          };
-          declation.children.push(SemanticAttachment);
-          console.log(
-            'concep',
-            'Concepts' in data.UdxDeclaration.SemanticAttachment,
+            nodes
           );
-          if ('Concepts' in data.UdxDeclaration.SemanticAttachment) {
-            const Concepts = {
-              text: 'Concepts',
-              state: {
-                opened: false,
-              },
-              children: [
-                {
-                  text: data.UdxDeclaration.SemanticAttachment.Concepts,
-                },
-              ],
-            };
-            console.log();
-            declation.children[1].children.push(Concepts);
-          }
+          tools.reset();
 
-          if ('SpatialRefs' in data.UdxDeclaration.SemanticAttachment) {
-            const SpatialRefs = {
-              text: 'SpatialRefs',
-              state: {
-                opened: false,
-              },
-              children: [
-                {
-                  text: data.UdxDeclaration.SemanticAttachment.SpatialRefs,
-                },
-              ],
-            };
-
-            declation.children[1].children.push(SpatialRefs);
-          }
-
-          if ('Units' in data.UdxDeclaration.SemanticAttachment) {
-            const Units = {
-              text: 'Units',
-              state: {
-                opened: false,
-              },
-              children: [
-                {
-                  text: data.UdxDeclaration.SemanticAttachment.Units,
-                },
-              ],
-            };
-
-            declation.children[1].children.push(Units);
-          }
-
-          if ('DataTemplates' in data.UdxDeclaration.SemanticAttachment) {
-            const DataTemplates = {
-              text: 'DataTemplates',
-              state: {
-                opened: false,
-              },
-              children: [
-                {
-                  text: data.UdxDeclaration.SemanticAttachment.DataTemplates,
-                },
-              ],
-            };
-
-            declation.children[1].children.push(DataTemplates);
-          }
-
-          // if ("SpatialRefs" in data.UdxDeclaration.SemanticAttachment.Concepts)
+          //  this.initJsTree(nodes.children);
+          // 更新tree的数据
+          $("#treeview").jstree(true).settings.core.data = nodes.children;
+          $("#treeview").jstree(true).refresh();
         }
-        // 移动下面代码位置，要改上面的declation.children[2].children.push(DataTemplates);
-        if ('UdxNode' in data.UdxDeclaration) {
-          const UdxNode = {
-            text: 'UdxNode',
-            state: {
-              opened: true,
-            },
-            children: [],
-          };
-
-          declation.children.push(UdxNode);
-        }
-      }
-      obj.push(declation);
-      console.log('obj', obj);
-      return obj;
-    },
-
-
-    schemaTree(schema, i) {
-      console.log('tree', schema);
-      console.log('tree number', i);
-
-      $(`#treeview${i}`).jstree({
-        type: {
-          default: {
-            icon: true, // 关闭默认图标
-          },
-        },
-        core: {
-          multiple: false,
-          data: schema,
-          dblclick_toggle: false, // 禁用tree的双击展开
-        },
-      });
-    },
+      );
+    }
   },
+
+  destroyed() {}
 };
 </script>
 <style lang="scss">
-body {
-  margin: 0;
-  padding: 0;
-  min-height: 100vh;
-  user-select: none;
+.treeview {
+  margin-top: 20px;
 }
-.el-header {
-  padding: 0;
-}
-.el-container {
+.el-card__body{
   height: 100%;
 }
-#app {
-  font-family: "Avenir", Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
-  height: 100vh;
+#iframe{
+      width: 100%;
+    height: 90%;
 }
+
 </style>

@@ -2,20 +2,20 @@ function UdxNode() {
   this.children = new Array();
 }
 
-var udx_nodes = new UdxNode();
+// var udx_nodes = new UdxNode();
 
-let index = 1;
-let isfirst = true;
-const icon = 'online';
+var index = 1;
+var isfirst = true;
+// const icon = 'online';
 function trans_new(dataset, nodes) {
-  console.log('trans_new');
+  
   // 如果dataset是一个obj的话
   // 一般情况下，udxnode下是一个[]，这个情况是排除不是数组的情况。
   if (dataset instanceof Object && !(dataset instanceof Array) && !isfirst) {
     var node = new UdxNode();
     node.id = index++;
     node.text = dataset.$.name;
-    node.icon = `/plugins/jstree/images/${icon}.png`;
+    node.icon = `../assets/tree.png`;
     node.state = { opened: true };
     nodes.children.push(node);
     trans_new(dataset.UdxNode, node);
@@ -33,7 +33,7 @@ function trans_new(dataset, nodes) {
       } else {
         node.text = dataset[o].$.name;
       }
-      node.icon = `/plugins/jstree/images/${icon}.png`;
+      node.icon = `../assets/tree.png`;
       node.state = { opened: true };
       nodes.children.push(node);
       trans_new(dataset[o].UdxNode, node);
@@ -42,12 +42,12 @@ function trans_new(dataset, nodes) {
       node.id = index++;
       node.text = dataset[o].$.name;
       node.state = { opened: true };
-      node.icon = `/plugins/jstree/images/${icon}.png`;
+      node.icon = `../assets/tree.png`;
       if (dataset[o].UdxNode.$ != 'undefined') {
         const n = new UdxNode();
         n.id = index++;
         n.text = dataset[o].UdxNode.$.name;
-        n.icon = `/plugins/jstree/images/${icon}.png`;
+        n.icon = `../assets/tree.png`;
         n.state = { opened: true };
         node.children.push(n);
 
@@ -61,7 +61,7 @@ function trans_new(dataset, nodes) {
       var node = new UdxNode();
       node.id = index++;
       node.text = dataset[o].$.name;
-      node.icon = `/plugins/jstree/images/${icon}.png`;
+      node.icon = `../assets/tree.png`;
       node.state = { opened: true };
       nodes.children.push(node);
     }
@@ -75,5 +75,9 @@ function test(that){
 //     test,trans_new, UdxNode,
 // };
 
+function reset(){
+    isfirst = true;
+}
 
-export default { trans_new,UdxNode , udx_nodes}
+
+export default { trans_new, UdxNode,reset}

@@ -134,7 +134,7 @@ export default {
     },
     content(row){
         this.$router.push({path:'/console/data/udx-schema',query:{id:row.id,fileName:row.file}});
-        console.log(row.id)
+         
 
     },
     renameData(row) {

@@ -56,6 +56,9 @@ export default {
     //   return this.$parent.chartData;
     // },
   },
+  mounted(){
+    debugger
+  },
 
   methods: {
     // 切换工具栏显示

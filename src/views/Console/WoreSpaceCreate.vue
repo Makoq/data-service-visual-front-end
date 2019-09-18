@@ -68,7 +68,7 @@ export default {
       },
       
       inputVisible: false,
-      inputValue: "",
+      inputValue:  "",
 
       // 上传文件
       fileList: [],
@@ -92,6 +92,8 @@ export default {
   },
   mounted(){
       this.isEdit()
+
+      
   },
   methods: {
       isEdit(){
