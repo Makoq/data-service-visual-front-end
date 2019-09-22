@@ -5,12 +5,12 @@ Blockly.Blocks['block_get_child_by_index'] = {
     this.appendValueInput("i_node")
         .setCheck("udx_node")
         .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("node");
-    this.appendValueInput("i_node_name")
-        .setCheck("String")
-        .setAlign(Blockly.ALIGN_RIGHT)
-        .appendField("node_name");
-    this.appendValueInput("i_inde")
+        .appendField("parent node");
+    // this.appendValueInput("i_node_name")
+    //     .setCheck("String")
+    //     .setAlign(Blockly.ALIGN_RIGHT)
+    //     .appendField("node_name");
+    this.appendValueInput("i_idx")
         .setCheck("Number")
         .setAlign(Blockly.ALIGN_RIGHT)
         .appendField("index");
@@ -23,10 +23,13 @@ Blockly.Blocks['block_get_child_by_index'] = {
 
 Blockly.JavaScript['block_get_child_by_index'] = function(block) {
   var value_i_node = Blockly.JavaScript.valueToCode(block, 'i_node', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_i_node_name = Blockly.JavaScript.valueToCode(block, 'i_node_name', Blockly.JavaScript.ORDER_ATOMIC);
-  var value_i_inde = Blockly.JavaScript.valueToCode(block, 'i_inde', Blockly.JavaScript.ORDER_ATOMIC);
+  // var value_i_node_name = Blockly.JavaScript.valueToCode(block, 'i_node_name', Blockly.JavaScript.ORDER_ATOMIC);
+  var value_i_idx = Blockly.JavaScript.valueToCode(block, 'i_idx', Blockly.JavaScript.ORDER_ATOMIC);
 
-  var code = 'get_child_by_index('+value_i_node+','+value_i_node_name+','+value_i_inde+')'
+  // var code = 'get_child_by_index('+value_i_node+','+value_i_node_name+','+value_i_inde+')'
+   
+  var code =value_i_node+'.getChildNode('+value_i_idx+')'
+
  
   return [code, Blockly.JavaScript.ORDER_NONE];
 };

@@ -1,31 +1,29 @@
 
 <template>
   <div id="block_container">
-    <!-- <el-row>
-      <el-row>
-        <el-button icon="el-icon-search" size="mini"></el-button>
-        <el-button type="primary" icon="el-icon-edit" size="mini"></el-button>
-        <el-button type="success" icon="el-icon-check" size="mini"></el-button>
-        <el-button type="info" icon="el-icon-message" size="mini"></el-button>
-        <el-button type="warning" icon="el-icon-star-off" size="mini"></el-button>
-        <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
-      </el-row>
-      <hr />
-      <el-col :span="12">
+    
 
-      </el-col>
-      <el-col :span="12">
-        <div style="border: 1px solid #ccc">adsad</div>
-      </el-col>
-    </el-row>-->
+    <div id="mydiv" style="display:none">mydiv</div>
+
     <el-row>
-      <el-button type="danger" icon="el-icon-folder-opened" size="mini"></el-button>
-      <el-button type="warning" icon="el-icon-download" size="mini" @click="showCode()"></el-button>
-      <el-button type="primary" icon="el-icon-edit-outline" size="mini"></el-button>
-      <el-button type="success" icon="el-icon-check" size="mini"></el-button>
-      <el-button type="info" icon="el-icon-message" size="mini"></el-button>
-      <el-button type="danger" icon="el-icon-delete" size="mini"></el-button>
-      <el-button type="danger" icon="el-icon-share" size="mini"></el-button>
+      <el-button type="success" icon="el-icon-caret-right" size="mini" @click="showCode()">Run</el-button>
+      <el-button type="success" icon="el-icon-check" size="mini" @click="save()"></el-button>
+      <el-button type="danger" icon="el-icon-folder-opened" size="mini" @click="blockLogList()"></el-button>
+      <el-dialog title="提示" :visible.sync="congigureLogDialogVisible" width="30%">
+        <el-table :data="blockList" @row-click="addBlockLog" style="width: 100%">
+          <el-table-column prop="name" :label="$t('data.name')" width="180"></el-table-column>
+          <el-table-column prop="time" :label="$t('data.date')" width="180"></el-table-column>
+        </el-table>
+
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="congigureLogDialogVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+      <!-- <el-button type="warning" icon="el-icon-download" size="mini" @click="showCode()"></el-button> -->
+      <!-- <el-button type="primary" icon="el-icon-edit-outline" size="mini"></el-button> -->
+      <!-- <el-button type="info" icon="el-icon-message" size="mini"></el-button> -->
+      <!-- <el-button type="danger" icon="el-icon-delete" size="mini"></el-button> -->
+      <!-- <el-button type="danger" icon="el-icon-share" size="mini"></el-button> -->
     </el-row>
     <hr />
 
@@ -34,8 +32,9 @@
         <td id="blocklyArea"></td>
         <td style="width: 1px;height: 100%; background: darkgray;"></td>
         <td id="td_udx_schema">
-          <!-- jstree -->
-          <div id="treeview1" class="treeview"></div>
+         
+           
+          <div id="udx_data_show">{{test }}</div>
         </td>
       </tr>
     </table>
@@ -45,21 +44,29 @@
 </template>
 
 <script>
-import Vue from 'vue';
-
+import Vue from "vue";
+import httpUtils from "../../utils/httpUtils";
+import urlUtils from "../../utils/urlUtils";
 export default {
+  data() {
+    return {
+      test: "",
+      congigureLogDialogVisible: false,
+      blockList: []
+    };
+  },
   mounted() {
-    const blocklyArea = document.getElementById('blocklyArea');
-    const blocklyDiv = document.getElementById('blocklyDiv');
+    const blocklyArea = document.getElementById("blocklyArea");
+    const blocklyDiv = document.getElementById("blocklyDiv");
 
     const myWorkspace = Blockly.inject(blocklyDiv, {
-      media: 'libs/blockly/media/',
-      toolbox: document.getElementById('toolbox'),
+      media: "libs/blockly/media/",
+      toolbox: document.getElementById("toolbox")
     });
 
     Vue.prototype.$myWorkspace = myWorkspace;
 
-    const onresize = function (e) {
+    const onresize = function(e) {
       // Compute the absolute coordinates and dimensions of blocklyArea.
       let element = blocklyArea;
       let x = 0;
@@ -76,93 +83,20 @@ export default {
       blocklyDiv.style.height = `${blocklyArea.offsetHeight}px`;
       Blockly.svgResize(myWorkspace);
     };
-    window.addEventListener('resize', onresize, false);
+    window.addEventListener("resize", onresize, false);
     onresize();
     Blockly.svgResize(myWorkspace);
 
-    myWorkspace.addChangeListener((event) => {
+    myWorkspace.addChangeListener(event => {
       console.log(event.type, event.element);
       // Blockly.Events.CREATE||
-      if (event.element == 'click') {
+      if (event.element == "click") {
         const block = myWorkspace.getBlockById(event.blockId);
         if (block) console.log(block, block.type);
       }
     });
 
     // 设置jstree
-    $('#treeview1').jstree({
-      type: {
-        default: {
-          icon: true, // 关闭默认图标
-        },
-      },
-      core: {
-        multiple: false,
-        data: [
-          {
-            // id: '00',
-            state: {
-              disabled: true,
-              selected: true,
-              opened: true,
-            },
-            text: '工作台',
-          },
-          {
-            children: [
-              {
-                // id: '0101',
-                text: '企业信息管理',
-              },
-              {
-                id: '0102',
-                text: '企业证照管理',
-              },
-            ],
-            // id: '01',
-            text: '企业管理',
-            state: {
-
-              opened: true,
-            },
-          },
-          {
-            children: [
-              {
-                id: '0201',
-                text: '生产企业商品管理',
-              },
-              {
-                id: '0202',
-                text: '商品溯源',
-              },
-              {
-                id: '0203',
-                text: '商品分布',
-              },
-            ],
-            id: '02',
-            text: '商品管理',
-          },
-          {
-            children: [
-              {
-                id: '0301',
-                text: '企业信息查询',
-              },
-              {
-                id: '0302',
-                text: '企业证照服务',
-              },
-            ],
-            id: '03',
-            text: '企业管理',
-          },
-
-        ],
-        dblclick_toggle: false, // 禁用tree的双击展开
-      },
-    });
 
     /* TODO: Change toolbox XML ID if necessary. Can export toolbox XML from Workspace Factory. */
     // var toolbox = document.getElementById("toolbox");
@@ -204,44 +138,125 @@ export default {
     save() {
       // Generate XML and set attributes.
       const xmlDom = Blockly.Xml.workspaceToDom(this.$myWorkspace);
-      xmlDom.id = 'workspaceBlocks';
-      xmlDom.setAttribute('style', 'display: none');
+      xmlDom.id = "workspaceBlocks";
+      xmlDom.setAttribute("style", "display: none");
+      const baseXml =
+        '<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"/>';
       const xmlStr = new XMLSerializer().serializeToString(xmlDom);
-      localStorage.workspace = xmlStr;
+      console.log(xmlStr);
+      let config_code_name = prompt("input name of your blocks");
 
-      const xml = document.getElementById('workspaceBlocks');
-      if (xml != undefined) document.getElementById('mydiv').removeChild(xml);
+      if (!config_code_name) {
+        //prompt取消，则直接返回
+        return;
+      }
 
-      console.log('save ok');
-    },
+      if (config_code_name != "") {
+        //prompt有值，则请求后台
 
-    load() {
-      if (localStorage.workspace != undefined) {
-        const xml = document.getElementById('workspaceBlocks');
-        if (xml == undefined) {
-          const mydiv = document.getElementById('mydiv');
-          mydiv.innerHTML = localStorage.workspace;
+        if (baseXml === xmlStr) {
+          alert("empty content can't be saved!");
+          return;
         }
-
-        Blockly.Xml.domToWorkspace(
-          document.getElementById('workspaceBlocks'),
-          this.$myWorkspace,
+        localStorage.setItem(config_code_name, xmlStr);
+        httpUtils.get(
+          this,
+          urlUtils.insert_block_log + "?name=" + config_code_name,
+          data => {
+            setTimeout(() => {
+              if (data === "ok") {
+                this.$alert("save ok");
+              }
+            }, 1500);
+          }
         );
-        console.log('load ok');
+
+        const xml = document.getElementById("workspaceBlocks");
+        if (xml != undefined) document.getElementById("mydiv").removeChild(xml);
+      } else {
+        alert("input can not be empty!!");
+      }
+    },
+    blockLogList() {
+      httpUtils.get(this, urlUtils.block_log, data => {
+        this.blockList = data;
+        this.congigureLogDialogVisible = true;
+      });
+    },
+    addBlockLog(row) {
+      if (row.name) {
+        this.load(row.name);
       }
     },
 
+    load(k) {
+      if (localStorage.getItem(k) != undefined) {
+        const xml = document.getElementById("workspaceBlocks");
+        if (xml == undefined) {
+          const mydiv = document.getElementById("mydiv");
+          mydiv.innerHTML = localStorage.getItem(k);
+        }
+
+        Blockly.Xml.domToWorkspace(
+          document.getElementById("workspaceBlocks"),
+          this.$myWorkspace
+        );
+      }
+    },
     showCode() {
       // Generate JavaScript code and display it.
+      // console.log("data",this.schemaxml)
+
+      var dataset = new UdxDataset();
+      dataset.createDataset();
+      dataset.loadFromXmlStream(this.schemaxml);
+
+      // console.log("count",dataset.getChildNode(1).getName())
+
       Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
       const code = Blockly.JavaScript.workspaceToCode(this.$myWorkspace);
+
       console.log(code);
+
+      let obj;
+
+      try {
+        obj = eval(code);
+        console.log("result", eval(code));
+        console.log(typeof obj);
+        if (typeof obj == "number") {
+          $("#udx_data_show").removeClass("showData");
+          $("#udx_data_show").addClass("showData_2");
+
+          this.test = obj;
+        } else if (typeof obj == "string") {
+          this.test = obj;
+        }
+        // else if(typeof obj=="object"){
+        //   alert("can`t show raw node object,please get() its attribute!")
+        // }
+        else if (obj.formatToXmlStream instanceof Function) {
+          // $('#udx_data_show').removeClass('showData_2')
+
+          $("#udx_data_show").addClass("showData");
+          try {
+            this.test = obj.formatToXmlStream();
+          } catch (e) {
+            alert("node select error!");
+          }
+        } else {
+          alert("Uncaught SyntaxError: Unexpected identifier!!");
+        }
+      } catch (err) {
+        alert(err);
+      }
     },
 
     runCode() {
       // Generate JavaScript code and run it.
       window.LoopTrap = 1000;
-      Blockly.JavaScript.INFINITE_LOOP_TRAP = 'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
+      Blockly.JavaScript.INFINITE_LOOP_TRAP =
+        'if (--window.LoopTrap == 0) throw "Infinite loop.";\n';
       const code = Blockly.JavaScript.workspaceToCode(this.$myWorkspace);
       Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
       try {
@@ -250,8 +265,8 @@ export default {
       } catch (e) {
         alert(e);
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -282,5 +297,13 @@ export default {
 #treeview1 {
   margin-top: 0px;
   padding-left: 0px;
+}
+.showData {
+  text-align: center;
+  overflow-y: scroll;
+  height: 100%;
+}
+.showData_2 {
+  text-align: center;
 }
 </style>

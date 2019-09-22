@@ -15,6 +15,11 @@ const urls = {
   udx_node: '/udxnode',
   default_udx_info:'/config',
 
+  udx_data_xml:'/schemadataxml',
+
+  insert_block_log:'/newblocklog',
+  block_log:'/blocklog',
+
   chart: '/chart', // 创建 chart
 
   server_url: 'http://localhost:8897',

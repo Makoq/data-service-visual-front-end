@@ -55,6 +55,7 @@ const en_US = {
     schema_tree: 'Udx Schema Tree',
     udx_data_list: 'Udx Data List',
     data_list: 'data item',
+    data_show:'Udx Data Show'
   },
   data: {
     check: 'Detail',

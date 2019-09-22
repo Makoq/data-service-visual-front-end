@@ -49,6 +49,7 @@ const zh_CN = {
     schema_tree: 'Udx Schema 结构树',
     udx_data_list: 'Udx Data 数据列表',
     data_list: '数据项',
+    data_show:'Udx Data 数据抽取展示'
   },
   data: {
     check: '详情',
