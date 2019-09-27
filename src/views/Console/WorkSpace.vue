@@ -23,6 +23,16 @@
           </el-table-column>
 
         </el-table>
+        <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+               :page-sizes="[10,50,100, 200, 300, 400]"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total">
+            </el-pagination>
+
       </el-col>
     </el-row>
   </div>
@@ -42,6 +52,9 @@ export default {
   data() {
     return {
       workspacelist: [],
+      currentPage:1,
+      pageSize:10,
+      total:0
 
     };
   },
@@ -56,10 +69,17 @@ export default {
   },
   mounted() {
     this.getWorkSpaceList('workspace');
+    this.getAllCount('workspace');
+
   },
   methods: {
+    getAllCount(type){
+      httpUtils.get(this, `${urlUtils.data_count}?type=${type}`, (data) => {
+        this.total = data;
+      });
+    },
     getWorkSpaceList(type) {
-      httpUtils.get(this, `${urlUtils.get_source_list}?type=${type}&username=${this.user.username}&uid=${this.user.uid}`, (data) => {
+      httpUtils.get(this, `${urlUtils.get_source_list}?type=${type}&username=${this.user.username}&uid=${this.user.uid}&page=${this.currentPage}&pageSize=${this.pageSize}`, (data) => {
         this.workspacelist = data;
       });
     },
@@ -86,6 +106,14 @@ export default {
     },
     editeWorkspace(id) {
       this.$router.push({ path: 'workspaceInfo', query: { id, type: 'edit' } });
+    },
+    handleSizeChange(val){
+      this.pageSize=val
+      this.getWorkSpaceList('workspace')
+    },
+    handleCurrentChange(val){
+       this.currentPage=val
+      this.getWorkSpaceList('workspace')
     },
 
     test() {

@@ -21,7 +21,22 @@ Blockly.Blocks['block_get_child_count'] = {
     var value_i_node = Blockly.JavaScript.valueToCode(block, 'i_node', Blockly.JavaScript.ORDER_ATOMIC);
     // var value_i_node_name = Blockly.JavaScript.valueToCode(block, 'i_node_name', Blockly.JavaScript.ORDER_ATOMIC);
    
-    var code = value_i_node+'.getChildNodeCount()'
+    // var code = value_i_node+'.getChildNodeCount()'
+    // var code = value_i_node.replace('//fuc', '.getChildNodeCount()//fuc');  
+    var code =value_i_node +'.getChildNodeCount()';
+    if(code.startsWith('(')){
+      let tp=0
+        //  console.log("brfore",code)    
+          for(let i=0;i<code.length;i++){
+            if(code[i]==='(') tp++;
+    
+            else break
+          }
+    
+         
+          code=code.substring(tp,value_i_node.length-tp)+'.getChildNodeCount()'
+     }
+   
 
     return [code, Blockly.JavaScript.ORDER_NONE];
   };

@@ -4,7 +4,7 @@
 </template>
 
 <style lang="scss">
-@import url('https://fonts.googleapis.com/css?family=Molengo|Noto+Sans+SC|Noto+Serif+SC|Lobster|ZCOOL+QingKe+HuangYou|ZCOOL+XiaoWei');
+@import url('/assets/font/googleapis/googleapis.css');
 @import url('//at.alicdn.com/t/font_1127427_8156c125kn9.css');
 
 body {

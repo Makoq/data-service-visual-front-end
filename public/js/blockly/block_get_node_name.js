@@ -27,8 +27,23 @@ Blockly.Blocks['block_get_node_name'] = {
     // var value_i_inde = Blockly.JavaScript.valueToCode(block, 'i_inde', Blockly.JavaScript.ORDER_ATOMIC);
   
     // var code = 'get_node_name('+value_i_node+','+value_i_node_name+','+value_i_inde+')'
-    var code = value_i_node+'.getName()'
-  
+    // var code = value_i_node+'.getName()'
+    // var code = value_i_node.replace('//fuc', '.getName()//fuc');  
+
+    var code =value_i_node +'.getName()';
+    if(code.startsWith('(')){
+      let tp=0
+        //  console.log("brfore",code)    
+          for(let i=0;i<code.length;i++){
+            if(code[i]==='(') tp++;
+    
+            else break
+          }
+    
+         
+          code=code.substring(tp,value_i_node.length-tp)+'.getName()'
+     }
+   
    
     return [code, Blockly.JavaScript.ORDER_NONE];
   };

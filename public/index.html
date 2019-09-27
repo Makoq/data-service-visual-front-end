@@ -17,19 +17,21 @@
   <script src="libs/blockly/blocks_compressed.js"></script>
   <script src="libs/blockly/javascript_compressed.js"></script>
   <script src="libs/blockly/msg/js/en.js"></script>
-
   <script src="js/blockly/my.js"></script>
+
   <script src="js/blockly/block_udx_dataset.js"></script>
+  <script src="js/blockly/block_udx_dataset_single.js"></script>
   <script src="js/blockly/block_get_child_by_index.js"></script>
   <script src="js/blockly/block_get_node_name.js"></script>
   <script src="js/blockly/block_get_node_value.js"></script>
+  <script src="js/blockly/block_get_node_value_by_index.js"></script>
+  <script src="js/blockly/block_get_child_count.js"></script>
+  <script src="js/blockly/block_const.js"></script>
 
-
-  <script src="js/blockly/block_get_value_by_index.js"></script>
 
   <!-- <script src="js/blockly/block_get_node_by_name.js"></script> -->
   <!-- <script src="js/blockly/block_get_item_by_index.js"></script> -->
-  <script src="js/blockly/block_get_child_count.js"></script>
+  
   <script src="js/blockly/block_get_node_length.js"></script>
 
   <!-- udx底层实现-->
@@ -61,8 +63,9 @@
       <block type="block_get_child_by_index"></block>
 
       <block type="block_get_node_value"></block>
-<block type="block_get_value_by_index"></block>
-    
+<block type="block_get_node_value_by_index"></block>
+    <!-- block_const -->
+    <block type="block_const"></block>
      
       <!-- <block type="block_get_node_by_name"></block> -->
       <block type="block_get_node_name"></block>
@@ -70,7 +73,7 @@
       <!-- <block type="block_get_item_by_index"></block> -->
       <block type="block_get_child_count"></block>
       <!-- <block type="block_get_node_length"></block> -->
-      <!-- <block type='en'></block> -->
+   
     </category>
     <sep></sep>
     
@@ -451,11 +454,12 @@
 
   <xml xmlns="https://developers.google.com/blockly/xml" id="toolbox2" style="display: none">
     <category name="UDX" colour="#5B67A5">
-      <block type="block_udx_dataset"></block>
+      <block type="block_udx_dataset_single"></block>
       <block type="block_get_child_by_index"></block>
 
       <block type="block_get_node_value"></block>
-<block type="block_get_value_by_index"></block>
+<block type="block_get_node_value_by_index"></block>
+<block type="block_const"></block>
  
       <!-- <block type="block_get_node_by_name"></block> -->
       <block type="block_get_node_name"></block>

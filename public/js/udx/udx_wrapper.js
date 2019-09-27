@@ -258,6 +258,22 @@ function UdxNode(pParentNode){
 		return pUdxNode;
 	};
 	
+	function tranverse_all_node(node, name) {
+		if (node.getName() == name) {
+			return node;
+		}
+
+		var child_node_count = node.getChildNodeCount();
+		for (var i = 0; i < child_node_count; i++) {
+			var child_node = node.getChildNode(i);
+			return tranverse_all_node(child_node, name);
+		}
+	}
+
+	this.getChildNodeByName = function (name) {
+		return tranverse_all_node(this, name);
+	}
+	
 	this.addChildNode=function(name, type){
 		var childNode = new UdxNode(this);
 		childNode.create(name, type);
@@ -283,11 +299,7 @@ function UdxNode(pParentNode){
 function UdxDataset(){		
 	
 	//test fuc
-	this.get_child_by_index=function(ind){
-		console.log("node node node",this)
-		return this.getChildNode(ind).getName()
-
-	};
+ 
 
 	this.createDataset=function(){
 		this.dataset = Module.createUdxDataset();
@@ -320,4 +332,12 @@ function UdxDataset(){
 	};
 }
 
-UdxDataset.prototype = new UdxNode();	
+UdxDataset.prototype = new UdxNode();
+
+
+var app_node = null;
+function set(nd){
+	app_node=nd;
+}
+
+

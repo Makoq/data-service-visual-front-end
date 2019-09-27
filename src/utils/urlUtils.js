@@ -1,7 +1,7 @@
 const urls = {
   get_source_list: '/dataSource', // ?type=xxx
   delete_source: '/deleteSource', // ?type=xxx&id=xxx
-
+  data_count:'/dataCount',
   workspace_create: '/workspace',
   workspace_delete: '/delworkspace',
   workspace_single: '/soloworkspace',

@@ -1,0 +1,139 @@
+<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none">
+    <variables>
+      <variable id="-~Legz$BDkFw0YCNZJoW">list</variable>
+      <variable id="UCZVU/!~0v1cZ9V3LLgy">index</variable>
+      <variable id="ND%7ndP;N08E+,Wr{aDB">node</variable></variables>
+    <block type="lists_create_with" id="9q4g_Cvx-?6fxQ8;uItT" disabled="true" x="88" y="33">
+      <mutation items="5" /></block>
+    <block type="variables_set" id="6-G/Wafr:@5`vLo1!wNq" x="68" y="164">
+      <field name="VAR" id="-~Legz$BDkFw0YCNZJoW">list</field>
+      <value name="VALUE">
+        <block type="lists_create_with" id="HQ6|RAHby6Q1J?5y()v_">
+          <mutation items="0" /></block>
+      </value>
+      <next>
+        <block type="variables_set" id="+x/{]9!AxMXpN5*W/3zk">
+          <field name="VAR" id="ND%7ndP;N08E+,Wr{aDB">node</field>
+          <value name="VALUE">
+            <block type="block_get_child_by_index" id="6$Ei[.b%jLUhG:S=BG2+">
+              <value name="i_node">
+                <block type="block_get_child_by_index" id="6,/EXV;/XXR!`2-E|6fC">
+                  <value name="i_node">
+                    <block type="block_udx_dataset" id="X]b,5rV,:Q?5zaJXk)(o">
+                      <value name="i_id">
+                        <block type="text" id="?x9gFTxG5pHwC#BC(GaA">
+                          <field name="TEXT">0480576f-8b63-47a9-8a32-056bc7c6ac91</field></block>
+                      </value>
+                      <value name="i_data_name">
+                        <block type="text" id="N7NBg@#^11K1/fCz^_wt">
+                          <field name="TEXT">ascii_test11.xml</field></block>
+                      </value>
+                    </block>
+                  </value>
+                  <value name="i_idx">
+                    <block type="math_number" id="LOZ=g5hp2{?T~5[SyLXR">
+                      <field name="NUM">1</field></block>
+                  </value>
+                </block>
+              </value>
+              <value name="i_idx">
+                <block type="math_number" id=")wU)Wn{Fbiq3++t):y0h">
+                  <field name="NUM">0</field></block>
+              </value>
+            </block>
+          </value>
+          <next>
+            <block type="variables_set" id=")6La?2|:x`EOnQe5)8LW">
+              <field name="VAR" id="UCZVU/!~0v1cZ9V3LLgy">index</field>
+              <value name="VALUE">
+                <block type="math_number" id="=tsN6@2Qw({BF,WzI6oU">
+                  <field name="NUM">1</field></block>
+              </value>
+              <next>
+                <block type="controls_whileUntil" id="4AhTu3T])%j=t*7C@Y(u">
+                  <field name="MODE">WHILE</field>
+                  <value name="BOOL">
+                    <block type="logic_compare" id="MJ;2cPPy9SYr3R;Fv!Tl">
+                      <field name="OP">LT</field>
+                      <value name="A">
+                        <block type="variables_get" id="lz)zs^cMB^dxOX_`kq4u">
+                          <field name="VAR" id="UCZVU/!~0v1cZ9V3LLgy">index</field></block>
+                      </value>
+                      <value name="B">
+                        <block type="math_number" id="]7Vk?nlcQKL7FrCr9$ej">
+                          <field name="NUM">5</field></block>
+                      </value>
+                    </block>
+                  </value>
+                  <statement name="DO">
+                    <block type="lists_setIndex" id="}0xf::WjaQeEWi)Jf~-[">
+                      <mutation at="true" />
+                      <field name="MODE">SET</field>
+                      <field name="WHERE">FROM_START</field>
+                      <value name="LIST">
+                        <block type="variables_get" id="]lez^ZuDn|N~6^W#R-[J">
+                          <field name="VAR" id="-~Legz$BDkFw0YCNZJoW">list</field></block>
+                      </value>
+                      <value name="AT">
+                        <block type="variables_get" id="vy.b$M$5tBBu9(E4oPxu">
+                          <field name="VAR" id="UCZVU/!~0v1cZ9V3LLgy">index</field></block>
+                      </value>
+                      <value name="TO">
+                        <block type="block_get_node_value_by_index" id="dY#T:##qjZ}![/WARO=Q">
+                          <value name="i_node">
+                            <block type="variables_get" id="7KQu:*7h_JWSiQV.TYaf">
+                              <field name="VAR" id="ND%7ndP;N08E+,Wr{aDB">node</field></block>
+                          </value>
+                          <value name="i_idx">
+                            <block type="variables_get" id="Y}H,p(9bKhPb_EFg2rhg">
+                              <field name="VAR" id="UCZVU/!~0v1cZ9V3LLgy">index</field></block>
+                          </value>
+                        </block>
+                      </value>
+                    </block>
+                  </statement>
+                </block>
+              </next>
+            </block>
+          </next>
+        </block>
+      </next>
+    </block>
+    <block type="variables_set" id="KXgntF(aR({b^:L)ft,C" disabled="true" x="51" y="586">
+      <field name="VAR" id="UCZVU/!~0v1cZ9V3LLgy">index</field>
+      <value name="VALUE">
+        <block type="math_number" id=",BYWs0=?6m`7pv(y+wAG">
+          <field name="NUM">1</field></block>
+      </value>
+      <next>
+        <block type="controls_whileUntil" id="3,|Hw#38^06A(-u|P*V@" disabled="true">
+          <field name="MODE">WHILE</field>
+          <value name="BOOL">
+            <block type="logic_compare" id="HBLR+^+H_d:)FUyn#Lq3">
+              <field name="OP">LT</field>
+              <value name="A">
+                <block type="variables_get" id="?-B/7KAgWW!rBFT(Vb]}">
+                  <field name="VAR" id="UCZVU/!~0v1cZ9V3LLgy">index</field></block>
+              </value>
+              <value name="B">
+                <block type="math_number" id="CB1km7IimP5D+cPJ~0e%">
+                  <field name="NUM">5</field></block>
+              </value>
+            </block>
+          </value>
+          <statement name="DO">
+            <block type="lists_setIndex" id="Ne6NJIk^Uo:gUaxiSpJR">
+              <mutation at="true" />
+              <field name="MODE">SET</field>
+              <field name="WHERE">FROM_START</field></block>
+          </statement>
+        </block>
+      </next>
+    </block>
+    <block type="block_const" id="1+`;Y1Nk9^Mr[}APDM_@" disabled="true" x="65" y="724">
+      <value name="node_value">
+        <block type="variables_get" id="_Xf$dZ}r(_U7!`?lb);-">
+          <field name="VAR" id="-~Legz$BDkFw0YCNZJoW">list</field></block>
+      </value>
+    </block>
+  </xml>

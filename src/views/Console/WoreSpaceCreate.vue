@@ -31,16 +31,15 @@
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加标签</el-button>
           </el-form-item>
           <!-- 上传UDX数据 -->
-          <el-form-item :label="isEditType?$t('workspace.update_workspace'):$t('workspace.create_workspace')">
-
+          <el-form-item
+            :label="isEditType?$t('workspace.update_workspace'):$t('workspace.create_workspace')"
+          >
             <el-button
-                style="margin-left: 10px;"
-                size="small"
-                type="success"
-                @click="submitUpload"
-              >{{isEditType?$t('workspace.edite'):$t('workspace.create')}}</el-button>
-
-
+              style="margin-left: 10px;"
+              size="small"
+              type="success"
+              @click="submitUpload"
+            >{{isEditType?$t('workspace.edite'):$t('workspace.create')}}</el-button>
           </el-form-item>
           <!--  -->
         </el-form>
@@ -59,22 +58,21 @@ export default {
   props: ["user"],
   data() {
     return {
-
-      form:{
+      form: {
         name: "",
         // tag
         dynamicTags: ["UDX", "水文学"],
-        desc:''
+        desc: ""
       },
-      
+
       inputVisible: false,
-      inputValue:  "",
+      inputValue: "",
 
       // 上传文件
       fileList: [],
       //编辑
-      editData:{},
-      isEditType:false
+      editData: {},
+      isEditType: false
       // udx_source_upload_url: urlUtils.udx_source_upload
     };
   },
@@ -90,28 +88,25 @@ export default {
     //   return data;
     // }
   },
-  mounted(){
-      this.isEdit()
-
-      
+  mounted() {
+    this.isEdit();
   },
   methods: {
-      isEdit(){
-        //   console.log(this.$route.query.id)
-          let id=this.$route.query.id
-          if(this.$route.query.type==='edit'){
-              httpUtils.get(this,urlUtils.workspace_single+"?id="+id,data=>{
-                  console.log(data)
-                    this.editData=data[0]
-                    this.form.name=data[0].name
-                    this.form.dynamicTags=(data[0].tags).split(",")
-                    this.form.desc=data[0].describe
+    isEdit() {
+      //   console.log(this.$route.query.id)
+      let id = this.$route.query.id;
+      if (this.$route.query.type === "edit") {
+        httpUtils.get(this, urlUtils.workspace_single + "?id=" + id, data => {
+          console.log(data);
+          this.editData = data[0];
+          this.form.name = data[0].name;
+          this.form.dynamicTags = data[0].tags.split(",");
+          this.form.desc = data[0].describe;
 
-                    this.isEditType=true
-
-              })
-          }
-      },
+          this.isEditType = true;
+        });
+      }
+    },
     submitUpload() {
       //this.$refs.upload.submit();
 
@@ -129,52 +124,46 @@ export default {
         return;
       }
 
-       
-
       let formData = new FormData();
-      
+
       formData.append("name", this.form.name);
       formData.append("tags", this.form.dynamicTags);
       formData.append("desc", this.form.desc);
       formData.append("username", this.user.username);
       formData.append("uid", this.user.uid);
 
-
-    if(this.isEditType){
+      if (this.isEditType) {
         formData.append("id", this.$route.query.id);
         httpUtils.post(this, urlUtils.workspace_update, formData, data => {
-         if(data==='workspace already exist!'){
-                this.$message({
-                type: "success",
-                message: "工作空间已存在，请重命名！"
-                });
-                
-         }else{
-                this.$message({
-                type: "success",
-                message: "工作空间修改成功"
-                });
-                this.$router.replace('/console/workspace');
-         }
-        
-      });
-    }else{
-
-        httpUtils.post(this, urlUtils.workspace_create, formData, data => {
-            console.log(data)
+          if (data === "workspace already exist!") {
             this.$message({
-          type: "success",
-          message: "工作空间创建成功"
+              type: "success",
+              message: "工作空间已存在，请重命名！"
+            });
+          } else {
+            this.$message({
+              type: "success",
+              message: "工作空间修改成功"
+            });
+            this.$router.replace("/console/workspace");
+          }
         });
-        this.$router.replace('/console/workspace');
-        
-      });
-
-    }
-      
-
-
-
+      } else {
+        httpUtils.post(this, urlUtils.workspace_create, formData, data => {
+          if (data === "workspace already exist!") {
+            this.$message({
+              type: "success",
+              message: "工作空间已存在，请重命名！"
+            });
+          } else {
+            this.$message({
+              type: "success",
+              message: "工作空间创建成功"
+            });
+            this.$router.replace("/console/workspace");
+          }
+        });
+      }
     },
     handleRemove(file, fileList) {
       console.log("remove", file, fileList);
@@ -189,8 +178,6 @@ export default {
     handleExceed(file) {
       console.log("exceed", file);
     },
-
-   
 
     // tag
     handleClose(tag) {

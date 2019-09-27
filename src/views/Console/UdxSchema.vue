@@ -1,6 +1,6 @@
 <template  >
   <div>
-    <el-row>
+    <el-row v-loading="loading">
       <el-col :span="5">
          <h3>{{$t('udx_schema.schema_tree')}}</h3>
         <el-row>
@@ -84,7 +84,7 @@
         <br/>
          
         <el-button type="success"    icon="el-icon-caret-right" size="mini" @click="showCode()">Run</el-button>
-        <el-button type="success" icon="el-icon-check" size="mini" @click="save()">Save Code</el-button>
+        <el-button type="primary" icon="el-icon-check" size="mini" @click="save()">Save Code</el-button>
         <el-button type="danger" icon="el-icon-folder-opened" size="mini" @click="blockLogList()">Open Log</el-button>
         <!-- congigureLogDialogVisible = true -->
         <el-dialog
@@ -136,6 +136,7 @@ export default {
   props: ["user"],
   data() {
     return {
+     
       udx_schema: [],
       udx_schema_data: [],
       jstree_node: [],
@@ -153,7 +154,9 @@ export default {
       schemaxml:'',
       test:'',
        congigureLogDialogVisible: false,
-       blockList:[]
+       blockList:[] ,
+       loading:false,
+       
     };
   },
   computed: {},
@@ -224,7 +227,7 @@ export default {
 
      
     },
-    getUdxDataXml(schemaData){
+    getUdxDataXml(schemaData){//拿到数据流文件
       
       httpUtils.get(this, `${urlUtils.udx_data_xml}?id=${this.$route.query.id}&schemaData=${schemaData}`, data => {
           this.schemaxml=data
@@ -341,6 +344,20 @@ export default {
         }
       );
     },
+    removeToken(code){
+      console.log("code",code[0])
+      let tp=0
+     
+      for(let i=0;i<code.length;i++){
+        if(code[i]==='(') tp++;
+
+        else break
+      }
+
+      return code.slice(tp,-2-tp)
+
+
+    },
     showCode() {
       // Generate JavaScript code and display it.
       // console.log("data",this.schemaxml)
@@ -352,24 +369,28 @@ export default {
       
       
       // console.log("count",dataset.getChildNode(1).getName())
-
-      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
-      const code = Blockly.JavaScript.workspaceToCode(this.$myWorkspace2);
-
       
-      console.log(code);
-    
-      let obj;
+      Blockly.JavaScript.INFINITE_LOOP_TRAP = null;
+      let code = Blockly.JavaScript.workspaceToCode(this.$myWorkspace2);
 
+      if(code.startsWith('(')){
+         code=this.removeToken(code)
+         
+         console.log(code)
+       }
+      
+
+      let obj;
+      
       try{
         obj=eval(code)
-        console.log("result",eval(code))
-        console.log(typeof obj)
+        
+       
+       
         if(typeof obj=="number"){
           $('#udx_data_show').removeClass('showData')
-           $('#udx_data_show').addClass('showData_2')
-          
-          
+          $('#udx_data_show').addClass('showData_2')
+    
           this.test=obj
         }else if(typeof obj=="string"){
           this.test=obj
@@ -401,21 +422,25 @@ export default {
     },
     save() {
       // Generate XML and set attributes.
+
+      this.loading=true
       const xmlDom = Blockly.Xml.workspaceToDom(this.$myWorkspace2);
       xmlDom.id = 'workspaceBlocks';
       xmlDom.setAttribute('style', 'display: none');
       const baseXml='<xml xmlns="https://developers.google.com/blockly/xml" id="workspaceBlocks" style="display: none"/>'
       const xmlStr = new XMLSerializer().serializeToString(xmlDom);
-      console.log(xmlStr)
       let config_code_name=prompt("input name of your blocks")
+      console.log("CFG",config_code_name)
  
       if(!config_code_name){//prompt取消，则直接返回
+       this.loading=false;
           return
         }
 
-      if(config_code_name!=""){//prompt有值，则请求后台
+      if(config_code_name.length!=0){//prompt有值，则请求后台
 
         if(baseXml===xmlStr){
+           this.loading=false;
           alert("empty content can't be saved!")
           return
         }
@@ -423,6 +448,7 @@ export default {
         httpUtils.get(this,urlUtils.insert_block_log+"?name="+config_code_name,data=>{
           setTimeout(()=>{
              if(data==="ok"){
+               this.loading=false;
             this.$alert("save ok")
           }
           },1500)
@@ -437,7 +463,13 @@ export default {
 
 
       }else{
-        alert("input can not be empty!!")
+        console.log("empty")
+        setTimeout(()=>{
+          this.loading=false;
+          alert("input can not be empty!!")
+        },1500)
+         
+        
       }
 
     },
@@ -449,7 +481,7 @@ export default {
         })
     },
     addBlockLog(row){
-       
+       console.log("name",row.name)
       if(row.name){
       this.load(row.name)
 
@@ -457,6 +489,9 @@ export default {
     },
     load(k) {
       if (localStorage.getItem(k) != undefined) {
+          
+          const mydiv = document.getElementById('mydiv');
+          mydiv.innerHTML =''
 
         const xml = document.getElementById('workspaceBlocks');
         if (xml == undefined) {
@@ -500,11 +535,13 @@ export default {
 }
 .showData{
   text-align: center;
+      color: crimson;
     overflow-y: scroll;
     height: 100%;
 }
 .showData_2{
   text-align: center;
+      color: crimson;
    
      
 }

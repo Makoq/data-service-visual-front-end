@@ -39,12 +39,25 @@
 
             </template>
           </el-table-column>
+          
         </el-table>
+   
+
       </el-tab-pane>
       <!-- 数据容器源 -->
       <el-tab-pane :label="$t('data_management.data_container_source')" name="second">配置管理</el-tab-pane>
       <!-- 可配置源 -->
       <el-tab-pane :label="$t('data_management.configurable_source')" name="third">角色管理</el-tab-pane>
+
+           <el-pagination
+              @size-change="handleSizeChange"
+              @current-change="handleCurrentChange"
+              :current-page="currentPage"
+               :page-sizes="[10,50,100, 200, 300, 400]"
+              :page-size="pageSize"
+              layout="total, sizes, prev, pager, next, jumper"
+              :total="total">
+            </el-pagination>
     </el-tabs>
 
     <!-- 弹出对话框 -->
@@ -90,11 +103,17 @@ export default {
       radio: "type1",
 
       //
-      activeName: "first"
+      activeName: "first",
+      currentPage:1,
+      pageSize:10,
+      total:0
+
     };
   },
   mounted() {
     this.getDataSource("udx_source");
+    this.getAllCount('udx_source');
+
   },
   filters: {
     simplifyID(id) {
@@ -102,22 +121,14 @@ export default {
     }
   },
   methods: {
+     getAllCount(type){
+      httpUtils.get(this, `${urlUtils.data_count}?type=${type}`, (data) => {
+        this.total = data;
+      });
+    },
     getDataSource(type) {
-      // this.$http
-      //   .get("/connect?uid=" + this.user.uid)
-      //   .then(res => {
-      //     const { errno, data } = res.data;
-      //     if (errno === 0) {
-      //       this.udxDataList = data.udxDataList;
-      //     }
-      //   })
-      //   .catch(() => {});
-
-      httpUtils.get(this, urlUtils.get_source_list + "?type=" + type+"&username="+this.user.username+"&uid="+this.user.uid, data => {
+      httpUtils.get(this, urlUtils.get_source_list + "?type=" + type+"&username="+this.user.username+"&uid="+this.user.uid+"&page="+this.currentPage+"?pageSize="+this.pageSize, data => {
         this.udxDataList = data;
-
-
-
       });
     },
 
@@ -211,6 +222,7 @@ export default {
     editData(id){
       this.$router.push({path:'data/udx-source',query:{id:id,type:'edit'}})
     },
+    tab_click(){},
 
     // 选择数据源类型
     selectDataSourceType() {
@@ -223,9 +235,23 @@ export default {
         this.$router.push("data/config-source");
       }
     },
+    //分页
+    handleSizeChange(val) {
+      this.pageSize=val
+      this.getDataSource('udx_source')
+      
 
-    //  切换数据源列表
-    tab_click() {}
+    },
+    handleCurrentChange(val) {
+      this.currentPage=val
+      this.getDataSource('udx_source')
+
+    
+
+    },
+     
+
+
   }
 };
 </script>

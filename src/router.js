@@ -20,6 +20,13 @@ const router = new Router({
       component: () => import('./components/Console/Index.vue'),
       children: [
         {
+          path: '/test',
+          component: () => import('./views/test.vue'),
+          meta: {
+            title: 'test',
+          },
+        },
+        {
           path: 'data',
           component: () => import('./views/Console/Data.vue'),
           meta: {
