@@ -10,7 +10,6 @@
           <!-- <el-table-column prop="file" :label="$t('data.name')" width="180"></el-table-column> -->
           <el-table-column prop="name" :label="$t('data.workspace')"></el-table-column>
           <el-table-column prop="describe" :label="$t('data.desc')"></el-table-column>
-
           <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
           <el-table-column prop="username" :label="$t('data.user')"></el-table-column>
         </el-table>
