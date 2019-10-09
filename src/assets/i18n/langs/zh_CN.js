@@ -20,8 +20,10 @@ const zh_CN = {
 
   navmenu: {
     service_status: '服务状态',
-    data_management: '数据管理',
+    data_management: '数据服务',
     my_visualization: '我的可视化',
+    data_process_service:'数据处理服务',
+    data_process_program:'数据处理方案',
     my_workspace: '工作空间',
     help: '帮助',
   },

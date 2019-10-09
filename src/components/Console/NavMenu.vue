@@ -28,8 +28,18 @@ export default {
         },
         {
           name: this.$t('navmenu.data_management'),
+          icon: 'el-icon-s-management',
+          path: '/console/service/data',
+        },
+        {
+          name: this.$t('navmenu.data_process_service'),
           icon: 'el-icon-menu',
-          path: '/console/data',
+          path: '/console/service/process',
+        },
+        {
+          name: this.$t('navmenu.data_process_program'),
+          icon: 'el-icon-s-grid',
+          path: '/console/service/program',
         },
         {
           name: this.$t('navmenu.my_visualization'),

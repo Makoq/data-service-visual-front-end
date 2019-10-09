@@ -20,20 +20,13 @@ const router = new Router({
       component: () => import('./components/Console/Index.vue'),
       children: [
         {
-          path: '/test',
+          path: 'test',
           component: () => import('./views/test.vue'),
           meta: {
             title: 'test',
           },
         },
-        {
-          path: 'data',
-          component: () => import('./views/Console/Data.vue'),
-          meta: {
-            title: 'Data Manager',
-          },
-          
-        },
+        
         {
           path: 'state',
           component: () => import('./views/Console/SystemState.vue'),
@@ -64,14 +57,14 @@ const router = new Router({
           },
         },
         {
-          path: 'data/udx-source',
+          path: 'service/udx-source',
           component: () => import('./views/Console/AddUdxSource.vue'),
           meta: {
-            title: 'Add Udx Source',
+            title: 'Add  Source',
           },
         },
         {
-          path: 'data/config-source',
+          path: 'service/config-source',
           component: () => import('./views/Console/AddConfigurableSource.vue'),
           meta: {
             title: 'Add Configurable Source',
@@ -101,8 +94,12 @@ const router = new Router({
           },
         },
         {
-          path: '',
-          redirect: 'chart',
+          path: 'service/:type',
+          component: () => import('./views/Console/Data.vue'),
+          meta: {
+            title: 'Service List',
+          },
+          
         },
       ],
     },

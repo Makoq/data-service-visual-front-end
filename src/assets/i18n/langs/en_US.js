@@ -14,7 +14,9 @@ const en_US = {
   },
   navmenu: {
     service_status: 'Service State',
-    data_management: 'Data Management',
+    data_management: 'Data Service',
+    data_process_service:'Data Process Service',
+    data_process_program:'Data Process Program',
     my_visualization: 'My Visualization',
     my_workspace: 'workspace',
     help: 'Help',

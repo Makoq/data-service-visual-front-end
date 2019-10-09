@@ -44,18 +44,13 @@ export default {
 
   },
   mounted() {
-    // console.log("idididi",this.$router.query.id)
-    this.$data.udx_schema_id = this.$route.params.id;
+    this.udx_schema_id = this.$route.query.id;
     this.getUdxSchemaInfo();
-    // console.log("origin",vue)
-    // bus.$on('id', (msg) => {
-    //       vue.$data.udx_schema_id = msg;// bus.$off('id')//销毁监听器
-    //       vue.getUdxSchemaInfo(vue)
-
-    // });
+     
   },
   methods: {
     getUdxSchemaInfo() {
+      console.log("ff",this.udx_schema_id)
       this.$axios
         .get(`/api${urlUtils.udx_schema_info}`, {
           params: {

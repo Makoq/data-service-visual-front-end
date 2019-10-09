@@ -9,7 +9,9 @@
     <el-tabs v-model="activeName" @tab-click="tab_click">
       <!-- UDX Source -->
       <el-tab-pane :label="$t('data_management.udx_source')" name="first">
-        <el-table :data="udxDataList">
+        <el-table :data="udxDataList"
+        :row-class-name="tableRowClassName"
+        >
           <!-- <el-table-column prop="_id" label="id">
              <template slot-scope="scope">
               <span>{{ scope.row._id | simplifyID }}</span>
@@ -45,9 +47,9 @@
 
       </el-tab-pane>
       <!-- 数据容器源 -->
-      <el-tab-pane :label="$t('data_management.data_process_service')" name="second">配置管理</el-tab-pane>
+      <el-tab-pane :label="$t('data_management.data_process_service')" name="second"></el-tab-pane>
       <!-- 可配置源 -->
-      <el-tab-pane :label="$t('data_management.data_process_program')" name="third">角色管理</el-tab-pane>
+      <el-tab-pane :label="$t('data_management.data_process_program')" name="third"></el-tab-pane>
 
            <el-pagination
               @size-change="handleSizeChange"
@@ -81,13 +83,13 @@
     </el-dialog>
     <!-- 弹出框 分享链接 -->
     <el-dialog
-  title="提示"
-  :visible.sync="dialogVisible"
+  title="share"
+  :visible.sync="shareDialog"
   width="30%"
-  :before-close="handleClose">
+   >
   <span>这是一段信息</span>
   <span slot="footer" class="dialog-footer">
-    <el-button @click="dialogVisible = false">取 消</el-button>
+    <el-button @click="shareDialog = false">取 消</el-button>
     
   </span>
 </el-dialog>
@@ -118,13 +120,57 @@ export default {
       activeName: "first",
       currentPage:1,
       pageSize:10,
-      total:0
+      total:0,
+      //share
+      shareDialog:false,
+      //type
+      currentType:''
 
     };
   },
+  watch:{
+     $route(to,from){
+       let type=to.path.split("/")
+      
+       this.currentType=type[type.length-1]
+        console.log("sd",this.currentType)
+      
+    if( this.currentType==='data'){
+
+      this.activeName='first'
+    }else if( this.currentType==='process'){
+
+      this.activeName='second'
+
+    }else if( this.currentType==='program'){
+
+      this.activeName='third'
+    }
+     
+    }
+  },
   mounted() {
+
+    let type=window.location.href.split("/")
+    console.log()
+    if(type[type.length-1]==='data'){
+this.currentType="data"
+      this.activeName='first'
+    }else if(type[type.length-1]==='process'){
+
+      this.activeName='second'
+this.currentType="process"
+
+    }else if(type[type.length-1]==='program'){
+
+      this.activeName='third'
+this.currentType="program"
+      
+    }
+
     this.getDataSource("udx_source");
     this.getAllCount('udx_source');
+    
 
   },
   filters: {
@@ -145,12 +191,21 @@ export default {
     },
 
     addData() {
-      this.selectVisible = true;
-      // this.$router.push("data/add");
+
+      if (this.currentType=== "data") {
+        this.$router.push("udx-source");
+      } else if (this.currentType === "process") {
+        this.$router.push("udx-source");
+
+      } else {
+        this.$router.push("config-source");
+      }
+
+      // this.selectVisible = true;
+       
     },
     detail(row){
-      //  console.log("parent",this)
-      //  bus.$emit('id',row.id)
+      
        this.$router.push({path:'/console/data/udx-info',query:{id:row.id}});
 
 
@@ -162,7 +217,7 @@ export default {
 
     },
     share(row) {
-
+      this.shareDialog=true
        
     },
     deleteData(type, id,workspace) {
@@ -208,7 +263,7 @@ export default {
       //   .catch(() => {});
     },
     editData(id){
-      this.$router.push({path:'data/udx-source',query:{id:id,type:'edit'}})
+      this.$router.push({path:'udx-source',query:{id:id,type:'edit'}})
     },
     tab_click(){},
 
@@ -217,12 +272,12 @@ export default {
       this.selectVisible = false;
 
       if (this.radio == "type1") {
-        this.$router.push("data/udx-source");
+        this.$router.push("udx-source");
       } else if (this.radio == "type2") {
-        this.$router.push("data/udx-source");
+        this.$router.push("udx-source");
 
       } else {
-        this.$router.push("data/config-source");
+        this.$router.push("config-source");
       }
     },
     //分页
@@ -235,10 +290,13 @@ export default {
     handleCurrentChange(val) {
       this.currentPage=val
       this.getDataSource('udx_source')
-
-    
-
     },
+    tableRowClassName({row, rowIndex}) {
+        if (rowIndex ===1) {
+          return 'success-row';
+        }  
+        return '';
+      }
      
 
 
@@ -246,5 +304,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style   scoped>
+
+.el-table .success-row {
+    background: oldlace;
+  }
 </style>
