@@ -32,7 +32,7 @@
               <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
               <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button>
 
-              <el-button type="text" size="small" @click="renameData(scope.row)">{{$t('data.share')}}</el-button>
+              <el-button type="text" size="small" @click="share(scope.row)">{{$t('data.share')}}</el-button>
               <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
               <el-button type="text" size="small" @click="editData(scope.row.id)">{{$t('data.edit')}}</el-button>
 
@@ -60,7 +60,7 @@
             </el-pagination>
     </el-tabs>
 
-    <!-- 弹出对话框 -->
+    <!-- 弹出对话框选择创建服务类型 -->
     <el-dialog
       :title="$t('data_management.source_type')"
       :visible.sync="selectVisible"
@@ -79,6 +79,18 @@
         <el-button size="small" type="primary" @click="selectDataSourceType">确定</el-button>
       </span>
     </el-dialog>
+    <!-- 弹出框 分享链接 -->
+    <el-dialog
+  title="提示"
+  :visible.sync="dialogVisible"
+  width="30%"
+  :before-close="handleClose">
+  <span>这是一段信息</span>
+  <span slot="footer" class="dialog-footer">
+    <el-button @click="dialogVisible = false">取 消</el-button>
+    
+  </span>
+</el-dialog>
   </div>
 </template>
 
@@ -102,7 +114,7 @@ export default {
       selectVisible: false,
       radio: "type1",
 
-      //
+      //tab
       activeName: "first",
       currentPage:1,
       pageSize:10,
@@ -149,34 +161,9 @@ export default {
          
 
     },
-    renameData(row) {
+    share(row) {
 
-      // this.$prompt("输入大屏标题", "重命名", {
-      //   inputValue: row.name,
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消"
-      // })
-      //   .then(({ value }) => {
-      //     this.$http
-      //       .put(`/connect/${row._id}`, {
-      //         name: value
-      //       })
-      //       .then(res => {
-      //         const { errno, data } = res.data;
-      //         if (errno === 0) {
-      //           this.$message({
-      //             type: "success",
-      //             message: "保存成功"
-      //           });
-      //           setTimeout(() => {
-      //             this.getData();
-      //           }, 100);
-      //           // this.editChart(data._id);
-      //         }
-      //       })
-      //       .catch(() => {});
-      //   })
-      //   .catch(() => {});
+       
     },
     deleteData(type, id,workspace) {
 
