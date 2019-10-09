@@ -47,6 +47,16 @@
             &nbsp;<el-button >{{$t('addUdxSource.select_local_file')}}
                 </el-button>
           </el-form-item>
+          <!-- 处理方法 -->
+          <el-form-item :label="$t('addUdxSource.process_methods')" prop="name">
+            <el-input v-model="form.processMethods" placeholder="" style="width:320px;">
+              <!-- <template slot="prepend">Local Path:</template> -->
+            </el-input>
+            
+          </el-form-item>
+
+
+
           <!-- 上传UDX数据 -->
           <el-form-item :label="$t('addUdxSource.data')">
             <!-- <el-upload
@@ -101,7 +111,8 @@ export default {
         dynamicTags: ["UDX", "水文学"],
         desc: "",
         selectPath:'F:/udx/UdxServer/Server/data_dir/testschema',
-        workspaceId:''
+        workspaceId:'',
+        processMethods:''
       },
       value:'',
       inputVisible: false,

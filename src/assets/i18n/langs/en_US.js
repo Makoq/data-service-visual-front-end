@@ -25,9 +25,9 @@ const en_US = {
     source_type: 'Select new data source type',
 
 
-    udx_source: 'UDX Source',
-    data_container_source: 'Original Source',
-    configurable_source: 'Configurable Source',
+    udx_source: 'Data Service',
+    data_process_service: 'Data Process Service',
+    data_process_program: 'Data Process Program',
   },
   workspace: {
     create_workspace: 'Create WorkSpace',
@@ -50,6 +50,7 @@ const en_US = {
     workspace: 'Work Space',
     local_path: 'Local Path',
     select_local_file: 'File',
+    process_methods:'Methods'
   },
   udx_schema: {
     schema_tree: 'Udx Schema Tree',

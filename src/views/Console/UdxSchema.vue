@@ -204,6 +204,9 @@ export default {
     this.initJsTree(null);
     this.initJsExtractTree(null);
 
+     
+
+
   },
   methods: {
     toInternet(){

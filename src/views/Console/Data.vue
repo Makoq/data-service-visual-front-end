@@ -45,9 +45,9 @@
 
       </el-tab-pane>
       <!-- 数据容器源 -->
-      <el-tab-pane :label="$t('data_management.data_container_source')" name="second">配置管理</el-tab-pane>
+      <el-tab-pane :label="$t('data_management.data_process_service')" name="second">配置管理</el-tab-pane>
       <!-- 可配置源 -->
-      <el-tab-pane :label="$t('data_management.configurable_source')" name="third">角色管理</el-tab-pane>
+      <el-tab-pane :label="$t('data_management.data_process_program')" name="third">角色管理</el-tab-pane>
 
            <el-pagination
               @size-change="handleSizeChange"
@@ -70,10 +70,10 @@
         <el-radio v-model="radio" label="type1">{{$t('data_management.udx_source')}}</el-radio>
       </el-row>
       <el-row style="margin-bottom: 15px;">
-        <el-radio v-model="radio" label="type2">{{$t('data_management.data_container_source')}}</el-radio>
+        <el-radio v-model="radio" label="type2">{{$t('data_management.data_process_service')}}</el-radio>
       </el-row>
       <el-row style="margin-bottom: 15px;">
-        <el-radio v-model="radio" label="type3">{{$t('data_management.configurable_source')}}</el-radio>
+        <el-radio v-model="radio" label="type3">{{$t('data_management.data_process_program')}}</el-radio>
       </el-row>
       <span slot="footer" class="dialog-footer">
         <el-button size="small" type="primary" @click="selectDataSourceType">确定</el-button>
@@ -144,7 +144,8 @@ export default {
 
     },
     content(row){
-        this.$router.push({path:'/console/data/udx-schema',query:{id:row.id,fileName:row.file}});
+      let id=row.id
+        this.$router.push({path:'/console/data/content',query:{id:row.id,fileName:row.file}});
          
 
     },
@@ -231,6 +232,8 @@ export default {
       if (this.radio == "type1") {
         this.$router.push("data/udx-source");
       } else if (this.radio == "type2") {
+        this.$router.push("data/udx-source");
+
       } else {
         this.$router.push("data/config-source");
       }

@@ -30,9 +30,9 @@ const zh_CN = {
     add_data_source: '新建数据源',
     source_type: '选择新建数据源类型',
 
-    udx_source: 'UDX源',
-    data_container_source: '原数据源',
-    configurable_source: '可配置源',
+    udx_source: '数据服务',
+    data_process_service: '数据处理服务',
+    data_process_program: '数据处理方案',
   },
   addUdxSource: {
     name: 'UDX名称',
@@ -43,7 +43,9 @@ const zh_CN = {
     upload_to_server: '上传到服务器',
     workspace: '工作空间',
     local_path: '连接参数',
-    select_local_file: 'File',
+    select_local_file: '文件',
+    process_methods:'处理方法'
+
   },
   udx_schema: {
     schema_tree: 'Udx Schema 结构树',

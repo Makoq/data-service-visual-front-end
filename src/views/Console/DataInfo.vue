@@ -45,8 +45,7 @@ export default {
   },
   mounted() {
     // console.log("idididi",this.$router.query.id)
-
-    this.$data.udx_schema_id = this.$route.query.id;
+    this.$data.udx_schema_id = this.$route.params.id;
     this.getUdxSchemaInfo();
     // console.log("origin",vue)
     // bus.$on('id', (msg) => {

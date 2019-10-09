@@ -32,6 +32,7 @@ const router = new Router({
           meta: {
             title: 'Data Manager',
           },
+          
         },
         {
           path: 'state',
@@ -85,7 +86,7 @@ const router = new Router({
           },
         },
         {
-          path: 'data/udx-schema',
+          path: 'data/content',
           name: 'schema',
           component: () => import('./views/Console/UdxSchema.vue'),
           meta: {
