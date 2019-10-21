@@ -15,6 +15,11 @@ const urls = {
   udx_node: '/udxnode',
   default_udx_info:'/config',
 
+
+  //数据服务详情中的schema
+  data_source_detail_schema_file:'/schemafile',
+
+
   udx_data_xml:'/schemadataxml',
 
   insert_block_log:'/newblocklog',

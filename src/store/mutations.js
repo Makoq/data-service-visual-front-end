@@ -4,6 +4,7 @@ import {
   CHANGE_SCALE,
   ADD_COMPONENT,
   DELETE_COMPONENT,
+  SET_DATA
 } from './mutation-types';
 
 export default {
@@ -34,5 +35,11 @@ export default {
       state.chartData.elements.splice(index, 1);
     }
   },
+  [SET_DATA](state, data2) {
+    state.chartData.elements[data2.ind].data=data2.data
+  }
+
+
+
 
 };

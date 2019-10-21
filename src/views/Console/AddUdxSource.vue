@@ -121,7 +121,8 @@ export default {
       // 上传文件
       fileList: [],
       //编辑数据
-      isEditType:false
+      isEditType:false,
+      type:''
 
       
        
@@ -140,6 +141,8 @@ export default {
     // }
   },
   mounted(){
+    this.type=this.$route.query.type
+    console.log(this.type)
     if(this.$route.query.type==='edit'){
       this.isEditType=true
         this.initEdit(this.$route.query.id)
@@ -215,10 +218,10 @@ export default {
       })
 
 
-      console.log("workspace",this.value)
+       
       if(this.isEditType){
         //workspaceId
-        console.log(this.form)
+        let _self=this
         let originalId=this.form.workspaceId;
               formData.append("id",this.$route.query.id)
               formData.append("originalWS",originalId)
@@ -228,15 +231,20 @@ export default {
                     type: "success",
                     message: "修改成功"
                   });
-                  this.$router.replace("/console/data");
+                  //TODO 数据创建成功后跳转到回列表
+                  // this.$router.replace("/console/service/");
+
                 });
       }else{
           httpUtils.post(this, urlUtils.udx_source_upload, formData, data => {
                   this.$message({
                     type: "success",
-                    message: "保存成功"
+                    message: "保存成功啦"
                   });
-                  this.$router.replace("/console/data");
+                  //TODO 数据创建成功后跳转到回列表
+
+                  // this.$router.replace("/console/service/"+_self.type);
+                  console.log("mkm",_self.type)
                 });
       }
       

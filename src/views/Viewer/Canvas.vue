@@ -7,6 +7,14 @@
         :key="index"
         :style="{width: item.w + 'px', height: item.h + 'px', left: item.x + 'px', top: item.y + 'px', zIndex: chartData.elements.length - index}")
         div.filler(
+          v-if="item.data.type == 'mycanvas'"
+          :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
+          vue-canvas(
+            v-if="item.data.settings.type=='mycanvas'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :canvasdata="item.data.generated")
+        div.filler(
           v-if="item.data.type == 'chart'"
           :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
           ve-map(
@@ -51,7 +59,13 @@
 
 <script>
 /* eslint-disable */
+import vueCanvas from '../../components/leaflet/vueCanvas';
+
 export default {
+   components: {
+     
+    vueCanvas
+  },
   data() {
     return {
       chartData: {}, // 请求数据库

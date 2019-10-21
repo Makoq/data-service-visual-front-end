@@ -6,7 +6,8 @@
           v-for="item in btnList"
           :class="{active: panelKey === item.key}"
           @click="showPanel(item.key)")
-          i.iconfont(:class="'icon-' + item.key")
+          //- i.iconfont(:class="'icon-' + item.key")
+          i(:class="iconSwitch(item.key)")
       .btn(:class="{active: panelKey === 'layers'}" @click="showPanel('layers')")
         i.iconfont.icon-layer
     .collapse-panel(v-show="panelKey")
@@ -28,8 +29,32 @@ export default {
       panelKey: '',
       // 侧边栏按钮列表
       btnList: [
+       {
+          key: 'mycanvas',
+          name: 'canvas',
+        },
+        {
+          key: 'map',
+          name: '地图',
+        },
         {
           key: 'chart',
+          name: '图表',
+        },
+        {
+          key: 'pie',
+          name: '图表',
+        },
+        {
+          key: 'scatter',
+          name: '图表',
+        },
+        {
+          key: 'funnel',
+          name: '图表',
+        },
+        {
+          key: 'radar',
           name: '图表',
         },
         {
@@ -57,10 +82,36 @@ export default {
     // },
   },
   mounted(){
-    debugger
+    
   },
 
   methods: {
+    //按钮图标
+    iconSwitch(v){
+      if(v==='mycanvas'){
+        return 'el-icon-s-marketing'
+      }else  if(v==='map'){
+        return 'el-icon-map-location'
+      }else  if(v==='chart'){
+        return 'el-icon-postcard'
+      }else  if(v==='pie'){
+        return 'el-icon-pie-chart'
+      }else  if(v==='scatter'){
+        return 'el-icon-grape'
+      }else  if(v==='funnel'){
+        return 'el-icon-caret-bottom'
+      }else  if(v==='mycanvas'){
+        return 'el-icon-s-marketing'
+      }else  if(v==='radar'){
+        return 'el-icon-eleme'
+      }else  if(v==='text'){
+        return 'el-icon-s-marketing'
+      }else  if(v==='picture'){
+        return 'el-icon-picture-outline'
+      }else  if(v==='tools'){
+        return 'el-icon-goods'
+      } 
+    },
     // 切换工具栏显示
     showPanel(key) {
       if (this.panelKey === key) {

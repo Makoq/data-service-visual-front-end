@@ -8,31 +8,22 @@
     <!-- 数据源列表 -->
     <el-tabs v-model="activeName" @tab-click="tab_click">
       <!-- UDX Source -->
-      <el-tab-pane :label="$t('data_management.udx_source')" name="first">
+      <el-tab-pane :label="tabName" name="first">
         <el-table :data="udxDataList"
         :row-class-name="tableRowClassName"
         >
-          <!-- <el-table-column prop="_id" label="id">
-             <template slot-scope="scope">
-              <span>{{ scope.row._id | simplifyID }}</span>
-            </template>
-          </el-table-column> -->
+      
 
           <el-table-column prop="name" :label="$t('data.name')"></el-table-column>
           <el-table-column prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
           <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
-          <!-- <el-table-column prop="file" label="文件"></el-table-column> -->
-
-
-            <!-- <template slot-scope="scope">
-              <span>{{ $dayjs(scope.row.createdAt).format('YYYY-MM-DD HH:mm') }}</span>
-            </template>-->
-          <!-- </el-table-column> -->
+          
 
           <el-table-column :label="$t('data.oper')">
             <template slot-scope="scope">
               <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
-              <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button>
+              <!-- 将数据抽取部分抛弃，把schema树合并到详情 -->
+              <!-- <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button> -->
 
               <el-button type="text" size="small" @click="share(scope.row)">{{$t('data.share')}}</el-button>
               <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
@@ -46,11 +37,7 @@
    
 
       </el-tab-pane>
-      <!-- 数据容器源 -->
-      <el-tab-pane :label="$t('data_management.data_process_service')" name="second"></el-tab-pane>
-      <!-- 可配置源 -->
-      <el-tab-pane :label="$t('data_management.data_process_program')" name="third"></el-tab-pane>
-
+      
            <el-pagination
               @size-change="handleSizeChange"
               @current-change="handleCurrentChange"
@@ -117,6 +104,7 @@ export default {
       radio: "type1",
 
       //tab
+      tabName:"",
       activeName: "first",
       currentPage:1,
       pageSize:10,
@@ -134,17 +122,33 @@ export default {
       
        this.currentType=type[type.length-1]
         console.log("sd",this.currentType)
-      
+    
     if( this.currentType==='data'){
 
-      this.activeName='first'
+      this.udxDataList=[]
+      this.total=0
+
+      this.tabName="Data Service"
+
+       
+      this.getDataSource("udx_source");
+      this.getAllCount('udx_source');
+
     }else if( this.currentType==='process'){
 
-      this.activeName='second'
+      this.udxDataList=[]
+      this.total=0
+     //TODO 获取数据处理方法列表
+      this.tabName="Process Service"
 
     }else if( this.currentType==='program'){
 
-      this.activeName='third'
+      this.udxDataList=[]
+      this.total=0
+
+    //TODO 获取数据处理方案列表
+      this.tabName="Program Service"
+
     }
      
     }
@@ -154,22 +158,31 @@ export default {
     let type=window.location.href.split("/")
     console.log()
     if(type[type.length-1]==='data'){
-this.currentType="data"
-      this.activeName='first'
+      this.currentType="data"
+     
+      this.tabName="Data Service"
+
     }else if(type[type.length-1]==='process'){
 
-      this.activeName='second'
-this.currentType="process"
-
+     
+      this.currentType="process"
+      this.tabName="Process Service"
     }else if(type[type.length-1]==='program'){
 
-      this.activeName='third'
-this.currentType="program"
-      
+     
+      this.currentType="program"
+      this.tabName="Program Service"
     }
+  if(type[type.length-1]==='data'){
 
     this.getDataSource("udx_source");
     this.getAllCount('udx_source');
+  }else if(type[type.length-1]==='process'){
+
+  }else{
+
+  }
+    
     
 
   },
@@ -193,12 +206,11 @@ this.currentType="program"
     addData() {
 
       if (this.currentType=== "data") {
-        this.$router.push("udx-source");
+        this.$router.push({path:"udx-source",query:{type:'data'}});
       } else if (this.currentType === "process") {
-        this.$router.push("udx-source");
-
+        this.$router.push({path:"config-source",query:{type:'process'}});
       } else {
-        this.$router.push("config-source");
+        this.$router.push({path:"config-source",query:{type:'program'}});
       }
 
       // this.selectVisible = true;

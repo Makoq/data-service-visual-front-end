@@ -55,7 +55,15 @@
             @resizing="handleResize(item, arguments[0])"
             @dragging="handleDrag(item, arguments[0])")
             div.filler(
-              v-if="item.data.type == 'chart'"
+              v-if="item.data.type == 'mycanvas'"
+              :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
+              vue-canvas(
+                 v-if="item.data.settings.type=='mycanvas'"
+                :width="item.w + 'px'"
+                :height="item.h + 'px'"
+                :canvasdata="item.data.generated")
+            div.filler(
+              v-if="item.data.type == 'map'"
               :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
               ve-map(
                 v-if="item.data.settings.type=='map'"
@@ -63,9 +71,17 @@
                 :height="item.h + 'px'"
                 :data="item.data.generated"
                 :settings="item.data.settings")
-                //- @ready-once="generateData(item)"
+            div.filler(
+              v-if="item.data.type == 'chart'"
+              :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
               ve-liquidfill(
-                v-else-if="item.data.settings.type=='liquidfill'"
+                v-if="item.data.settings.type=='liquidfill'"
+                :width="item.w + 'px'"
+                :height="item.h + 'px'"
+                :data="item.data.generated")
+                //- @ready-once="generateData(item)"
+              ve-scatter(
+                v-else-if="item.data.settings.type=='scatter'"
                 :width="item.w + 'px'"
                 :height="item.h + 'px'"
                 :data="item.data.generated")
@@ -103,10 +119,14 @@ import { component as VueContextMenu } from '@xunlei/vue-context-menu';
 import { constants } from 'crypto';
 import { mapState } from 'vuex';
 
+import vueCanvas from '../../components/leaflet/vueCanvas';
+
+
 /* eslint-disable */
 export default {
   components: {
-    "vue-context-menu": VueContextMenu
+    "vue-context-menu": VueContextMenu,
+    vueCanvas
   },
 
   props: ["scale"],
@@ -117,7 +137,8 @@ export default {
 
       // 右键菜单
       contextMenuTarget: document.getElementById("app"),
-      contextMenuVisible: false
+      contextMenuVisible: false,
+       
     };
   },
   computed: {
@@ -130,6 +151,7 @@ export default {
     //   return this.$parent.chartData;
     // },
     ...mapState(["chartData"]),
+  
 
     wrapStyle() {
       return {

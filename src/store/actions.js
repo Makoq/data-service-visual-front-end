@@ -3,6 +3,7 @@ import {
   CHANGE_SCALE,
   ADD_COMPONENT,
   DELETE_COMPONENT,
+  SET_DATA
 } from './mutation-types';
 
 export default {
@@ -21,6 +22,10 @@ export default {
   deleteComponent({ commit }, index) {
     commit(DELETE_COMPONENT, index);
   },
+
+  setComponentData({ commit }, data){
+    commit(SET_DATA, data);
+  }
 
 
 };

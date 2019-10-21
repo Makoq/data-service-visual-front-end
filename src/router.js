@@ -26,7 +26,13 @@ const router = new Router({
             title: 'test',
           },
         },
-        
+        {
+          path: 'test2',
+          component: () => import('./views/test2.vue'),
+          meta: {
+            title: 'test2',
+          },
+        },
         {
           path: 'state',
           component: () => import('./views/Console/SystemState.vue'),

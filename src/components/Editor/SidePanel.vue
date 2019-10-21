@@ -66,6 +66,72 @@ export default {
     return {
       drag: true,
       componentList: {
+        map:{
+          name: "Map",
+          children: [
+           {
+              id: "map",
+              name: "中国地图",
+              img: require("@/assets/img/charts/map-china.png")
+            },
+
+            ]
+        },
+        mycanvas:{
+          name: "Canvas",
+          children: [
+            {
+              id: "mycanvas",
+              name: "Canvas",
+              img: require("@/assets/img/charts/canvas.png")
+            },
+            ]
+        },
+        pie:{
+          name:"Pie",
+          children:[
+            {
+              id: "pie",
+              name: "饼图",
+              img: require("@/assets/img/charts/pie.png")
+            },
+            {
+              id: "ring",
+              name: "环状图",
+              img: require("@/assets/img/charts/ring.png")
+            },
+          ]
+        },
+        scatter:{
+          name:"Scatter",
+          children:[
+             {
+              id: "scatter",
+              name: "散点图",
+              img: require("@/assets/img/charts/scatter.png")
+            },
+          ]
+        },
+        funnel:{
+          name:"Funnel",
+          children:[
+             {
+              id: "funnel",
+              name: "漏斗图",
+              img: require("@/assets/img/charts/funnel.png")
+            },
+          ]
+        },
+        radar:{
+          name:"radar",
+          children:[
+             {
+              id: "radar",
+              name: "雷达图",
+              img: require("@/assets/img/charts/radar.png")
+            },
+          ]
+        },
         chart: {
           name: "Chart",
           children: [
@@ -84,46 +150,20 @@ export default {
               name: "条形图",
               img: require("@/assets/img/charts/bar.png")
             },
-            {
-              id: "pie",
-              name: "饼图",
-              img: require("@/assets/img/charts/pie.png")
-            },
-            {
-              id: "ring",
-              name: "环状图",
-              img: require("@/assets/img/charts/ring.png")
-            },
-            {
-              id: "funnel",
-              name: "漏斗图",
-              img: require("@/assets/img/charts/funnel.png")
-            },
-            {
-              id: "radar",
-              name: "雷达图",
-              img: require("@/assets/img/charts/radar.png")
-            },
+            
             // {
-            //   id: "map-world",
-            //   name: "世界地图",
-            //   img: require("@/assets/img/charts/map-world.png")
+            //   id: "radar",
+            //   name: "雷达图",
+            //   img: require("@/assets/img/charts/radar.png")
             // },
-            {
-              id: "map",
-              name: "中国地图",
-              img: require("@/assets/img/charts/map-china.png")
-            },
+            
+            
             // {
             //   id: "sankey",
             //   name: "桑基图",
             //   img: require("@/assets/img/charts/sankey.png")
             // },
-            // {
-            //   id: "scatter",
-            //   name: "散点图",
-            //   img: require("@/assets/img/charts/scatter.png")
-            // },
+           
             // {
             //   id: "candle",
             //   name: "K线图",
@@ -134,11 +174,11 @@ export default {
             //   name: "仪表盘",
             //   img: require("@/assets/img/charts/gauge.png")
             // },
-            {
-              id: "liquidfill",
-              name: "水球图",
-              img: require("@/assets/img/charts/liquidfill.png")
-            }
+            // {
+            //   id: "liquidfill",
+            //   name: "水球图",
+            //   img: require("@/assets/img/charts/liquidfill.png")
+            // }
             // {
             //   id: "wordcloud",
             //   name: "词云图",
@@ -201,11 +241,76 @@ export default {
       //this.$parent.$parent.setActiveComponentByIndex(e.newIndex);
 
       this.$store.dispatch("setActiveComponentByIndex", e.newIndex);
+
     },
 
     handleAddComponent(item) {
+      console.log(item)
       let initData = {};
-      if (item.id == "text") {
+      if(item.id == "map"){
+         initData = {
+          type: "map",
+          settings: {
+            type: item.id
+          },
+          datacon: {
+            type: "raw",
+            connectId: "",
+            data: {
+              columns: ["测试数据x", "测试数据y"],
+              rows: [
+                { 测试数据x: "1", 测试数据y: 1 },
+              { 测试数据x: "2", 测试数据y: 15 },
+
+             
+              ]
+            },
+            getUrl: "",
+            interval: 2
+          },
+          generated: {
+             
+           columns: ["测试数据x", "测试数据y"],
+              rows: [
+                { 测试数据x: "1", 测试数据y: 1 },
+              { 测试数据x: "2", 测试数据y: 15 },        
+            ]
+          }
+        };
+
+      }else
+      if(item.id == "mycanvas"){
+         initData = {
+          type: "mycanvas",
+          settings: {
+            type: item.id
+          },
+          datacon: {
+            type: "raw",
+            connectId: "",
+            data: {
+              columns: ["x", "y"],
+              rows: [
+                { x: "1", y: 1 },
+              { x: "2", y: 15 },
+
+             
+              ]
+            },
+            getUrl: "",
+            interval: 2
+          },
+          generated: {
+             
+           columns: ["测试数据x", "测试数据y"],
+              rows: [
+                { x: "1", y: 1 },
+              { x: "2",y: 15 },        
+            ]
+          }
+        };
+
+      }else if (item.id == "text") {
         initData = {
           type: "text",
           datacon: {
@@ -223,6 +328,7 @@ export default {
             shadowBlur: 10
           }
         };
+        
       } else if (item.id == "image") {
         initData = {
           type: "image",
@@ -250,28 +356,23 @@ export default {
             type: "raw",
             connectId: "",
             data: {
-              columns: ["日期", "访问用户"],
+              columns: ["测试数据x", "测试数据y"],
               rows: [
-                { 日期: "1月1日", 访问用户: 1523 },
-                { 日期: "1月2日", 访问用户: 1223 },
-                { 日期: "1月3日", 访问用户: 2123 },
-                { 日期: "1月4日", 访问用户: 4123 },
-                { 日期: "1月5日", 访问用户: 3123 },
-                { 日期: "1月6日", 访问用户: 7123 }
+                { 测试数据x: "1", 测试数据y: 1 },
+              { 测试数据x: "2", 测试数据y: 15 },
+
+             
               ]
             },
             getUrl: "",
             interval: 2
           },
           generated: {
-            columns: ["日期", "访问用户"],
-            rows: [
-              { 日期: "1月1日", 访问用户: 1523 },
-              { 日期: "1月2日", 访问用户: 1223 },
-              { 日期: "1月3日", 访问用户: 2123 },
-              { 日期: "1月4日", 访问用户: 4123 },
-              { 日期: "1月5日", 访问用户: 3123 },
-              { 日期: "1月6日", 访问用户: 7123 }
+             
+           columns: ["测试数据x", "测试数据y"],
+              rows: [
+                { 测试数据x: "1", 测试数据y: 1 },
+              { 测试数据x: "2", 测试数据y: 15 },        
             ]
           }
         };
@@ -302,7 +403,7 @@ export default {
 <style lang="scss" scoped>
 .panel {
   height: 100%;
-  width: 250px;
+  width: 160px;
   display: flex;
   flex-direction: column;
   background: #ffffffe9;
