@@ -74,6 +74,16 @@ export default {
               name: "中国地图",
               img: require("@/assets/img/charts/map-china.png")
             },
+            {
+              id: "heatmap",
+              name: "HeatMap",
+              img: require("@/assets/img/charts/heatmap.png")
+            },
+            {
+              id: "bmap",
+              name: "百度热力地图",
+              img: require("@/assets/img/charts/bmap.png")
+            },
 
             ]
         },
@@ -106,29 +116,34 @@ export default {
           name:"Scatter",
           children:[
              {
-              id: "scatter",
+              id: "scatter1",
               name: "散点图",
               img: require("@/assets/img/charts/scatter.png")
             },
-          ]
-        },
-        funnel:{
-          name:"Funnel",
-          children:[
-             {
-              id: "funnel",
-              name: "漏斗图",
-              img: require("@/assets/img/charts/funnel.png")
+            {
+              id: "scatter2",
+              name: "散点图",
+              img: require("@/assets/img/charts/scatter2.png")
             },
           ]
         },
         radar:{
           name:"radar",
           children:[
+            // {
+            //   id: "tree",
+            //   name: "树图",
+            //   img: require("@/assets/img/charts/tree.png")
+            // },
              {
               id: "radar",
               name: "雷达图",
               img: require("@/assets/img/charts/radar.png")
+            },
+            {
+              id: "funnel",
+              name: "漏斗图",
+              img: require("@/assets/img/charts/funnel.png")
             },
           ]
         },
@@ -151,11 +166,12 @@ export default {
               img: require("@/assets/img/charts/bar.png")
             },
             
-            // {
-            //   id: "radar",
-            //   name: "雷达图",
-            //   img: require("@/assets/img/charts/radar.png")
-            // },
+            
+            {
+              id: "candle",
+              name: "K线图",
+              img: require("@/assets/img/charts/candle.png")
+            },
             
             
             // {
@@ -278,8 +294,100 @@ export default {
           }
         };
 
-      }else
-      if(item.id == "mycanvas"){
+      }else if(item.id == "heatmap"){
+        console.log("heat")
+         initData = {
+          type: "map",
+          settings: {
+            type: item.id
+          },
+          datacon: {
+            type: "raw",
+            connectId: "",
+            data: {
+              columns: ['lat', 'lng', '人数'],
+               rows: [
+            { 'lat': 115.892151, 'lng': 28.676493, '人数': 1000 },
+            { 'lat': 117.000923, 'lng': 36.675807, '人数': 400 },
+            { 'lat': 113.665412, 'lng': 34.757975, '人数': 800 },
+            { 'lat': 114.298572, 'lng': 30.584355, '人数': 200 },
+            { 'lat': 112.982279, 'lng': 28.19409, '人数': 100 },
+            { 'lat': 113.280637, 'lng': 23.125178, '人数': 300 },
+            { 'lat': 110.33119, 'lng': 20.031971, '人数': 800 },
+            { 'lat': 104.065735, 'lng': 30.659462, '人数': 700 },
+            { 'lat': 108.948024, 'lng': 34.263161, '人数': 300 },
+            { 'lat': 103.823557, 'lng': 36.058039, '人数': 500 }
+          ]
+            },
+            getUrl: "",
+            interval: 2
+          },
+          generated: {
+             
+            columns: ['lat', 'lng', '人数'],
+               rows: [
+            { 'lat': 115.892151, 'lng': 28.676493, '人数': 1000 },
+            { 'lat': 117.000923, 'lng': 36.675807, '人数': 400 },
+            { 'lat': 113.665412, 'lng': 34.757975, '人数': 800 },
+            { 'lat': 114.298572, 'lng': 30.584355, '人数': 200 },
+            { 'lat': 112.982279, 'lng': 28.19409, '人数': 100 },
+            { 'lat': 113.280637, 'lng': 23.125178, '人数': 300 },
+            { 'lat': 110.33119, 'lng': 20.031971, '人数': 800 },
+            { 'lat': 104.065735, 'lng': 30.659462, '人数': 700 },
+            { 'lat': 108.948024, 'lng': 34.263161, '人数': 300 },
+            { 'lat': 103.823557, 'lng': 36.058039, '人数': 500 }
+          ]
+          }
+        };
+
+      }else if(item.id == "bmap"){
+        console.log("bmap")
+         initData = {
+          type: "map",
+          settings: {
+            type: item.id
+          },
+          datacon: {
+            type: "raw",
+            connectId: "",
+            data: {
+             columns: ['lat', 'lng'],
+          rows: [
+            { 'lat': 120.14322240845, 'lng': 30.236064370321 },
+            { 'lat': 120.14301682797, 'lng': 30.236035316745 },
+            { 'lat': 120.14138577045, 'lng': 30.236113748704 },
+            { 'lat': 120.1400398833, 'lng': 30.235973050702 },
+            { 'lat': 120.13893453465, 'lng': 30.23517220446 },
+            { 'lat': 120.1382899739, 'lng': 30.234062922977 },
+            { 'lat': 120.13265960629, 'lng': 30.231641351722 },
+            { 'lat': 120.13170681763, 'lng': 30.229925745619 },
+            { 'lat': 120.13119614803, 'lng': 30.228996846637 },
+            { 'lat': 120.13023980134, 'lng': 30.228226570416 }
+          ]
+            },
+            getUrl: "",
+            interval: 2
+          },
+          generated: {
+             
+            columns: ['lat', 'lng'],
+          rows: [
+            { 'lat': 120.14322240845, 'lng': 30.236064370321 },
+            { 'lat': 120.14301682797, 'lng': 30.236035316745 },
+            { 'lat': 120.14138577045, 'lng': 30.236113748704 },
+            { 'lat': 120.1400398833, 'lng': 30.235973050702 },
+            { 'lat': 120.13893453465, 'lng': 30.23517220446 },
+            { 'lat': 120.1382899739, 'lng': 30.234062922977 },
+            { 'lat': 120.13265960629, 'lng': 30.231641351722 },
+            { 'lat': 120.13170681763, 'lng': 30.229925745619 },
+            { 'lat': 120.13119614803, 'lng': 30.228996846637 },
+            { 'lat': 120.13023980134, 'lng': 30.228226570416 }
+          ]
+          }
+        };
+
+      }
+      else if(item.id == "mycanvas"){
          initData = {
           type: "mycanvas",
           settings: {
@@ -302,11 +410,13 @@ export default {
           },
           generated: {
              
-           columns: ["测试数据x", "测试数据y"],
+           columns: ["x", "y"],
               rows: [
                 { x: "1", y: 1 },
-              { x: "2",y: 15 },        
-            ]
+              { x: "2", y: 15 },
+
+             
+              ]
           }
         };
 
@@ -376,13 +486,22 @@ export default {
             ]
           }
         };
+
+         
+
+
+
+
+
+
+
       }
       const component = {
         name: "New Layer" + (this.$store.state.chartData.elements.length + 2),
         x: 10,
         y: 10,
-        w: 400,
-        h: 200,
+        w: 900,
+        h: 700,
         bgcolor: "rgba(0, 0, 0, 0)",
         active: false,
         data: initData

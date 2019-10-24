@@ -15,17 +15,53 @@
             :height="item.h + 'px'"
             :canvasdata="item.data.generated")
         div.filler(
-          v-if="item.data.type == 'chart'"
-          :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
+          v-if="item.data.type == 'map'"
+          :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")         
           ve-map(
             v-if="item.data.settings.type=='map'"
             :width="item.w + 'px'"
             :height="item.h + 'px'"
             :data="item.data.generated"
+            :settings="item.data.settings") 
+          heat-map(
+            v-else-if="item.data.settings.type=='heatmap'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated"
             :settings="item.data.settings")
-            //- @ready-once="generateData(item)"
+          b-map(
+            v-else-if="item.data.settings.type=='bmap'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated"
+            :settings="item.data.settings")      
+        div.filler(
+          v-if="item.data.type == 'chart'"
+          :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
           ve-liquidfill(
-            v-else-if="item.data.settings.type=='liquidfill'"
+            v-if="item.data.settings.type=='liquidfill'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated")
+            //- @ready-once="generateData(item)"
+          ve-scatter(
+            v-else-if="item.data.settings.type=='scatter1'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated")
+          vue-scatter2(
+            v-else-if="item.data.settings.type=='scatter2'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated")
+          ve-candle(
+            v-else-if="item.data.settings.type=='candle'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated")
+            //- @ready-once="generateData(item)"
+          ve-radar(
+            v-else-if="item.data.settings.type=='radar'"
             :width="item.w + 'px'"
             :height="item.h + 'px'"
             :data="item.data.generated")
@@ -59,12 +95,20 @@
 
 <script>
 /* eslint-disable */
-import vueCanvas from '../../components/leaflet/vueCanvas';
+import vueCanvas from '../../components/visualComponents/vueCanvas';
+import heatMap from '../../components/visualComponents/heatMap';
+import vueScatter2 from '../../components/visualComponents/vueScatter2'
+import vueCandle from '../../components/visualComponents/vueCandle'
+import bMap from '../../components/visualComponents/bMap'
 
 export default {
    components: {
      
-    vueCanvas
+    vueCanvas,
+     heatMap,
+    vueScatter2,
+    vueCandle,
+    bMap
   },
   data() {
     return {

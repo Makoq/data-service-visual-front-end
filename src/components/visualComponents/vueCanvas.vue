@@ -1,18 +1,19 @@
 <template  >
-  <div>
+  <div >
     <canvas
-     
       id="myCanvas"
       :width="width"
       :height="height"
-      style="border:1px solid #c3c3c3;"
+      style="border:1px solid #c3c3c3;display:none"
     >您的浏览器不支持 HTML5 canvas 标签。</canvas>
 
+    <img id="img" src="">
 
   </div>
 </template>
 <script>
 import httpUtils from "../../utils/httpUtils";
+import { globalBus } from '../../utils/globalBus';
 export default {
   props:["width","height","canvasdata"],
   data() {
@@ -22,22 +23,35 @@ export default {
     };
   },
   watch:{
+    colorBar:function(){
     
+       this.updateData()
+    },
+     Update:function(){
+       
+
+        this.updateData()
+     },
     //监听长宽变化，变化后重绘图像
     height:function(){
-      console.log("h",this.canvasdata)
-      let _self=this
-        console.log("w",this.canvasdata)
-        this.jieLiu(this.updateData, 500, 2000)();
+       
+        // this.jieLiu(this.updateData, 500, 2000)();
     },
     width:function(){
-       let _self=this
-        console.log("w",this.canvasdata)
-        this.jieLiu(this.updateData, 500, 2000)();
+       
+        // this.jieLiu(this.updateData, 500, 2000)();
     }
   },
   computed:{
-        
+    //监听vuex中数据的变化
+        Update(){
+          let index = this.$store.state.currentElementIndex;
+      
+          return this.$store.state.chartData.elements[index].data;
+        },
+        colorBar(){
+          return this.$store.state.colorNo
+        }
   },
   mounted() {
      
@@ -151,6 +165,20 @@ export default {
             ctx.clearRect(0, 0, cW, cH);
             ctx.putImageData(imgData, x, y);
 
+            let img_src=canvas.toDataURL();
+           
+            var img=document.getElementById("img");
+            img.setAttribute("src",img_src);
+            console.log(this.width)
+            console.log(this.height)
+
+            // img.setAttribute("width",this.width-400)
+            // img.setAttribute("height",this.height-300)
+
+             
+
+
+
 
     })
      
@@ -178,6 +206,15 @@ export default {
 }
 };
 </script>
-<style lang="scss">
+<style  >
+
+#img{
+     height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+ 
+}
 </style>
 

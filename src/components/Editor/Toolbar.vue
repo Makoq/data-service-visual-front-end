@@ -49,10 +49,7 @@ export default {
           key: 'scatter',
           name: '图表',
         },
-        {
-          key: 'funnel',
-          name: '图表',
-        },
+        
         {
           key: 'radar',
           name: '图表',

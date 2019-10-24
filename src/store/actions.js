@@ -3,7 +3,8 @@ import {
   CHANGE_SCALE,
   ADD_COMPONENT,
   DELETE_COMPONENT,
-  SET_DATA
+  SET_DATA,
+  CHANGE_COLOR
 } from './mutation-types';
 
 export default {
@@ -25,6 +26,10 @@ export default {
 
   setComponentData({ commit }, data){
     commit(SET_DATA, data);
+  },
+
+  changeColor({ commit }, data){
+    commit(CHANGE_COLOR, data);
   }
 
 

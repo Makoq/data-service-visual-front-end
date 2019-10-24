@@ -4,7 +4,8 @@ import {
   CHANGE_SCALE,
   ADD_COMPONENT,
   DELETE_COMPONENT,
-  SET_DATA
+  SET_DATA,
+  CHANGE_COLOR
 } from './mutation-types';
 
 export default {
@@ -37,6 +38,9 @@ export default {
   },
   [SET_DATA](state, data2) {
     state.chartData.elements[data2.ind].data=data2.data
+  },
+  [CHANGE_COLOR](state, data2) {
+    state.colorNo=data2
   }
 
 

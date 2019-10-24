@@ -13,7 +13,7 @@ import vueJsonEditor from "vue-json-editor";
 import tools from "../utils/tools";
 import httpUtils from "../utils/httpUtils";
 
-import vueCanvas from '../components/leaflet/vueCanvas';
+import vueCanvas from '../components/visualComponents/vueCanvas';
 
 export default {
   data() {

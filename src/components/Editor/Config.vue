@@ -99,7 +99,14 @@
         //-   .title Settings.json
         //-   pre.code-box(v-html="formatedJSON")
       .panel(v-show="thisKey=='data' && (currentElement.data.type == 'mycanvas')")
-       
+        .config-box
+          .title 数据源获取
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-input(v-model="data_src")
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-button(@click="testLineChart(data_src)") data
         .config-box
           .title 色带选择
           el-select(
@@ -115,16 +122,6 @@
             :value="item")
               <p v-html="item.text"></p>
           canvas(id="nowShow" width="240" height="20")
-        .config-box
-          .title 数据源获取
-          el-row(:gutter="20")
-            el-col(:span="20") 
-              el-input(v-model="data_src")
-          el-row(:gutter="20")
-            el-col(:span="20") 
-              el-button(@click="testLineChart(data_src)") data
-              
-
         .config-box
           .title 数据配置
           el-select(
@@ -220,6 +217,64 @@
             type="textarea"
             :rows="5"
             style="margin-bottom: 10px;")
+          el-row(v-if="currentElement.data.datacon.type == 'get'")
+            el-col(:span="8")
+              p(style="margin-top: 8px;") 刷新时间
+            el-col(:span="16")
+              el-input-number(
+                v-model="currentElement.data.datacon.interval"
+                :min="1"
+                :max="10"
+                @change="handleChartDataChange"
+                style="width: 100%;")
+      .panel(v-show="thisKey=='data' && (currentElement.data.type == 'map')")
+        .config-box
+          .title 数据源获取
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-input(v-model="data_src")
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-button(@click="testLineChart(data_src)") data
+        .config-box
+          .title 数据配置
+          el-select(
+            v-model="currentElement.data.datacon.type"
+            placeholder="请选择"
+            @change="handleChartDataChange"
+            style="width: 100%; margin-bottom: 10px;")
+            el-option(label="静态JSON" value="raw")
+            el-option(label="我的数据源" value="connect")
+            //- el-option(label="表格数据" value="table")
+            el-option(label="GET接口" value="get")
+          //- el-input(
+            v-model="currentElement.data.datacon.data"
+            type="textarea"
+            :rows="10"
+            placeholder="请插入标准 JSON 文件"
+            v-show="currentElement.data.datacon.type == 'raw'")
+          vue-json-editor(
+            v-if="currentElement.data.datacon.type == 'raw'"
+            v-model="currentElement.data.datacon.data"
+            mode="code"
+            :show-btns="true"
+            @json-save="handleChartDataChange")
+          
+          el-select(
+            v-if="currentElement.data.datacon.type == 'connect'"
+            v-model="currentElement.data.datacon.connectId"
+            placeholder="请选择"
+            @change="handleChartDataChange"
+            style="width: 100%; margin-bottom: 10px;")
+          
+            //- el-option(v-for="item in connectList" :label="item.name" :value="item._id")
+          el-input(
+            v-if="currentElement.data.datacon.type == 'get'"
+            v-model="currentElement.data.datacon.getUrl"
+            type="textarea"
+            :rows="5"
+            style="margin-bottom: 10px;")
+
           el-row(v-if="currentElement.data.datacon.type == 'get'")
             el-col(:span="8")
               p(style="margin-top: 8px;") 刷新时间
@@ -343,6 +398,7 @@
 import httpUtils from "../../utils/httpUtils";
 import ramp from "../../utils/canvas/ramp";
 
+import {globalBus} from "../../utils/globalBus"
 import vueJsonEditor from "vue-json-editor";
 import { mapState, mapGetters } from "vuex";
 import { all } from "q";
@@ -483,10 +539,73 @@ export default {
           };
           _self.$store.dispatch("setComponentData", da);
           
-          console.log( _self.$store.state.chartData.elements[index])
+         
+          globalBus.$emit('updateData')
+
+        }else if( _self.currentElement.data.type == "map"){
+            console.log(dataset.getChildNodeCount())
+          let node_len = dataset.getChildNodeCount();
+          let arr_len = dataset
+            .getChildNode(node_len-1)
+            .getKernel()
+            .getArrayCount();
+
+          //取结点操作
+          let col = [],
+            row = [];
+          for (let j = 0; j < node_len; j++) {
+            col.push(dataset.getChildNode(j).getName());
+          }
+
+          for (let i = 0; i < arr_len; i++) {
+            let obj = {};
+            for (let j = 0; j < node_len; j++) {
+              obj[col[j]] = dataset
+                .getChildNode(j)
+                .getKernel()
+                .getTypedValueByIndex(i);
+            }
+            row.push(obj);
+          }
+         
+          //当前点击的组件索引
+         
+
+          //初始化数据
+          let initData = {
+            type: "map",
+            settings: {
+              type:
+                _self.$store.state.chartData.elements[_self.$store.state.currentElementIndex].data.settings.type //类型
+            },
+            datacon: {
+              type: "raw",
+              connectId: "",
+              data: {
+                columns: col,
+                rows: row
+              },
+              getUrl: "",
+              interval: 2
+            },
+            generated: {
+              columns: col,
+              rows: row
+            }
+          };
+
+          let da = {
+            ind: _self.$store.state.currentElementIndex,
+            data: initData
+          };
+          console.log("map",da)
+          _self.$store.dispatch("setComponentData", da);
+
+
 
         } else if ( _self.currentElement.data.type == "chart") {
           //schema只有同级的若干个节点的情况 chart
+             
 
           let node_len = dataset.getChildNodeCount();
           let arr_len = dataset
@@ -541,6 +660,7 @@ export default {
             ind: index,
             data: initData
           };
+          console.log("chart",da)
           _self.$store.dispatch("setComponentData", da);
         }
 
@@ -549,10 +669,13 @@ export default {
     },
     //选择色带后显示
     choose_color_bar(item) {
+
       this.color_bar_value = "选中第" + item.id + "色带";
       sessionStorage.colorJson = JSON.stringify(
         this.ramp_obj.getSingleRamp(item.id)
       );
+      //改变色带时监听vuex中数据变化
+      this.$store.dispatch("changeColor",item.id)
 
       var c = document.getElementById("nowShow");
       var cxt = c.getContext("2d");
@@ -562,6 +685,8 @@ export default {
         cxt.fillStyle = "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
         cxt.fillRect(x / 2, 0, (x + 1) / 2, 20);
       }
+
+
     },
     //初始化色带
     readyColorBars() {
@@ -591,6 +716,13 @@ export default {
       }
 
       this.color_bar = DataArray;
+      //若已选择色带则加载记忆
+      if(this.color_bar_value!=''){
+        
+        let obj={}
+        obj.id=this.color_bar_value.match(/\d+/)[0]
+        this.choose_color_bar(obj)
+      }
     },
     initCOlorBar() {
       let ramp1 = this.ramp_obj;
