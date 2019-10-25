@@ -546,7 +546,7 @@ export default {
             console.log(dataset.getChildNodeCount())
           let node_len = dataset.getChildNodeCount();
           let arr_len = dataset
-            .getChildNode(node_len-1)
+            .getChildNode(0)
             .getKernel()
             .getArrayCount();
 

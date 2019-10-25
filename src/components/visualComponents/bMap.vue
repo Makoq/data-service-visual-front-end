@@ -1,9 +1,12 @@
 <template>
+<div>
   <ve-heatmap 
   :width="width"
  :height="height"
   :data="chartData" 
   :settings="chartSettings"></ve-heatmap>
+<div> Drag Only Here   </div>
+</div>
 </template>
 
 <script>

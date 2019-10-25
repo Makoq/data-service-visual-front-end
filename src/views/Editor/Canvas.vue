@@ -29,6 +29,7 @@
           :h="chartData.h"
           class-name="screen-box"
           class-name-draggable="screen-box-draggable"
+          :drag-handle="'.drag-handle'"
           :draggable="screenDraggable"
           :resizable="false")
         .screen(:style="screenStyle" @click.self="handleActivated(-1)" ref="screen")
@@ -77,12 +78,20 @@
                 :height="item.h + 'px'"
                 :data="item.data.generated"
                 :settings="item.data.settings")
+             
+              vue-mapbox(
+                 v-else-if="item.data.settings.type=='mapbox'"
+                :width="item.w + 'px'"
+                :height="item.h + 'px'"
+                :data="item.data.generated"
+                :settings="item.data.settings")
               b-map(
                 v-else-if="item.data.settings.type=='bmap'"
                 :width="item.w + 'px'"
                 :height="item.h + 'px'"
                 :data="item.data.generated"
-                :settings="item.data.settings")       
+                :settings="item.data.settings")
+             
             div.filler(
               v-if="item.data.type == 'chart'"
               :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
@@ -152,6 +161,7 @@ import heatMap from '../../components/visualComponents/heatMap';
 import vueScatter2 from '../../components/visualComponents/vueScatter2'
 import vueCandle from '../../components/visualComponents/vueCandle'
 import bMap from '../../components/visualComponents/bMap'
+import vueMapbox from '../../components/visualComponents/vueMapbox'
 
 /* eslint-disable */
 export default {
@@ -161,7 +171,8 @@ export default {
     heatMap,
     vueScatter2,
     vueCandle,
-    bMap
+    bMap,
+    vueMapbox
   },
 
   props: ["scale"],
@@ -223,6 +234,7 @@ export default {
     },
     handleDrag(widget, arg) {
       const item = widget;
+      
       item.x = arg.left;
       item.y = arg.top;
     },
