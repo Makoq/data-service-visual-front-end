@@ -505,7 +505,34 @@ export default {
         dataset.loadFromXmlStream(data);
         
         if ( _self.currentElement.data.type == "mycanvas") {
-          
+
+        //拿到最大最小值
+         var min = 99999, max = -99999;
+        var listnode = dataset.getChildNode(1);
+        var rows = listnode.getChildNodeCount();
+    // 一开始已经检测过了，保证了每个item(int_array|real_array)的长度是一致的，所以，这里直接取第一个的长度就可以了。
+        var cols = listnode.getChildNode(0).getKernel().getArrayCount();
+
+        for (var i = 0; i < rows; i++) {
+            var child = listnode.getChildNode(i);
+
+            for (var j = 0; j < cols; j++) {
+
+                var curValue = child.getKernel().getTypedValueByIndex(j); //parseFloat(oneLineArray[j]);
+                if (curValue != "") {
+                    if (curValue < min) {
+                        min = curValue;
+                    }
+                    if (curValue > max) {
+                        max = curValue;
+                    }
+                }
+                
+            }
+        }
+
+
+          console.log("max,min",max,min)
         
        //当前点击的组件索引
           let index = _self.$store.state.currentElementIndex;
@@ -522,7 +549,7 @@ export default {
               connectId: "",
               data: {
                 columns: url,
-                rows: ''
+                rows: [max,min]
               },
               getUrl: "",
               interval: 2

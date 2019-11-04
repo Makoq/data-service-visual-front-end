@@ -9,6 +9,8 @@
       a(href="javascript:;" @click="moveUpChartCom") Move Up
       a(href="javascript:;" @click="moveDownChartCom") Move Down
       a(href="javascript:;" @click="deleteChartCom") Delete
+      a(href="javascript:;" @click="draggable") {{draggableComponent?'Disdraggable':'Draggable'}}
+
     //- 发布对话框
     el-dialog(title="Publish" :visible.sync="$parent.publishPopVisible" width="50%")
       div(style="margin-bottom: 16px;") 发布成功! 访问地址为:
@@ -33,6 +35,7 @@
           :draggable="screenDraggable"
           :resizable="false")
         .screen(:style="screenStyle" @click.self="handleActivated(-1)" ref="screen")
+         
           vue-drag-resize(
             v-for="(item, index) in chartData.elements"
             :key="index"
@@ -50,7 +53,7 @@
             :minw="20"
             :minh="20"
             :z="chartData.elements.length - index"
-            :isDraggable="!$parent.preview"
+            :isDraggable="draggableComponent"
             :isResizable="!$parent.preview"
             @activated="handleActivated(index)"
             @resizing="handleResize(item, arguments[0])"
@@ -91,7 +94,12 @@
                 :height="item.h + 'px'"
                 :data="item.data.generated"
                 :settings="item.data.settings")
-             
+              my-three(
+                v-else-if="item.data.settings.type=='3js'"
+                :width="item.w + 'px'"
+                :height="item.h + 'px'"
+                :data="item.data.generated"
+                :settings="item.data.settings")
             div.filler(
               v-if="item.data.type == 'chart'"
               :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
@@ -162,7 +170,7 @@ import vueScatter2 from '../../components/visualComponents/vueScatter2'
 import vueCandle from '../../components/visualComponents/vueCandle'
 import bMap from '../../components/visualComponents/bMap'
 import vueMapbox from '../../components/visualComponents/vueMapbox'
-
+import myThree from '../../components/visualComponents/myThree'
 /* eslint-disable */
 export default {
   components: {
@@ -172,7 +180,8 @@ export default {
     vueScatter2,
     vueCandle,
     bMap,
-    vueMapbox
+    vueMapbox,
+    myThree
   },
 
   props: ["scale"],
@@ -184,6 +193,7 @@ export default {
       // 右键菜单
       contextMenuTarget: document.getElementById("app"),
       contextMenuVisible: false,
+      draggableComponent:true
        
     };
   },
@@ -296,7 +306,15 @@ export default {
       }
       this.contextMenuVisible = false;
     },
+draggable(){
+  if(this.draggableComponent){
+    this.draggableComponent=false
+  }else{
+    this.draggableComponent=true
+  }
+ this.contextMenuVisible = false;
 
+},
     // 发布
     btnPublish() {
       //window.location.href = this.publicUrl; // 在当前tab中打开

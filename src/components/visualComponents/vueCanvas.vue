@@ -1,5 +1,6 @@
 <template  >
   <div >
+     
     <canvas
       id="myCanvas"
       :width="width"
@@ -7,8 +8,12 @@
       style="border:1px solid #c3c3c3;display:none"
     >您的浏览器不支持 HTML5 canvas 标签。</canvas>
 
-    <img id="img" src="">
+    <img id="img" src=""> 
+    
 
+    <el-row>
+     <h2 style="color:red;margin-top:65%">像元值范围：{{min}}--{{max}}</h2> 
+    </el-row>
   </div>
 </template>
 <script>
@@ -20,6 +25,8 @@ export default {
     return {
       _self:this,
       text:'',
+      max:-1,
+      min:-1
     };
   },
   watch:{
@@ -56,7 +63,8 @@ export default {
   mounted() {
      
       this.updateData()
-        
+     
+
             
       
   },
@@ -121,7 +129,8 @@ export default {
               srcData.push(curValue);
             }
           }
-            
+            this.max=max
+            this.min=min
          
           // 将高程数据映射到0-255之间
           for (var i = 0; i < srcData.length; i++) {

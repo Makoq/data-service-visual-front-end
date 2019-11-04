@@ -5,7 +5,7 @@
  :height="height"
   :data="chartData" 
   :settings="chartSettings"></ve-heatmap>
-<div> Drag Only Here   </div>
+ 
 </div>
 </template>
 
