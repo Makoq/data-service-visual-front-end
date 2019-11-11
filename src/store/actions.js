@@ -4,7 +4,8 @@ import {
   ADD_COMPONENT,
   DELETE_COMPONENT,
   SET_DATA,
-  CHANGE_COLOR
+  CHANGE_COLOR,
+  SET_COLOR_COUNT
 } from './mutation-types';
 
 export default {
@@ -30,6 +31,9 @@ export default {
 
   changeColor({ commit }, data){
     commit(CHANGE_COLOR, data);
+  },
+  setColorCount({commit},data){
+    commit(SET_COLOR_COUNT,data)
   }
 
 

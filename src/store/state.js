@@ -6,6 +6,7 @@ export default {
   },
   currentElementIndex: -1,
   scale: 0.7,
-  colorNo:-1
+  colorNo:-1,
+  colorCount:{}
    
 };

@@ -17,7 +17,7 @@
         key: 'oBvDtR6nzWtVchkY4cLHtnah1VVZQKRK',
         bmap: {
           center: [this.data.rows[0].lat, this.data.rows[0].lng],
-          zoom: 8,
+          zoom: 10,
           roam: true
         },
         type: 'bmap'

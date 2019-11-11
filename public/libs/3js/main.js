@@ -611,9 +611,9 @@ function ready(){
 
 }
 
- export default {
-     ready
-};   
+//  export default {
+//      ready
+// };   
 // });
 
 

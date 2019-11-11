@@ -5,7 +5,9 @@ import {
   ADD_COMPONENT,
   DELETE_COMPONENT,
   SET_DATA,
-  CHANGE_COLOR
+  CHANGE_COLOR,
+  SET_COLOR_COUNT
+
 } from './mutation-types';
 
 export default {
@@ -41,8 +43,10 @@ export default {
   },
   [CHANGE_COLOR](state, data2) {
     state.colorNo=data2
+  },
+  [SET_COLOR_COUNT](state,data){
+    state.colorCount=data
   }
-
 
 
 

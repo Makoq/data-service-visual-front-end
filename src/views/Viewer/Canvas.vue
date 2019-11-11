@@ -34,7 +34,13 @@
             :width="item.w + 'px'"
             :height="item.h + 'px'"
             :data="item.data.generated"
-            :settings="item.data.settings")      
+            :settings="item.data.settings")
+          my-three(
+              v-else-if="item.data.settings.type=='3js'"
+              :width="item.w + 'px'"
+              :height="item.h + 'px'"
+              :data="item.data.generated"
+              :settings="item.data.settings")      
         div.filler(
           v-if="item.data.type == 'chart'"
           :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
@@ -100,6 +106,7 @@ import heatMap from '../../components/visualComponents/heatMap';
 import vueScatter2 from '../../components/visualComponents/vueScatter2'
 import vueCandle from '../../components/visualComponents/vueCandle'
 import bMap from '../../components/visualComponents/bMap'
+import myThree from '../../components/visualComponents/myThree'
 
 export default {
    components: {
@@ -108,7 +115,9 @@ export default {
      heatMap,
     vueScatter2,
     vueCandle,
-    bMap
+    bMap,
+    myThree
+
   },
   data() {
     return {

@@ -89,11 +89,11 @@ export default {
               name: "3d",
               img: require("@/assets/img/charts/3js.jpg")
             },
-            //  {
-            //   id: "mapbox",
-            //   name: "mapbox",
-            //   img: require("@/assets/img/charts/mapbox.png")
-            // },
+             {
+              id: "mapbox",
+              name: "mapbox",
+              img: require("@/assets/img/charts/mapbox.png")
+            },
 
             ]
         },
@@ -484,6 +484,34 @@ export default {
             { 'lat': 120.13170681763, 'lng': 30.229925745619 },
             { 'lat': 120.13119614803, 'lng': 30.228996846637 },
             { 'lat': 120.13023980134, 'lng': 30.228226570416 }
+          ]
+          }
+        };
+
+      }else if(item.id == "mapbox"){
+        console.log("mapbox")
+         initData = {
+          type: "map",
+          settings: {
+            type: item.id
+          },
+          datacon: {
+            type: "raw",
+            connectId: "",
+            data: {
+             columns:  [],
+          rows: [
+             
+          ]
+            },
+            getUrl: "",
+            interval: 2
+          },
+          generated: {
+             
+            columns: [],
+          rows: [
+            
           ]
           }
         };

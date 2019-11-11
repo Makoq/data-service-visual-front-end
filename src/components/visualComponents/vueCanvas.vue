@@ -8,17 +8,22 @@
       style="border:1px solid #c3c3c3;display:none"
     >您的浏览器不支持 HTML5 canvas 标签。</canvas>
 
-    <img id="img" src=""> 
+    <img id="img" style="z-index:-1" src=""> 
     
+      
+     <div  style="float: left;margin-top: -60px;">
+      <canvas id="scale" width="240" height="20" style="margin-bottom: -50px;margin-left: 100px;display:none"> </canvas>
+    <img id="scale_img" style="display: display: table-row;width:100%"  src=""> 
 
-    <el-row>
-     <h2 style="color:red;margin-top:65%">像元值范围：{{min}}--{{max}}</h2> 
-    </el-row>
+     <h3 style="color:red;display: table-row">{{min===-1?'':min}}--{{max===-1?'':max}}</h3> 
+     </div>
   </div>
 </template>
 <script>
 import httpUtils from "../../utils/httpUtils";
 import { globalBus } from '../../utils/globalBus';
+import ramp from "../../utils/canvas/ramp";
+
 export default {
   props:["width","height","canvasdata"],
   data() {
@@ -75,7 +80,9 @@ export default {
       console.log("method")
         let url=this.canvasdata.columns
        httpUtils.get(this, url, data => {
-        var dataset = new UdxDataset();
+         if(!data) {}
+         else{
+             var dataset = new UdxDataset();
         dataset.createDataset();
         dataset.loadFromXmlStream(data);
 
@@ -178,11 +185,31 @@ export default {
            
             var img=document.getElementById("img");
             img.setAttribute("src",img_src);
-            console.log(this.width)
-            console.log(this.height)
+
+            //图例canvas
+            var sc = document.getElementById("scale");
+            var scale = sc.getContext("2d");
+            let ramp_obj=this.$store.state.colorCount
+            let item=this.$store.state.colorNo
+             
+             for (var i = 0; i <=ramp_obj.colorCount-1; i++) {
+            var rgb = {};
+            rgb = colorJSON[i.toString()];
+            scale.fillStyle = "rgb(" + rgb.r + "," + rgb.g + "," + rgb.b + ")";
+            scale.fillRect(x / 2, 0, (x + 1) / 2, 20);
+          }
+
+            let scale_img_src=sc.toDataURL();
+            var scale_img=document.getElementById("scale_img");
+            scale_img.setAttribute("src",scale_img_src);
+
+          
 
             // img.setAttribute("width",this.width-400)
             // img.setAttribute("height",this.height-300)
+
+         }
+       
 
              
 
