@@ -81,9 +81,14 @@
                 :height="item.h + 'px'"
                 :data="item.data.generated"
                 :settings="item.data.settings")
-             
               vue-mapbox(
                  v-else-if="item.data.settings.type=='mapbox'"
+                :width="item.w + 'px'"
+                :height="item.h + 'px'"
+                :data="item.data.generated"
+                :settings="item.data.settings")
+              vue-leaflat(
+                 v-else-if="item.data.settings.type=='leaflat'"
                 :width="item.w + 'px'"
                 :height="item.h + 'px'"
                 :data="item.data.generated"
@@ -171,6 +176,8 @@ import vueCandle from '../../components/visualComponents/vueCandle'
 import bMap from '../../components/visualComponents/bMap'
 import vueMapbox from '../../components/visualComponents/vueMapbox'
 import myThree from '../../components/visualComponents/myThree'
+import vueLeaflat from '../../components/visualComponents/vueLeaflat'
+
 /* eslint-disable */
 export default {
   components: {
@@ -181,7 +188,8 @@ export default {
     vueCandle,
     bMap,
     vueMapbox,
-    myThree
+    myThree,
+    vueLeaflat
   },
 
   props: ["scale"],

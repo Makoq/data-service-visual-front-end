@@ -231,11 +231,16 @@
         .config-box
           .title 数据源获取
           el-row(:gutter="20")
+          .title 观测数据
             el-col(:span="20") 
               el-input(v-model="data_src")
           el-row(:gutter="20")
+          .title 模拟数据
             el-col(:span="20") 
-              el-button(@click="testLineChart(data_src)") data
+              el-input(v-model="data_sum")
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-button(@click="testLineChart(data_src,data_sum)") data
         .config-box
           .title 数据配置
           el-select(
@@ -422,8 +427,8 @@ export default {
       },
       thisKey: "general",
       connectList: [],
-      data_src: "http://localhost:8897/testChart?file=testObservation&type=chart",
-
+      data_src:  "http://localhost:8897/testChart?file=testObservation&type=chart",
+      data_sum:"http://localhost:8897/testChart?file=testSimulation&type=chart",
       color_bar: [], //color色带
       color_bar_value: "",
       ramp_obj: {}, //色带对象
@@ -497,86 +502,8 @@ export default {
       // console.log(file);
       // this.imageUrl = URL.createObjectURL(file.raw);
     },
-    ///输入为udx_data的流
-    testLineChart(url) {
-      let _self = this;
-      httpUtils.get(this, url, data => {
-        var dataset = new UdxDataset();
-        dataset.createDataset();
-        dataset.loadFromXmlStream(data);
-
-        if (_self.currentElement.data.type == "mycanvas") {
-          //拿到最大最小值
-          var min = 99999,
-            max = -99999;
-          var listnode = dataset.getChildNode(1);
-          var rows = listnode.getChildNodeCount();
-          // 一开始已经检测过了，保证了每个item(int_array|real_array)的长度是一致的，所以，这里直接取第一个的长度就可以了。
-          var cols = listnode
-            .getChildNode(0)
-            .getKernel()
-            .getArrayCount();
-
-          for (var i = 0; i < rows; i++) {
-            var child = listnode.getChildNode(i);
-
-            for (var j = 0; j < cols; j++) {
-              var curValue = child.getKernel().getTypedValueByIndex(j); //parseFloat(oneLineArray[j]);
-              if (curValue != "") {
-                if (curValue < min) {
-                  min = curValue;
-                }
-                if (curValue > max) {
-                  max = curValue;
-                }
-              }
-            }
-          }
-
-          console.log("max,min", max, min);
-
-          //当前点击的组件索引
-          let index = _self.$store.state.currentElementIndex;
-
-          //初始化数据
-          let initData = {
-            type: "mycanvas",
-            settings: {
-              type:
-                _self.$store.state.chartData.elements[index].data.settings.type //类型
-            },
-            datacon: {
-              type: "raw",
-              connectId: "",
-              data: {
-                columns: url,
-                rows: [max, min]
-              },
-              getUrl: "",
-              interval: 2
-            },
-            generated: {
-              columns: url,
-              rows: ""
-            }
-          };
-
-          let da = {
-            ind: index,
-            data: initData
-          };
-          _self.$store.dispatch("setComponentData", da);
-
-          globalBus.$emit("updateData");
-        } else if (_self.currentElement.data.type == "map") {
-          console.log(dataset.getChildNodeCount());
-
-          //取结点操作
-          let col = [],
-            row = [];
-
-          if (_self.currentElement.data.settings.type === "mapbox") {
-            var siteCount = dataset.getChildNodeCount();
+    wapper_data(row,col,dataset){
+      var siteCount = dataset.getChildNodeCount();
             for (let i = 1; i < siteCount; i++) {
               var site = [];
               var siteNode = dataset.getChildNode(i);
@@ -599,6 +526,9 @@ export default {
               }
               col.push(site);//将月均值入到col
             }
+            let year_len=dataset.getChildNode(1).getChildNodeCount()
+            let start_year=dataset.getChildNode(1).getChildNode(0).getName()
+            col.push(start_year,year_len)
             //将第一个位置元素，入栈
             let location_count = dataset
               .getChildNodeCount()
@@ -606,8 +536,10 @@ export default {
             
             let lat = dataset.getChildNode(0).getChildNode(0);
             let lag = dataset.getChildNode(0).getChildNode(1);
+            let year_gear=[dataset.getChildNode(0).getChildNode(2).getKernel().getTypedValueByIndex(0),dataset.getChildNode(0).getChildNode(2).getKernel().getTypedValueByIndex(1)]
+             ;
 
-            for (var i = 1; i < location_count - 1; i++) {
+            for (var i = 0; i < location_count-1; i++) {
               let obj = {};
               obj['name']= dataset.getChildNode(i).getName();
               obj['lat'] = lat.getKernel().getTypedValueByIndex(i);
@@ -615,123 +547,254 @@ export default {
 
               row.push(obj);//将站点信息，名字，经纬度，入到row
             }
-          } else {
-            let node_len = dataset.getChildNodeCount();
-            let arr_len = dataset
-              .getChildNode(0)
-              .getKernel()
-              .getArrayCount();
-            for (let j = 0; j < node_len; j++) {
-              col.push(dataset.getChildNode(j).getName());
-            }
+            let obj={'year_gear':year_gear}
+            row.push(obj)
+    },
+    ///输入为udx_data的流
+    testLineChart(obs,sum) {
+      var _self = this,R=[],C=[]  ;
+      if(_self.currentElement.data.settings.type === "leaflat"){
 
-            for (let i = 0; i < arr_len; i++) {
-              let obj = {};
-              for (let j = 0; j < node_len; j++) {
-                obj[col[j]] = dataset
-                  .getChildNode(j)
-                  .getKernel()
-                  .getTypedValueByIndex(i);
-              }
-              row.push(obj);
-            }
-          }
+        if(obs!=''&&sum!=''){
+           httpUtils.get(this, obs, data => {
+              var dataset_observ = new UdxDataset();
+              dataset_observ.createDataset();
+              dataset_observ.loadFromXmlStream(data);
 
-          //当前点击的组件索引
+                httpUtils.get(this, sum, data2 => {
+                  var dataset_sum = new UdxDataset();
+                  dataset_sum.createDataset();
+                  dataset_sum.loadFromXmlStream(data2);
+                  //观测值
+                  var row1=[],col1=[]
+                  _self.wapper_data(row1,col1,dataset_observ)
+                  R.push(row1)
+                  C.push(col1)
+                  //模拟值
+                    row1=[],col1=[]
+                  _self.wapper_data(row1,col1,dataset_sum)
+                  R.push(row1)
+                  C.push(col1)
 
-          //初始化数据
-          var initData = {
-            type: "map",
-            settings: {
-              type:
-                _self.$store.state.chartData.elements[
-                  _self.$store.state.currentElementIndex
-                ].data.settings.type //类型
-            },
-            datacon: {
-              type: "raw",
-              connectId: "",
-              data: {
-                columns: col,
-                rows: row
-              },
-              getUrl: "",
-              interval: 2
-            },
-            generated: {
-              columns: col,
-              rows: row
-            }
-          };
+                   var initData = {
+                    type: "map",
+                    settings: {
+                      type:
+                        _self.$store.state.chartData.elements[
+                          _self.$store.state.currentElementIndex
+                        ].data.settings.type //类型
+                    },
+                    datacon: {
+                      type: "raw",
+                      connectId: "",
+                      data: {
+                        columns: C,
+                        rows: R
+                      },
+                      getUrl: "",
+                      interval: 2
+                    },
+                    generated: {
+                      columns: C,
+                      rows: R
+                    }
+                  };
 
-          var da = {
-            ind: _self.$store.state.currentElementIndex,
-            data: initData
-          };
-          console.log("map", da);
-          _self.$store.dispatch("setComponentData", da);
-        } else if (_self.currentElement.data.type == "chart") {
-          //schema只有同级的若干个节点的情况 chart
+                  var da = {
+                    ind: _self.$store.state.currentElementIndex,
+                    data: initData
+                  };
+                  console.log("map", da);
+                  _self.$store.dispatch("setComponentData", da);
 
-          let node_len = dataset.getChildNodeCount();
-          let arr_len = dataset
-            .getChildNode(0)
-            .getKernel()
-            .getArrayCount();
 
-          //取结点操作
-          let col = [],
-            row = [];
-          for (let j = 0; j < node_len; j++) {
-            col.push(dataset.getChildNode(j).getName());
-          }
+                      
 
-          for (let i = 0; i < arr_len; i++) {
-            let obj = {};
-            for (let j = 0; j < node_len; j++) {
-              obj[col[j]] = dataset
-                .getChildNode(j)
-                .getKernel()
-                .getTypedValueByIndex(i);
-            }
-            row.push(obj);
-          }
-          //当前点击的组件索引
-          let index = _self.$store.state.currentElementIndex;
 
-          //初始化数据
-          let initData = {
-            type: "chart",
-            settings: {
-              type:
-                _self.$store.state.chartData.elements[index].data.settings.type //类型
-            },
-            datacon: {
-              type: "raw",
-              connectId: "",
-              data: {
-                columns: col,
-                rows: row
-              },
-              getUrl: "",
-              interval: 2
-            },
-            generated: {
-              columns: col,
-              rows: row
-            }
-          };
-
-          let da = {
-            ind: index,
-            data: initData
-          };
-          console.log("chart", da);
-          _self.$store.dispatch("setComponentData", da);
+                });
+        
+            });
         }
+      }else{
+         httpUtils.get(this, obs, data => {
+              var dataset = new UdxDataset();
+              dataset.createDataset();
+              dataset.loadFromXmlStream(data);
 
-        //调用改变数据的vuex
-      });
+              if (_self.currentElement.data.type == "mycanvas") {
+                //拿到最大最小值
+                var min = 99999,
+                  max = -99999;
+                var listnode = dataset.getChildNode(1);
+                var rows = listnode.getChildNodeCount();
+                // 一开始已经检测过了，保证了每个item(int_array|real_array)的长度是一致的，所以，这里直接取第一个的长度就可以了。
+                var cols = listnode
+                  .getChildNode(0)
+                  .getKernel()
+                  .getArrayCount();
+
+                for (var i = 0; i < rows; i++) {
+                  var child = listnode.getChildNode(i);
+
+                  for (var j = 0; j < cols; j++) {
+                    var curValue = child.getKernel().getTypedValueByIndex(j); //parseFloat(oneLineArray[j]);
+                    if (curValue != "") {
+                      if (curValue < min) {
+                        min = curValue;
+                      }
+                      if (curValue > max) {
+                        max = curValue;
+                      }
+                    }
+                  }
+                }
+
+                console.log("max,min", max, min);
+
+                //当前点击的组件索引
+                let index = _self.$store.state.currentElementIndex;
+
+                //初始化数据
+                let initData = {
+                  type: "mycanvas",
+                  settings: {
+                    type:
+                      _self.$store.state.chartData.elements[index].data.settings.type //类型
+                  },
+                  datacon: {
+                    type: "raw",
+                    connectId: "",
+                    data: {
+                      columns: url,
+                      rows: [max, min]
+                    },
+                    getUrl: "",
+                    interval: 2
+                  },
+                  generated: {
+                    columns: url,
+                    rows: ""
+                  }
+                };
+
+                let da = {
+                  ind: index,
+                  data: initData
+                };
+                _self.$store.dispatch("setComponentData", da);
+
+                globalBus.$emit("updateData");
+              } else if (_self.currentElement.data.type == "map") {
+                console.log(dataset.getChildNodeCount());
+
+                //取结点操作
+                let col = [],
+                  row = [];
+
+                if (_self.currentElement.data.settings.type === "mapbox") {
+                  var siteCount = dataset.getChildNodeCount();
+                  for (let i = 1; i < siteCount; i++) {
+                    var site = [];
+                    var siteNode = dataset.getChildNode(i);
+                    var yearCount = siteNode.getChildNodeCount();
+                    for (var j = 0; j < yearCount; j++) {
+                      var yearNode = siteNode.getChildNode(j);
+                      var monthCount = yearNode.getChildNodeCount();
+                      for (var k = 0; k < monthCount; k++) {
+                        var monthNode = yearNode.getChildNode(k);
+                        //console.log(monthNode.getKernel().getArrayCount());
+                        var days = monthNode.getKernel().getArrayCount();
+                        var sum = 0;
+                        for (var m = 0; m < days; m++) {
+                          sum += monthNode.getKernel().getTypedValueByIndex(m);
+                        }
+                        sum /= days;
+
+                        site.push(sum);
+                      }
+                    }
+                    col.push(site);//将月均值入到col
+                  }
+                  //将第一个位置元素，入栈
+                  let location_count = dataset
+                    .getChildNodeCount()
+
+                  
+                  let lat = dataset.getChildNode(0).getChildNode(0);
+                  let lag = dataset.getChildNode(0).getChildNode(1);
+
+                  for (var i = 0; i < location_count-1; i++) {
+                    let obj = {};
+                    obj['name']= dataset.getChildNode(i).getName();
+                    obj['lat'] = lat.getKernel().getTypedValueByIndex(i);
+                    obj['lag'] = lag.getKernel().getTypedValueByIndex(i);
+
+                    row.push(obj);//将站点信息，名字，经纬度，入到row
+                  }
+                }   else if (_self.currentElement.data.type == "chart") {
+                //schema只有同级的若干个节点的情况 chart
+
+                let node_len = dataset.getChildNodeCount();
+                let arr_len = dataset
+                  .getChildNode(0)
+                  .getKernel()
+                  .getArrayCount();
+
+                //取结点操作
+                let col = [],
+                  row = [];
+                for (let j = 0; j < node_len; j++) {
+                  col.push(dataset.getChildNode(j).getName());
+                }
+
+                for (let i = 0; i < arr_len; i++) {
+                  let obj = {};
+                  for (let j = 0; j < node_len; j++) {
+                    obj[col[j]] = dataset
+                      .getChildNode(j)
+                      .getKernel()
+                      .getTypedValueByIndex(i);
+                  }
+                  row.push(obj);
+                }
+                //当前点击的组件索引
+                let index = _self.$store.state.currentElementIndex;
+
+                //初始化数据
+                let initData = {
+                  type: "chart",
+                  settings: {
+                    type:
+                      _self.$store.state.chartData.elements[index].data.settings.type //类型
+                  },
+                  datacon: {
+                    type: "raw",
+                    connectId: "",
+                    data: {
+                      columns: col,
+                      rows: row
+                    },
+                    getUrl: "",
+                    interval: 2
+                  },
+                  generated: {
+                    columns: col,
+                    rows: row
+                  }
+                };
+
+                let da = {
+                  ind: index,
+                  data: initData
+                };
+                console.log("chart", da);
+                _self.$store.dispatch("setComponentData", da);
+              }
+
+              }
+        });
+      }
+     
     },
     //选择色带后显示
     choose_color_bar(item) {

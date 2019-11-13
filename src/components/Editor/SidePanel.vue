@@ -94,6 +94,11 @@ export default {
               name: "mapbox",
               img: require("@/assets/img/charts/mapbox.png")
             },
+            {
+              id: "leaflat",
+              name: "leaflat",
+              img: require("@/assets/img/charts/leaflat.png")
+            },
 
             ]
         },
@@ -346,6 +351,34 @@ export default {
             { 'lat': 104.065735, 'lng': 30.659462, '人数': 700 },
             { 'lat': 108.948024, 'lng': 34.263161, '人数': 300 },
             { 'lat': 103.823557, 'lng': 36.058039, '人数': 500 }
+          ]
+          }
+        };
+
+      }else if(item.id == "leaflat"){
+        console.log("leaflat")
+         initData = {
+          type: "map",
+          settings: {
+            type: item.id
+          },
+          datacon: {
+            type: "raw",
+            connectId: "",
+            data: {
+              columns: [ ],
+               rows: [
+             
+          ]
+            },
+            getUrl: "",
+            interval: 2
+          },
+          generated: {
+             
+            columns: [ ],
+               rows: [
+             
           ]
           }
         };
