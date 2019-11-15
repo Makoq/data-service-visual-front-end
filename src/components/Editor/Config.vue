@@ -588,13 +588,22 @@ export default {
       if(_self.currentElement.data.settings.type === "leaflat"){
 
         if(obs!=''&&sum!=''){
-           httpUtils.get2(this, obs, data => {
+           httpUtils.get(this, obs, data => {
              
-              var dataset_observ = data.formatToXmlStream()
-              // dataset_observ.loadFromXmlStream(data);
+              // var dataset_observ = data.formatToXmlStream()
+               var dataset_observ = new UdxDataset();
+              dataset_observ.createDataset();
+              dataset_observ.loadFromXmlStream(data);
+               
 
-                httpUtils.get2(this, sum, data2 => {
-                  var dataset_sum  = data.formatToXmlStream()
+                httpUtils.get(this, sum, data2 => {
+                  // var dataset_sum  = data.formatToXmlStream()
+
+                   var dataset_sum = new UdxDataset();
+              dataset_sum.createDataset();
+              dataset_sum.loadFromXmlStream(data2);
+
+
                   //观测值
                   var row1=[],col1=[]
                   _self.wapper_data(row1,col1,dataset_observ)
