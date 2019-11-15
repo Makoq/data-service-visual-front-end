@@ -5,7 +5,9 @@ import {
   DELETE_COMPONENT,
   SET_DATA,
   CHANGE_COLOR,
-  SET_COLOR_COUNT
+  SET_COLOR_COUNT,
+  MOVE_UP,
+  MOVE_DOWN
 } from './mutation-types';
 
 export default {
@@ -34,7 +36,14 @@ export default {
   },
   setColorCount({commit},data){
     commit(SET_COLOR_COUNT,data)
-  }
+  },
+
+  moveUpElement({commit},data){
+    commit(MOVE_UP,data)
+  },
+  moveDownElement({commit},data){
+    commit(MOVE_DOWN,data)
+  },
 
 
 };

@@ -29,6 +29,12 @@
             :height="item.h + 'px'"
             :data="item.data.generated"
             :settings="item.data.settings")
+          vue-leaflat(
+            v-else-if="item.data.settings.type=='leaflat'"
+            :width="item.w + 'px'"
+            :height="item.h + 'px'"
+            :data="item.data.generated"
+            :settings="item.data.settings")
           b-map(
             v-else-if="item.data.settings.type=='bmap'"
             :width="item.w + 'px'"
@@ -107,16 +113,19 @@ import vueScatter2 from '../../components/visualComponents/vueScatter2'
 import vueCandle from '../../components/visualComponents/vueCandle'
 import bMap from '../../components/visualComponents/bMap'
 import myThree from '../../components/visualComponents/myThree'
+import vueLeaflat from '../../components/visualComponents/vueLeaflat'
 
 export default {
    components: {
      
     vueCanvas,
-     heatMap,
+    heatMap,
     vueScatter2,
     vueCandle,
     bMap,
-    myThree
+    myThree,
+    vueLeaflat
+
 
   },
   data() {

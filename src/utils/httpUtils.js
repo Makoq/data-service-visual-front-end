@@ -12,6 +12,19 @@ function get(that, url, solve) {
     .catch(() => { });
 }
 
+function get2(that, url, solve) {
+  that.$http
+    .get(url)
+    .then((res) => {
+      // console.log(res)
+      // const { errno, data } = res.data;
+       
+        solve(res.data);
+       
+    })
+    .catch(() => { });
+}
+
 function post(that, url, data, solve) {
   that.$http
     .post(url, data)
@@ -64,5 +77,5 @@ function del(that, url, solve) {
 
 
 export default {
-  get, post, put, del,
+  get,get2, post, put, del,
 };

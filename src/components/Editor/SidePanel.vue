@@ -278,6 +278,8 @@ export default {
     handleAddComponent(item) {
       console.log(item)
       let initData = {};
+      let self=this
+      var ind_leaflat=self.$store.state.chartData.elements.length
       if(item.id == "map"){
          initData = {
           type: "map",
@@ -362,6 +364,7 @@ export default {
           settings: {
             type: item.id
           },
+          mapid:ind_leaflat+1,
           datacon: {
             type: "raw",
             connectId: "",

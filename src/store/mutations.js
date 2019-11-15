@@ -6,7 +6,10 @@ import {
   DELETE_COMPONENT,
   SET_DATA,
   CHANGE_COLOR,
-  SET_COLOR_COUNT
+  SET_COLOR_COUNT,
+  MOVE_UP,
+  MOVE_DOWN
+
 
 } from './mutation-types';
 
@@ -46,6 +49,12 @@ export default {
   },
   [SET_COLOR_COUNT](state,data){
     state.colorCount=data
+  },
+  [MOVE_UP](state,data){
+    state.chartData=data
+  },
+  [MOVE_DOWN](state,data){
+    state.chartData=data
   }
 
 

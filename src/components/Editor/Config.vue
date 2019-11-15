@@ -170,6 +170,38 @@
                 :max="10"
                 @change="handleChartDataChange"
                 style="width: 100%;")
+      .panel(v-show="thisKey=='data' && (currentElement.data.type == 'map')&&(currentElement.data.settings.type != 'leaflat')")
+        .config-box
+          .title 数据源获取
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-input(v-model="data_src")
+          el-row(:gutter="20")
+            el-col(:span="20") 
+              el-button(@click="testLineChart(data_src)") data
+        .config-box
+          .title 数据配置
+          el-select(
+            v-model="currentElement.data.datacon.type"
+            placeholder="请选择"
+            @change="handleChartDataChange"
+            style="width: 100%; margin-bottom: 10px;")
+            el-option(label="静态JSON" value="raw")
+            el-option(label="我的数据源" value="connect")
+            //- el-option(label="表格数据" value="table")
+            el-option(label="GET接口" value="get")
+          //- el-input(
+            v-model="currentElement.data.datacon.data"
+            type="textarea"
+            :rows="10"
+            placeholder="请插入标准 JSON 文件"
+            v-show="currentElement.data.datacon.type == 'raw'")
+          vue-json-editor(
+            v-if="currentElement.data.datacon.type == 'raw'"
+            v-model="currentElement.data.datacon.data"
+            mode="code"
+            :show-btns="true"
+            @json-save="handleChartDataChange")
       .panel(v-show="thisKey=='data' && (currentElement.data.type == 'chart')")
         .config-box
           .title 数据源获取
@@ -227,7 +259,7 @@
                 :max="10"
                 @change="handleChartDataChange"
                 style="width: 100%;")
-      .panel(v-show="thisKey=='data' && (currentElement.data.type == 'map')")
+      .panel(v-show="thisKey=='data' && (currentElement.data.type == 'map')&&(currentElement.data.settings.type == 'leaflat')")
         .config-box
           .title 数据源获取
           el-row(:gutter="20")
@@ -556,15 +588,13 @@ export default {
       if(_self.currentElement.data.settings.type === "leaflat"){
 
         if(obs!=''&&sum!=''){
-           httpUtils.get(this, obs, data => {
-              var dataset_observ = new UdxDataset();
-              dataset_observ.createDataset();
-              dataset_observ.loadFromXmlStream(data);
+           httpUtils.get2(this, obs, data => {
+             
+              var dataset_observ = data.formatToXmlStream()
+              // dataset_observ.loadFromXmlStream(data);
 
-                httpUtils.get(this, sum, data2 => {
-                  var dataset_sum = new UdxDataset();
-                  dataset_sum.createDataset();
-                  dataset_sum.loadFromXmlStream(data2);
+                httpUtils.get2(this, sum, data2 => {
+                  var dataset_sum  = data.formatToXmlStream()
                   //观测值
                   var row1=[],col1=[]
                   _self.wapper_data(row1,col1,dataset_observ)
@@ -616,12 +646,14 @@ export default {
             });
         }
       }else{
+        let typ=_self.currentElement.data.type
+        console.log(typ)
          httpUtils.get(this, obs, data => {
               var dataset = new UdxDataset();
               dataset.createDataset();
               dataset.loadFromXmlStream(data);
 
-              if (_self.currentElement.data.type == "mycanvas") {
+              if (_self.currentElement.data.type === "mycanvas") {
                 //拿到最大最小值
                 var min = 99999,
                   max = -99999;
@@ -684,54 +716,112 @@ export default {
                 _self.$store.dispatch("setComponentData", da);
 
                 globalBus.$emit("updateData");
-              } else if (_self.currentElement.data.type == "map") {
+              }else if(_self.currentElement.data.type === "map") {
                 console.log(dataset.getChildNodeCount());
 
                 //取结点操作
                 let col = [],
                   row = [];
 
-                if (_self.currentElement.data.settings.type === "mapbox") {
-                  var siteCount = dataset.getChildNodeCount();
-                  for (let i = 1; i < siteCount; i++) {
-                    var site = [];
-                    var siteNode = dataset.getChildNode(i);
-                    var yearCount = siteNode.getChildNodeCount();
-                    for (var j = 0; j < yearCount; j++) {
-                      var yearNode = siteNode.getChildNode(j);
-                      var monthCount = yearNode.getChildNodeCount();
-                      for (var k = 0; k < monthCount; k++) {
-                        var monthNode = yearNode.getChildNode(k);
-                        //console.log(monthNode.getKernel().getArrayCount());
-                        var days = monthNode.getKernel().getArrayCount();
-                        var sum = 0;
-                        for (var m = 0; m < days; m++) {
-                          sum += monthNode.getKernel().getTypedValueByIndex(m);
+                    if (_self.currentElement.data.settings.type === "mapbox") {
+                      var siteCount = dataset.getChildNodeCount();
+                      for (let i = 1; i < siteCount; i++) {
+                        var site = [];
+                        var siteNode = dataset.getChildNode(i);
+                        var yearCount = siteNode.getChildNodeCount();
+                        for (var j = 0; j < yearCount; j++) {
+                          var yearNode = siteNode.getChildNode(j);
+                          var monthCount = yearNode.getChildNodeCount();
+                          for (var k = 0; k < monthCount; k++) {
+                            var monthNode = yearNode.getChildNode(k);
+                            //console.log(monthNode.getKernel().getArrayCount());
+                            var days = monthNode.getKernel().getArrayCount();
+                            var sum = 0;
+                            for (var m = 0; m < days; m++) {
+                              sum += monthNode.getKernel().getTypedValueByIndex(m);
+                            }
+                            sum /= days;
+
+                            site.push(sum);
+                          }
                         }
-                        sum /= days;
-
-                        site.push(sum);
+                        col.push(site);//将月均值入到col
                       }
+                      //将第一个位置元素，入栈
+                      let location_count = dataset
+                        .getChildNodeCount()
+
+                      
+                      let lat = dataset.getChildNode(0).getChildNode(0);
+                      let lag = dataset.getChildNode(0).getChildNode(1);
+
+                      for (var i = 0; i < location_count-1; i++) {
+                        let obj = {};
+                        obj['name']= dataset.getChildNode(i).getName();
+                        obj['lat'] = lat.getKernel().getTypedValueByIndex(i);
+                        obj['lag'] = lag.getKernel().getTypedValueByIndex(i);
+
+                        row.push(obj);//将站点信息，名字，经纬度，入到row
+                      }
+                    } else{
+                       console.log(dataset.getChildNodeCount())
+                        let node_len = dataset.getChildNodeCount();
+                        let arr_len = dataset
+                          .getChildNode(node_len-1)
+                          .getKernel()
+                          .getArrayCount();
+                        //取结点操作
+                        let col = [],
+                          row = [];
+                        for (let j = 0; j < node_len; j++) {
+                          col.push(dataset.getChildNode(j).getName());
+                        }
+                        for (let i = 0; i < arr_len; i++) {
+                          let obj = {};
+                          for (let j = 0; j < node_len; j++) {
+                            obj[col[j]] = dataset
+                              .getChildNode(j)
+                              .getKernel()
+                              .getTypedValueByIndex(i);
+                          }
+                          row.push(obj);
+                        }
+                      
+                        //当前点击的组件索引
+                      
+                        //初始化数据
+                        let initData = {
+                          type: "map",
+                          settings: {
+                            type:
+                              _self.$store.state.chartData.elements[_self.$store.state.currentElementIndex].data.settings.type //类型
+                          },
+                          datacon: {
+                            type: "raw",
+                            connectId: "",
+                            data: {
+                              columns: col,
+                              rows: row
+                            },
+                            getUrl: "",
+                            interval: 2
+                          },
+                          generated: {
+                            columns: col,
+                            rows: row
+                          }
+                        };
+                        let da = {
+                          ind: _self.$store.state.currentElementIndex,
+                          data: initData
+                        };
+                        console.log("map",da)
+                        _self.$store.dispatch("setComponentData", da);
+
+
                     }
-                    col.push(site);//将月均值入到col
-                  }
-                  //将第一个位置元素，入栈
-                  let location_count = dataset
-                    .getChildNodeCount()
-
-                  
-                  let lat = dataset.getChildNode(0).getChildNode(0);
-                  let lag = dataset.getChildNode(0).getChildNode(1);
-
-                  for (var i = 0; i < location_count-1; i++) {
-                    let obj = {};
-                    obj['name']= dataset.getChildNode(i).getName();
-                    obj['lat'] = lat.getKernel().getTypedValueByIndex(i);
-                    obj['lag'] = lag.getKernel().getTypedValueByIndex(i);
-
-                    row.push(obj);//将站点信息，名字，经纬度，入到row
-                  }
-                }   else if (_self.currentElement.data.type == "chart") {
+                
+                }  else if (_self.currentElement.data.type == "chart") {
                 //schema只有同级的若干个节点的情况 chart
 
                 let node_len = dataset.getChildNodeCount();
@@ -791,7 +881,7 @@ export default {
                 _self.$store.dispatch("setComponentData", da);
               }
 
-              }
+              
         });
       }
      

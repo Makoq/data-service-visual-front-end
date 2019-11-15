@@ -91,6 +91,7 @@
                  v-else-if="item.data.settings.type=='leaflat'"
                 :width="item.w + 'px'"
                 :height="item.h + 'px'"
+                :id="item.data.mapid"
                 :data="item.data.generated"
                 :settings="item.data.settings")
               b-map(
@@ -263,10 +264,17 @@ export default {
     // === 右键菜单 ===
     // 复制
     copyChartCom() {
+     
       var cur_elem_index = this.$store.state.currentElementIndex;
       var chart_data = this.$store.state.chartData;
-      if (cur_elem_index != -1) {
-        var cur_com = chart_data.elements[cur_elem_index];
+      var cur_com = chart_data.elements[cur_elem_index];
+      
+      console.log(chart_data)
+      if(cur_com.data.settings.type==="leaflat"){
+        alert("can't copy this!")
+      }
+      else if (cur_elem_index != -1) {
+        
         var cur_com_clone = Object.assign({}, cur_com);
         cur_com_clone.name = cur_com.name + "_copy_" + chart_data.elements.length;
         cur_com_clone.x += 20;
@@ -283,24 +291,46 @@ export default {
       // 查找当前组件在 chartData.elements 数组中的位置
       var cur_elem_index = this.$store.state.currentElementIndex;
       var chart_data = this.$store.state.chartData;
+      if(cur_elem_index>0){
+        var former_elem=this.$store.state.chartData.elements[cur_elem_index-1]
+        var cur_elem=this.$store.state.chartData.elements[cur_elem_index]
+        
+        this.$store.state.chartData.elements[cur_elem_index-1]=cur_elem
+        this.$store.state.chartData.elements[cur_elem_index]=former_elem
 
-      // var newIndex = this.$parent.currentElementIndex - 1 < 0 ? 0 : this.$parent.currentElementIndex - 1;
-      // var cur_com = this.$parent.chartData.elements[this.$parent.currentElementIndex];
-      // var new_index = this.$parent.currentElementIndex - 1;
+        this.$store.dispatch("moveUpElement", this.$store.state.chartData)
 
-      // console.log(new_index);
-      //  var cur_up_com = this.$parent.chartData.elements[newIndex];
-      // var remove_coms = this.$parent.deleteComponent(this.$parent.currentElementIndex);
-      // console.log(remove_coms);
-      // this.$parent.chartData.elements.splice(new_index, remove_coms[0]);
-
-      // this.$parent.setActiveComponentByIndex(newIndex);
-
+      }else{
+        alert("Already the top component!!")
+      }
+   
       this.contextMenuVisible = false;
     },
 
     // 下移
     moveDownChartCom() {
+      var cur_elem_index = this.$store.state.currentElementIndex;
+      var chart_data = this.$store.state.chartData;
+      console.log( cur_elem_index)
+      console.log( this.$store.state.chartData.elements.length)
+
+      if(cur_elem_index<this.$store.state.chartData.elements.length-1){
+
+        var next_elem=this.$store.state.chartData.elements[cur_elem_index+1]
+        var cur_elem=this.$store.state.chartData.elements[cur_elem_index]
+        
+        this.$store.state.chartData.elements[cur_elem_index+1]=cur_elem
+        this.$store.state.chartData.elements[cur_elem_index]=next_elem
+
+        this.$store.dispatch("moveDownElement", this.$store.state.chartData)
+
+      }else{
+        alert("Already the bottom component!")
+      }
+
+
+
+
       this.contextMenuVisible = false;
     },
 
