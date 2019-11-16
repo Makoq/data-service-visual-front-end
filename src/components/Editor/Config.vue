@@ -655,6 +655,7 @@ export default {
             });
         }
       }else{
+        //非leaflet组件的数据
         let typ=_self.currentElement.data.type
         console.log(typ)
          httpUtils.get(this, obs, data => {
