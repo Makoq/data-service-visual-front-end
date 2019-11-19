@@ -8,10 +8,12 @@ import {
   CHANGE_COLOR,
   SET_COLOR_COUNT,
   MOVE_UP,
-  MOVE_DOWN
+  MOVE_DOWN,
+  CHANGE_SCREEN_BKG
 
 
 } from './mutation-types';
+import { stat } from 'fs';
 
 export default {
   [SET_ACTIVE_COMPONENT_BY_INDEX](state, index) {
@@ -55,6 +57,9 @@ export default {
   },
   [MOVE_DOWN](state,data){
     state.chartData=data
+  },
+  [CHANGE_SCREEN_BKG](state,data){
+    state.chartData.bgimage=data
   }
 
 

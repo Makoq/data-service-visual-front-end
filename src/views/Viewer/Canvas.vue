@@ -218,6 +218,9 @@ export default {
 
 .container{
   text-align: center;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
 }
 
 .enter-fullscreen {

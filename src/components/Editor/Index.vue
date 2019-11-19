@@ -148,6 +148,7 @@ export default {
       let that = this;
       return new Promise(function(resolve, reject) {
         let screenRef = that.$refs["screenContainer"].$refs["screen"];
+        // let screenRef=document.getElementById('app')
         html2canvas(screenRef, {
           backgroundColor: "#142E48"
         }).then(canvas => {
@@ -156,6 +157,8 @@ export default {
         });
       });
     }
+
+
   }
 };
 </script>

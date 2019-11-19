@@ -7,7 +7,8 @@ import {
   CHANGE_COLOR,
   SET_COLOR_COUNT,
   MOVE_UP,
-  MOVE_DOWN
+  MOVE_DOWN,
+  CHANGE_SCREEN_BKG
 } from './mutation-types';
 
 export default {
@@ -44,6 +45,9 @@ export default {
   moveDownElement({commit},data){
     commit(MOVE_DOWN,data)
   },
+  changeScreenBg({commit},data){
+    commit(CHANGE_SCREEN_BKG,data)
+  }
 
 
 };

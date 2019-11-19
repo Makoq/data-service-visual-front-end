@@ -23,8 +23,8 @@
         el-row(:gutter="20" style="margin-top: 12px;" v-show="editorSettings.parentBg === 1")
           el-col(:span="24")
             el-upload(
-              class="bg-uploader"
-              action="http://localhost:3000/api/uploadfile/"
+              class="avatar-uploader"
+              action="http://localhost:8897/canvasimg/"
               :show-file-list="false"
               :on-success="handleScreenBgUploadSuccess"
               :before-upload="beforeUpload")
@@ -385,9 +385,9 @@
           .title 上传图片
           el-upload(
             class="bg-uploader"
-            action="http://localhost:3000/api/uploadfile/"
+            action="http://localhost:8897/canvasimg/"
             :show-file-list="false"
-            :on-success="handleImageUploadSuccess"
+            :on-success="handleImgBgUploadSuccess"
             :before-upload="beforeUpload")
             .bg-preview-wrapper(v-if="this.currentElement.data.datacon.img")
               img.bg-preview(:src="this.currentElement.data.datacon.img")
@@ -502,10 +502,37 @@ export default {
     //     }
     //   })
     //   .catch(() => {});
+     
   },
   methods: {
+    handleImgBgUploadSuccess(res, file) {
+      let url='http://localhost:8897/canimg/'+res.id
+      let indx=this.$store.state.currentElementIndex
+      let data={
+           type: "image",
+          datacon: {
+            img: url,
+            imgSize: "cover",
+            opacity: 1
+          }
+      };
+      let mydata={
+        ind:indx,
+        data:data
+      }
+      this.$store.dispatch('setComponentData',mydata)
+      console.log(this.$store.state.chartData.elements[indx])
+      // this.$store.state.chartData.elements[ind].data.datacon.img = url;
+
+      // this.imageUrl = URL.createObjectURL(file.raw);
+    },
     handleScreenBgUploadSuccess(res, file) {
-      this.$store.state.chartData.bgimage = res.url;
+      let url='http://localhost:8897/canimg/'+res.id
+       
+      this.$store.dispatch('changeScreenBg',url)
+      console.log(this.$store.state.chartData)
+      // this.$store.state.chartData.elements[ind].data.datacon.img = url;
+
       // this.imageUrl = URL.createObjectURL(file.raw);
     },
     beforeUpload(file) {
@@ -534,6 +561,8 @@ export default {
       // console.log(file);
       // this.imageUrl = URL.createObjectURL(file.raw);
     },
+    handleAvatarSuccess(){},
+    beforeAvatarUpload(){},
     wapper_data(row,col,dataset){
       var siteCount = dataset.getChildNodeCount();
             for (let i = 1; i < siteCount; i++) {
@@ -1128,4 +1157,7 @@ export default {
     margin: 0 auto;
   }
 }
+
+
+
 </style>

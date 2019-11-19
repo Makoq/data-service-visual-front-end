@@ -9,6 +9,7 @@
       a(href="javascript:;" @click="moveUpChartCom") Move Up
       a(href="javascript:;" @click="moveDownChartCom") Move Down
       a(href="javascript:;" @click="deleteChartCom") Delete
+      a(href="javascript:;" @click="compnentInfo") Info
       a(href="javascript:;" @click="draggable") {{draggableComponent?'Disdraggable':'Draggable'}}
 
     //- 发布对话框
@@ -262,13 +263,17 @@ export default {
     },
 
     // === 右键菜单 ===
+    compnentInfo(){
+      console.log(this.$store.state.currentElementIndex)
+      console.log("component info:",this.$store.state.chartData.elements)
+    },
     // 复制
     copyChartCom() {
      
       var cur_elem_index = this.$store.state.currentElementIndex;
       var chart_data = this.$store.state.chartData;
       var cur_com = chart_data.elements[cur_elem_index];
-      
+
       console.log(chart_data)
       if(cur_com.data.settings.type==="leaflat"){
         alert("can't copy this!")

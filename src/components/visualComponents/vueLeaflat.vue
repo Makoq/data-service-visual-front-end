@@ -1,8 +1,10 @@
 <template>
 <div id="leaflet-parent">
-   <div 
+   <div
+   :width="width"
+   :height="height" 
    @click="click_listener"
-   id="map"></div>
+   id="mapid"></div>
  
 </div>
 </template>
@@ -24,7 +26,7 @@
       //  document.getElementById('mapid').id="mapid"+this.id
       //  let _map="mapid"+this.id
 
-       this.map= L.map("map").setView([33.49771311230842, 109.45744048529967],8);
+       this.map= L.map("mapid").setView([33.49771311230842, 109.45744048529967],8);
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         
           }).addTo(self.map)
