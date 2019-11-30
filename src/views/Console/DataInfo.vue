@@ -2,12 +2,12 @@
 <template  >
   <div>
     <el-row>
-       <el-col :span="5">
+       <!-- <el-col :span="5">
          <h3>{{$t('udx_schema.schema_tree')}}</h3>
         <el-row>
          
            
-          <!-- <el-select v-model="value" placeholder="请选择" @change="selectValue">
+          <el-select v-model="value" placeholder="请选择" @change="selectValue">
             <el-option
               v-for="item in configList"
               :key="item.value"
@@ -15,12 +15,12 @@
               :value="item.schema"
             ></el-option>
 
-          </el-select> -->
+          </el-select> 
 
           <div id="treeview" class="treeview"></div>
         </el-row>
-       </el-col>
-      <el-col :span="19">
+       </el-col> -->
+      <el-col :span="24">
 
 <el-row>
   <h4>Basic Information:</h4>
@@ -123,26 +123,26 @@ export default {
           console.log(this.schemaTreeNode)
            var nodes = new tools.UdxNode();
 
-          tools.trans_new(
-            {
-              UdxNode:  res.data.data.UdxDeclaration.UdxNode
-            },
-            nodes
-          );
-          tools.reset();
+          // tools.trans_new(
+          //   {
+          //     UdxNode:  res.data.data.UdxDeclaration.UdxNode
+          //   },
+          //   nodes
+          // );
+          // tools.reset();
 
           //  this.initJsTree(nodes.children);
           // 更新tree的数据
-          $("#treeview").jstree(true).settings.core.data = nodes.children;
-          $("#treeview")
-            .jstree(true)
-            .refresh();
+          // $("#treeview").jstree(true).settings.core.data = nodes.children;
+          // $("#treeview")
+          //   .jstree(true)
+          //   .refresh();
 
 
-            $("#treeview1").jstree(true).settings.core.data = nodes.children;
-          $("#treeview1")
-            .jstree(true)
-            .refresh();
+          //   $("#treeview1").jstree(true).settings.core.data = nodes.children;
+          // $("#treeview1")
+          //   .jstree(true)
+          //   .refresh();
 
 
 
@@ -150,34 +150,34 @@ export default {
     },
  
     initJsTree(data) {
-      $("#treeview").jstree({
-        type: {
-          default: {
-            icon: false
-          }
-        },
-        core: {
-          multiple: false,
-          data,
-          dblclick_toggle: false
-        },
-        plugins: ["search"]
-      });
+      // $("#treeview").jstree({
+      //   type: {
+      //     default: {
+      //       icon: false
+      //     }
+      //   },
+      //   core: {
+      //     multiple: false,
+      //     data,
+      //     dblclick_toggle: false
+      //   },
+      //   plugins: ["search"]
+      // });
     },
     initJsExtractTree(data){
-         $("#treeview1").jstree({
-        type: {
-          default: {
-            icon: false
-          }
-        },
-        core: {
-          multiple: false,
-          data,
-          dblclick_toggle: false
-        },
-        plugins: ["search"]
-      });
+      //    $("#treeview1").jstree({
+      //   type: {
+      //     default: {
+      //       icon: false
+      //     }
+      //   },
+      //   core: {
+      //     multiple: false,
+      //     data,
+      //     dblclick_toggle: false
+      //   },
+      //   plugins: ["search"]
+      // });
     },
     // selectValue(v) {
     //   this.udx_schema_data = this.tableObj[v];

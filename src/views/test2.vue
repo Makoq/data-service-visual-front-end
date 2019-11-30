@@ -1,10 +1,31 @@
 <template>
   <div>
-    <p>vue-json-editor</p>
+     
+    <el-form ref="form" :model="form" label-width="80px">
+    <el-form-item label="desc">
+      <el-input type="textarea" v-model="form.desc"></el-input>
+    </el-form-item>
+    <el-form-item label="upload">
+      <el-upload
+          class="upload-demo"
+          ref="upload"
+          action="/te/publicdata"
+          :data="form"
+          :on-remove="handleRemove"
+          :on-success="handleAvatarSuccess"
+          :limit="5"
+          :auto-upload="false">
+          <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
+          <el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传到服务器</el-button>
+          <div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>
+        </el-upload>
+    </el-form-item>
+    </el-form>
 
-    <vue-json-editor v-model="json" :show-btns="true" @json-change="onJsonChange"></vue-json-editor>
-    <vue-canvas></vue-canvas>
-    <el-button @click="udx_dataset()">udx_dataset</el-button>
+
+    <!-- <input type="file" id="file" multiple="multiple" onchange="handleFile()"> -->
+    
+
   </div>
 </template>
  
@@ -18,21 +39,13 @@ import vueCanvas from '../components/visualComponents/vueCanvas';
 export default {
   data() {
     return {
-      json: {
-        columns: ["日期", "访问用户"],
-        rows: [
-          {
-            日期: "1月1日",
-            访问用户: 1523
-          },
-          {
-            日期: "1月2日",
-            访问用户: 1223
-          },
-          
-        ]
+      uploadurl:'/te/publicdata',
+      form:{
+      
+        desc:'my data'
       },
-      img: ""
+      formData:'',
+      dataFile:{}
     };
   },
 
@@ -40,34 +53,29 @@ export default {
     vueJsonEditor,
     vueCanvas
   },
-
+  
   methods: {
-    onJsonChange(value) {
-      console.log("value:", value);
+     submitUpload() {
+        this.$refs.upload.submit();
+      },
+      handleRemove(file, fileList) {
+        console.log(file, fileList);
+      },
+    handleAvatarSuccess(res,file){
+      if("source_store_id" in res){
+        this.$message("ok")
+      } 
     },
-    udx_dataset() {
-      httpUtils.get(this, "http://localhost:8897/testChart", data => {
-        
-        
-        var dataset = new UdxDataset();
-        dataset.createDataset();
-        dataset.loadFromXmlStream(data);
-
-        //取结点操作，这里去了两个结点的值
-         let x_value=[],y_value=[]
-        for(let i=0;i<7;i++){
-            x_value.push(dataset.getChildNode(0).getKernel().getTypedValueByIndex(i))
-            y_value.push(dataset.getChildNode(1).getKernel().getTypedValueByIndex(i))
-
-        }
-        
-        console.log("DATASET", dataset);
-        console.log("x__val", x_value);
-        console.log("y__val", y_value);
-
-
-      });
-    }
+    beforeAvatarUpload(file){
+     
+      console.log("bef",file)
+    },
+     
   }
 };
 </script>
+<style scoped>
+.upload-demo input .el-upload__input{
+  display: none!important;
+}
+</style>>

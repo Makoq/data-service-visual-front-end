@@ -27,10 +27,26 @@ export default {
           path: '/console/workspace',
         },
         {
+          name: this.$t('navmenu.data_direct_upload'),
+          icon: 'el-icon-upload2',
+          path: '/console/directupload',
+        },
+        {
+          name: this.$t('navmenu.cloud_datalist'),
+          icon: 'el-icon-cloudy',
+          path: '/console/service/cloud',
+        },
+        {
           name: this.$t('navmenu.data_management'),
           icon: 'el-icon-s-management',
           path: '/console/service/data',
         },
+        {
+          name: this.$t('navmenu.udx_dataService'),
+          icon: 'el-icon-link',
+          path: '/console/service/udx',
+        },
+
         {
           name: this.$t('navmenu.data_process_service'),
           icon: 'el-icon-menu',

@@ -19,9 +19,12 @@ const zh_CN = {
 
 
   navmenu: {
+    cloud_datalist:'在线数据服务',
+    data_direct_upload:'数据共享',
     service_status: '服务状态',
-    data_management: '数据服务',
-    my_visualization: '我的可视化',
+    data_management: '数据管理',
+    udx_dataService:'udx数据服务',
+    my_visualization: '可视化服务',
     data_process_service:'数据处理服务',
     data_process_program:'数据处理方案',
     my_workspace: '工作空间',
@@ -37,7 +40,7 @@ const zh_CN = {
     data_process_program: '数据处理方案',
   },
   addUdxSource: {
-    name: 'UDX名称',
+    name: '名称',
     desc: '摘要',
     tags: '标签',
     data: '提交',
@@ -46,7 +49,8 @@ const zh_CN = {
     workspace: '工作空间',
     local_path: '连接参数',
     select_local_file: '文件',
-    process_methods:'处理方法'
+    process_methods:'处理方法',
+    img:'图片'
 
   },
   udx_schema: {
@@ -64,11 +68,13 @@ const zh_CN = {
 
     name: '名称',
     workspace: '工作空间',
-    tags: '标签',
+    tags: '关键字',
     oper: '操作',
     date: '创建时间',
     user: '用户',
     desc: '描述',
+    public:'发布',
+    img:'图片'
 
   },
   workspace: {

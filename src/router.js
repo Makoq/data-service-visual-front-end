@@ -27,10 +27,10 @@ const router = new Router({
           },
         },
         {
-          path: 'test2',
+          path: 'directupload',
           component: () => import('./views/test2.vue'),
           meta: {
-            title: 'test2',
+            title: 'Data Share ',
           },
         },
         {

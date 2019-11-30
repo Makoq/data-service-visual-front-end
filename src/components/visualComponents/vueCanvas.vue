@@ -90,10 +90,10 @@ export default {
           let listnode = dataset.getChildNode(1);
 
           let colorJsonStr = sessionStorage.colorJson;
-          if (colorJsonStr === undefined) {
-            alert("please choose a color clamp.");
-            return;
-          }
+          // if (colorJsonStr === undefined) {
+          //   alert("please choose a color clamp.");
+          //   return;
+          // }
 
 
           let colorBar = new Array();

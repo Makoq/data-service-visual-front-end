@@ -13,9 +13,12 @@ const en_US = {
     login_success_info: 'Login successfully',
   },
   navmenu: {
+    cloud_datalist:'online data service',
+    data_direct_upload:'Data Share',
     service_status: 'Service State',
     data_management: 'Data Service',
-    data_process_service:'Data Process Service',
+    data_process_service:'Data Process Management',
+    udx_dataService:'Udx Service',
     data_process_program:'Data Process Program',
     my_visualization: 'My Visualization',
     my_workspace: 'workspace',
@@ -43,7 +46,7 @@ const en_US = {
   },
 
   addUdxSource: {
-    name: 'UDX Name',
+    name: 'Name',
     desc: 'Description',
     tags: 'Tags',
     data: 'Submit',
@@ -52,7 +55,8 @@ const en_US = {
     workspace: 'Work Space',
     local_path: 'Local Path',
     select_local_file: 'File',
-    process_methods:'Methods'
+    process_methods:'Methods',
+    img:'Image'
   },
   udx_schema: {
     schema_tree: 'Udx Schema Tree',
@@ -68,11 +72,13 @@ const en_US = {
     edit: 'Edit',
     name: 'Name',
     workspace: 'Work Space',
-    tags: 'Tags',
+    tags: 'Keywords',
     oper: 'Operation',
     date: 'Date',
     user: 'User',
     desc: 'Description',
+    public:'Public',
+    img:'Img'
 
   },
   system_state: {

@@ -6,16 +6,23 @@
     </el-row>
 
     <!-- 数据源列表 -->
-    <el-tabs v-model="activeName" @tab-click="tab_click">
+    <el-tabs v-model="activeName" @tab-click="tab_click" >
       <!-- UDX Source -->
       <el-tab-pane :label="tabName" name="first">
         <el-table :data="udxDataList"
+        stripe
         :row-class-name="tableRowClassName"
         >
       
 
-          <el-table-column prop="name" :label="$t('data.name')"></el-table-column>
+          <el-table-column    prop="name" :label="$t('data.name')"></el-table-column>
           <el-table-column prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
+          <el-table-column  prop="img" :label="$t('data.img')">
+            <template slot-scope="scope">
+              <img height="70px" width="120px" style="border: 1px solid"  :src="scope.row.img"/>
+            </template>
+          </el-table-column>
+
           <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
           
 
@@ -28,6 +35,8 @@
               <el-button type="text" size="small" @click="share(scope.row)">{{$t('data.share')}}</el-button>
               <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
               <el-button type="text" size="small" @click="editData(scope.row.id)">{{$t('data.edit')}}</el-button>
+
+              <el-button type="text" size="small" @click="publicMyData(scope.row.id)">{{$t('data.public')}}</el-button>
 
 
             </template>
@@ -134,6 +143,8 @@ export default {
       this.getDataSource("udx_source");
       this.getAllCount('udx_source');
 
+    }else if(this.currentType==='udx'){
+      this.tabName="UDX Service"
     }else if( this.currentType==='process'){
 
       this.udxDataList=[]
@@ -192,6 +203,10 @@ export default {
     }
   },
   methods: {
+     publicMyData(id){
+       console.log(id)
+
+     },
      getAllCount(type){
       httpUtils.get(this, `${urlUtils.data_count}?type=${type}`, (data) => {
         this.total = data;

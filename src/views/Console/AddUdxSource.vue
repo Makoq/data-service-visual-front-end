@@ -39,13 +39,34 @@
             ></el-input>
             <el-button v-else class="button-new-tag" size="small" @click="showInput">+ 添加标签</el-button>
           </el-form-item>
+          <!-- 图片 -->
+          <el-form-item :label="$t('addUdxSource.img')" prop="name">
+             <div style="display: -webkit-inline-box;"> 
+             <img id="edit_img" v-if="imgUrl&&type!='data'" :src="imgUrl" />
+             <el-upload
+              action="#"
+              list-type="picture-card"
+              :limit="1"
+              :on-change="changeImg"
+              :on-preview="handlePictureCardPreview"
+              :on-remove="handleRemove"
+              :auto-upload="false">
+              <i class="el-icon-plus"></i>
+            </el-upload>
+            
+            <el-dialog :visible.sync="dialogVisible">
+              <img id="avater" width="100%" :src="dialogImageUrl" />
+            </el-dialog>
+           
+             </div>
+          </el-form-item>
           <!-- 连接参数 -->
           <el-form-item :label="$t('addUdxSource.local_path')" prop="name">
-            <el-input v-model="form.selectPath" placeholder="" style="width:320px;">
+            <el-input v-model="form.selectPath" placeholder="" style="width:520px;">
               <template slot="prepend">Local Path:</template>
             </el-input>
-            &nbsp;<el-button >{{$t('addUdxSource.select_local_file')}}
-                </el-button>
+            <!-- &nbsp;<el-button >{{$t('addUdxSource.select_local_file')}}
+                </el-button> -->
           </el-form-item>
           <!-- 处理方法 -->
           <el-form-item :label="$t('addUdxSource.process_methods')" prop="name">
@@ -122,6 +143,10 @@ export default {
       fileList: [],
       //编辑数据
       isEditType:false,
+      type:'',
+      dialogImageUrl: '',
+      dialogVisible: false,
+      imgUrl:'',
       type:''
 
       
@@ -152,6 +177,46 @@ export default {
     this.myWokrspace("workspace")
   },
   methods: {
+    changeImg(file, fileList){
+      let type=document.location.href.split("?")
+      let real_type=type[type.length-1].split("=")
+      this.type=real_type[1]
+      let child=document.getElementById("edit_img")
+    
+      if(child!=null){
+        let parent=child.parentElement
+        parent.removeChild(child)
+      }
+      
+      let self=this
+      setTimeout(()=>{
+        let img=document.getElementsByTagName("img")[0]
+        self.imgUrl=self.getBase64Image(img)
+        
+         
+      },1000)
+      
+     
+
+    },
+    handleRemove(file, fileList) {
+      console.log(file, fileList);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+      console.log(this.dialogImageUrl)
+    },
+    getBase64Image(img) {
+         var canvas = document.createElement("canvas");
+         canvas.width = img.width;
+         canvas.height = img.height;
+         var ctx = canvas.getContext("2d");
+         ctx.drawImage(img, 0, 0, img.width, img.height);
+         var dataURL = canvas.toDataURL("image/png");
+         return dataURL
+         // return dataURL.replace("data:image/png;base64,", "");
+     },
     initEdit(id){
       
       httpUtils.get(this,urlUtils.solo_udx_schema+"?id="+id,data=>{
@@ -164,6 +229,9 @@ export default {
            this.form.desc=data[0].describe
            this.form.selectPath=data[0].localPath
            this.form.workspaceId=data[0].workspace
+        //  this.dialogImageUrl=data[0].img
+         this.imgUrl=data[0].img
+          //  document.getElementsByTagName("img")[0].src=data[0].img
           
            
            
@@ -186,6 +254,9 @@ export default {
       //   }
       // }
 
+      
+      
+      
       if (this.form.name.length <= 0) {
         alert("必须填写数据源名称");
         return;
@@ -208,6 +279,9 @@ export default {
       formData.append("localpath", this.form.selectPath);
 
       formData.append("workspace", this.value);
+      formData.append("img", this.imgUrl);
+      console.log(this.imgUrl)
+
      
 
       this.form.myWokrspace.forEach((v)=>{
@@ -232,7 +306,7 @@ export default {
                     message: "修改成功"
                   });
                   //TODO 数据创建成功后跳转到回列表
-                  // this.$router.replace("/console/service/");
+                  this.$router.replace("/console/service/data");
 
                 });
       }else{
@@ -242,9 +316,9 @@ export default {
                     message: "保存成功啦"
                   });
                   //TODO 数据创建成功后跳转到回列表
-
+                  this.$router.replace("/console/service/data");
                   // this.$router.replace("/console/service/"+_self.type);
-                  console.log("mkm",_self.type)
+                   
                 });
       }
       
@@ -336,4 +410,32 @@ export default {
   margin-left: 10px;
   vertical-align: bottom;
 }
+/* img */
+
+.avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+  .el-upload__input{
+    display: none !important;
+  }
 </style>
