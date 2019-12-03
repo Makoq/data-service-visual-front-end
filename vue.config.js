@@ -13,7 +13,7 @@ module.exports = {
         },
       },
       '/te': {
-        target: 'http://111.229.14.128:8899/',
+        target: 'http://localhost:8899/',
         ws: true,
         changeOrigin: true,
         pathRewrite: {

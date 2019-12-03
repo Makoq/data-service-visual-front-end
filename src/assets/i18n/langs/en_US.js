@@ -65,6 +65,7 @@ const en_US = {
     data_show:'Udx Data Show'
   },
   data: {
+    fetch:'Fetch',
     check: 'Detail',
     share: 'Share',
     content: 'Content',

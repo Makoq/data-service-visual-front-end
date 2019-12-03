@@ -2,7 +2,7 @@
   <div>
     <!-- 新建数据源按钮 -->
     <el-row style="margin-bottom: 20px;">
-      <el-button type="primary" @click="addData">{{$t('data_management.add_data_source')}}</el-button>
+      <el-button v-if="currentType!='cloud'" type="primary" @click="addData">{{$t('data_management.add_data_source')}}</el-button>
     </el-row>
 
     <!-- 数据源列表 -->
@@ -31,12 +31,13 @@
               <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
               <!-- 将数据抽取部分抛弃，把schema树合并到详情 -->
               <!-- <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button> -->
+              <el-button v-if="currentType!='data'" type="text" size="small" @click="getOnlineData(scope.row)" id="btn_share">{{$t('data.fetch')}}</el-button>
 
-              <el-button type="text" size="small" @click="share(scope.row)">{{$t('data.share')}}</el-button>
-              <el-button type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)">{{$t('data.delete')}}</el-button>
-              <el-button type="text" size="small" @click="editData(scope.row.id)">{{$t('data.edit')}}</el-button>
+              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="share(scope.row)" id="btn_share">{{$t('data.share')}}</el-button>
+              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)" id="btn_del">{{$t('data.delete')}}</el-button>
+              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="editData(scope.row.id)" id="btn_edit">{{$t('data.edit')}}</el-button>
 
-              <el-button type="text" size="small" @click="publicMyData(scope.row.id)">{{$t('data.public')}}</el-button>
+              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="publicMyData(scope.row)" id="btn_public">{{$t('data.public')}}</el-button>
 
 
             </template>
@@ -99,6 +100,7 @@ import toolUtils from '../../utils/toolUtils';
 
 
 import bus from '../../assets/eventBus';
+import { thisExpression } from 'babel-types';
 /* eslint-disable */
 export default {
   props: ["user"],
@@ -121,7 +123,9 @@ export default {
       //share
       shareDialog:false,
       //type
-      currentType:''
+      currentType:'',
+      //onlinedataid
+      onlineDataId:[]
 
     };
   },
@@ -130,7 +134,7 @@ export default {
        let type=to.path.split("/")
       
        this.currentType=type[type.length-1]
-        console.log("sd",this.currentType)
+        console.log("current",this.currentType)
     
     if( this.currentType==='data'){
 
@@ -160,39 +164,50 @@ export default {
     //TODO 获取数据处理方案列表
       this.tabName="Program Service"
 
+    }else if( this.currentType==='cloud'){
+
+      this.udxDataList=[]
+      this.total=0
+
+    //TODO 获取数据处理方案列表
+      this.tabName="Cloud data"
+      this.onlineDataList()
+      
     }
      
     }
   },
   mounted() {
 
-    let type=window.location.href.split("/")
-    console.log()
-    if(type[type.length-1]==='data'){
+    // let type=window.location.href.split("/")
+    let type=this.$route.params.type
+    console.log(type)
+    if(type==='data'){
       this.currentType="data"
      
       this.tabName="Data Service"
 
-    }else if(type[type.length-1]==='process'){
+      this.getDataSource("udx_source");
+      this.getAllCount('udx_source');
+
+    }else if(type==='cloud'){
+      this.currentType='cloud'
+      this.onlineDataList()
+    }
+    
+    else if(type==='process'){
 
      
       this.currentType="process"
       this.tabName="Process Service"
-    }else if(type[type.length-1]==='program'){
+    }else if(type==='program'){
 
-     
+  
       this.currentType="program"
       this.tabName="Program Service"
     }
-  if(type[type.length-1]==='data'){
 
-    this.getDataSource("udx_source");
-    this.getAllCount('udx_source');
-  }else if(type[type.length-1]==='process'){
-
-  }else{
-
-  }
+  
     
     
 
@@ -203,8 +218,78 @@ export default {
     }
   },
   methods: {
-     publicMyData(id){
-       console.log(id)
+     publicMyData(row){
+      //  this.$axios.get(`/api/${urlUtils.public_data}`).then(re=>{
+      //     if(re.status===200){
+      //       this.$message('public successful!')
+      //     }else{
+      //       this.$message('err')
+      //     }       
+      //  }) 
+      let self=this
+       this.$axios.post(`/api/${urlUtils.public_data}`,{
+        data:row.localPath
+       }).then(re=>{
+          if(re.status===200){
+             
+            let formData=new FormData()
+            formData.append("info",JSON.stringify(row))
+            formData.append("uid",re.data.uid.uid)
+
+            self.$axios.post(`/api/${urlUtils.public_data_info}`,formData)
+            .then(re=>{
+              console.log(re.data)
+            })
+            
+
+             
+          }else{
+            this.$message('err')
+          }       
+       })  
+
+
+
+
+     },
+     onlineDataList(){
+       let self=this
+       this.currentPage=1
+       this.$axios.get(`/te/${urlUtils.onlineDataList}?page=${self.currentPage}`)
+       .then(re=>{
+         console.log(re)
+         re.data.forEach(el => {
+           el.info['server_id']=el.uid
+           self.udxDataList.push(el.info)
+         
+         });
+
+       }) 
+     },
+     getOnlineData(row){
+       //TODO 获取在线数据流
+       console.log("data:",row)
+       let uid =row.server_id
+       this.$axios.get(`/te/${urlUtils.dataSteam}?uid=${uid}`,{
+         responseType: 'blob'
+       })
+       .then(re=>{
+          
+          const blob = new Blob([re.data], {type: 'application/zip;charset=utf-8'});
+          const alink = document.createElement('a')
+          alink.style.display = 'none'
+          alink.href = URL.createObjectURL(blob) 
+          document.body.appendChild(alink)
+          alink.click()
+          URL.revokeObjectURL(alink.href)
+          document.body.removeChild(alink)
+
+       })
+
+
+
+
+
 
      },
      getAllCount(type){
@@ -265,29 +350,6 @@ export default {
           }
         );
       });
-
-      // this.$confirm("？", "提示", {
-      //   confirmButtonText: "确定",
-      //   cancelButtonText: "取消",
-      //   type: "warning"
-      // })
-      //   .then(() => {
-      //     httpUtils.get(
-      //       this,
-      //       urlUtils.delete_source + "?id=" + id + "&type=" + type,
-      //       data => {
-      //         this.$message({
-      //           type: "success",
-      //           message: "已删除"
-      //         });
-      //         setTimeout(() => {
-      //           this.getDataSource(type);
-      //         }, 100);
-      //         // this.editChart(data._id);
-      //       }
-      //     );
-      //   })
-      //   .catch(() => {});
     },
     editData(id){
       this.$router.push({path:'udx-source',query:{id:id,type:'edit'}})

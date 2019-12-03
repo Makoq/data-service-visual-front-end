@@ -15,6 +15,14 @@ const urls = {
   udx_node: '/udxnode',
   default_udx_info:'/config',
 
+  //发布数据
+  public_data:'onlinedata',
+  public_data_info:'onlinedatainfo',
+  //在线数据列表
+  onlineDataList:'datalist',
+  //获取数据流】
+  dataSteam:'datasource',
+
 
   //数据服务详情中的schema
   data_source_detail_schema_file:'/schemafile',

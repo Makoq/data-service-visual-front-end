@@ -60,6 +60,7 @@ const zh_CN = {
     data_show:'Udx Data 数据抽取展示'
   },
   data: {
+    fetch:'获取',
     check: '详情',
     content: '内容',
     share: '分享',

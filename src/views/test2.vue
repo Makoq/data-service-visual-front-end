@@ -11,6 +11,7 @@
           ref="upload"
           action="/te/publicdata"
           :data="form"
+          :before-upload="before"
           :on-remove="handleRemove"
           :on-success="handleAvatarSuccess"
           :limit="5"
@@ -66,7 +67,7 @@ export default {
         this.$message("ok")
       } 
     },
-    beforeAvatarUpload(file){
+    before(file){
      
       console.log("bef",file)
     },
