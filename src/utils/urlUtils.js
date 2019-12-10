@@ -20,8 +20,12 @@ const urls = {
   public_data_info:'onlinedatainfo',
   //在线数据列表
   onlineDataList:'datalist',
-  //获取数据流】
+  //获取在线数据流
   dataSteam:'datasource',
+  //搜索在线数据
+  searchOnlieData:'onlinefilter',
+  //搜索本地数据
+  searchLocalData:'localfilter',
 
 
   //数据服务详情中的schema

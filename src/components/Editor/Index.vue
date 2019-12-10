@@ -148,9 +148,12 @@ export default {
       let that = this;
       return new Promise(function(resolve, reject) {
         let screenRef = that.$refs["screenContainer"].$refs["screen"];
+          // let screenRef = that.$refs["screenContainer"].$refs["panel"];
         // let screenRef=document.getElementById('app')
+        // let screenRef=document.getElementsByClassName('filler')[0]
+
         html2canvas(screenRef, {
-          backgroundColor: "#142E48"
+          // backgroundColor: "#142E48"
         }).then(canvas => {
           let dataURL = canvas.toDataURL("image/png");
           resolve(dataURL);

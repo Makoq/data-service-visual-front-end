@@ -8,6 +8,23 @@
       style="border:1px solid #c3c3c3;"
     >您的浏览器不支持 HTML5 canvas 标签。</canvas>
 
+  <el-row>
+    <el-col :span="6" >
+      <el-card></el-card>
+    </el-col>
+     <el-col :span="6" >
+      <el-card></el-card>
+    </el-col>
+     <el-col :span="6" >
+      <el-card></el-card>
+    </el-col>
+     <el-col :span="6" >
+      <el-card></el-card>
+    </el-col>
+     <el-col :span="6" >
+      <el-card></el-card>
+    </el-col>
+  </el-row>
 
   </div>
 </template>

@@ -26,6 +26,9 @@ TODO:
   2*处理方法路径
 
 
+巢湖专题
+data_src:  "http://localhost:8897/testChart?file=testObservation&type=chart",
+      data_sum:"http://localhost:8897/testChart?file=testSimulation&type=chart",
 
 
 

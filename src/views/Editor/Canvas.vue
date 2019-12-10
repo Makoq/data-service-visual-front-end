@@ -61,7 +61,7 @@
             @dragging="handleDrag(item, arguments[0])")
             div.filler(
               v-if="item.data.type == 'mycanvas'"
-              :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}")
+              :style="{width: '100%', height: '100%', backgroundColor: item.bgcolor}" ref="panel")
               vue-canvas(
                  v-if="item.data.settings.type=='mycanvas'"
                 :width="item.w + 'px'"

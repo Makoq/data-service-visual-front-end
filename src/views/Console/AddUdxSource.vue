@@ -131,7 +131,7 @@ export default {
         // tag
         dynamicTags: ["UDX", "水文学"],
         desc: "",
-        selectPath:'F:/udx/UdxServer/Server/data_dir/testschema',
+        selectPath:'F:/udx/UdxServer/Server/data_dir/testUpload/testUpload.zip',
         workspaceId:'',
         processMethods:''
       },
@@ -280,7 +280,7 @@ export default {
 
       formData.append("workspace", this.value);
       formData.append("img", this.imgUrl);
-      console.log(this.imgUrl)
+     
 
      
 

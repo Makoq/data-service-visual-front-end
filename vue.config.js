@@ -20,6 +20,14 @@ module.exports = {
           '^/te': '/',
         },
       },
+      '/pd': {
+        target: 'http://111.229.14.128:8899/',
+        ws: true,
+        changeOrigin: true,
+        pathRewrite: {
+          '^/pd': '/',
+        },
+      },
 
 
     },

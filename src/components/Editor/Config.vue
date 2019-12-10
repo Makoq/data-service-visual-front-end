@@ -441,6 +441,9 @@ import { mapState, mapGetters } from "vuex";
 import { all } from "q";
 import { constants } from "crypto";
 
+import proj4 from 'proj4'
+
+
 export default {
   components: {
     vueJsonEditor
@@ -459,7 +462,7 @@ export default {
       },
       thisKey: "general",
       connectList: [],
-      data_src:  "http://localhost:8897/testChart?file=testObservation&type=chart",
+      data_src:  "http://localhost:8897/testChart?file=SWAT_MASK&type=chart",
       data_sum:"http://localhost:8897/testChart?file=testSimulation&type=chart",
       color_bar: [], //color色带
       color_bar_value: "",
@@ -693,9 +696,10 @@ export default {
               dataset.loadFromXmlStream(data);
 
               if (_self.currentElement.data.type === "mycanvas") {
+                 this.data_src="http://localhost:8897/testChart?file=SWAT_DEM&type=chart"
                 //拿到最大最小值
-                var min = 99999,
-                  max = -99999;
+                var min = Number.MIN_VALUE,
+                  max = Number.MAX_VALUE;
                 var listnode = dataset.getChildNode(1);
                 var rows = listnode.getChildNodeCount();
                 // 一开始已经检测过了，保证了每个item(int_array|real_array)的长度是一致的，所以，这里直接取第一个的长度就可以了。
@@ -736,14 +740,14 @@ export default {
                     type: "raw",
                     connectId: "",
                     data: {
-                      columns: url,
+                      columns: obs,
                       rows: [max, min]
                     },
                     getUrl: "",
                     interval: 2
                   },
                   generated: {
-                    columns: url,
+                    columns: obs,
                     rows: ""
                   }
                 };
@@ -753,6 +757,7 @@ export default {
                   data: initData
                 };
                 _self.$store.dispatch("setComponentData", da);
+                console.log(_self.currentElement)
 
                 globalBus.$emit("updateData");
               }else if(_self.currentElement.data.type === "map") {
@@ -763,45 +768,55 @@ export default {
                   row = [];
 
                     if (_self.currentElement.data.settings.type === "mapbox") {
-                      var siteCount = dataset.getChildNodeCount();
-                      for (let i = 1; i < siteCount; i++) {
-                        var site = [];
-                        var siteNode = dataset.getChildNode(i);
-                        var yearCount = siteNode.getChildNodeCount();
-                        for (var j = 0; j < yearCount; j++) {
-                          var yearNode = siteNode.getChildNode(j);
-                          var monthCount = yearNode.getChildNodeCount();
-                          for (var k = 0; k < monthCount; k++) {
-                            var monthNode = yearNode.getChildNode(k);
-                            //console.log(monthNode.getKernel().getArrayCount());
-                            var days = monthNode.getKernel().getArrayCount();
-                            var sum = 0;
-                            for (var m = 0; m < days; m++) {
-                              sum += monthNode.getKernel().getTypedValueByIndex(m);
-                            }
-                            sum /= days;
+                      this.data_src="http://localhost:8897/testChart?file=SWAT_MASK&type=chart"
+                      let nodeCount = dataset.getChildNodeCount();
+                      let node=dataset.getChildNode(1).getChildNode(0).getChildNode(3).getChildNode(0)
+                      let coords=(node.getKernel().getTypedValue()).split(",");
 
-                            site.push(sum);
+                      let co=[]
+                      var firstProjection = 'PROJCS["NAD83 / Massachusetts Mainland",GEOGCS["NAD83",DATUM["North_American_Datum_1983",SPHEROID["GRS 1980",6378137,298.257222101,AUTHORITY["EPSG","7019"]],AUTHORITY["EPSG","6269"]],PRIMEM["Greenwich",0,AUTHORITY["EPSG","8901"]],UNIT["degree",0.01745329251994328,AUTHORITY["EPSG","9122"]],AUTHORITY["EPSG","4269"]],UNIT["metre",1,AUTHORITY["EPSG","9001"]],PROJECTION["Lambert_Conformal_Conic_2SP"],PARAMETER["standard_parallel_1",42.68333333333333],PARAMETER["standard_parallel_2",41.71666666666667],PARAMETER["latitude_of_origin",41],PARAMETER["central_meridian",-71.5],PARAMETER["false_easting",200000],PARAMETER["false_northing",750000],AUTHORITY["EPSG","26986"],AXIS["X",EAST],AXIS["Y",NORTH]]';
+
+                      coords.forEach(v=>{
+                        let c=v.split(" ")
+                        c[0]=Number(c[0])
+                        c[1]=Number(c[1])
+                        
+                        co.push(proj4(firstProjection).inverse(c))
+
+                      })
+                     
+
+
+                      //初始化数据
+                        let initData = {
+                          type: "map",
+                          settings: {
+                            type:
+                              _self.$store.state.chartData.elements[_self.$store.state.currentElementIndex].data.settings.type //类型
+                          },
+                          datacon: {
+                            type: "raw",
+                            connectId: "",
+                            data: {
+                              columns: obs,
+                              rows: co[0]
+                            },
+                            getUrl: "",
+                            interval: 2
+                          },
+                          generated: {
+                            columns: obs,
+                            rows: co[0]
                           }
-                        }
-                        col.push(site);//将月均值入到col
-                      }
-                      //将第一个位置元素，入栈
-                      let location_count = dataset
-                        .getChildNodeCount()
+                        };
+                        let da = {
+                          ind: _self.$store.state.currentElementIndex,
+                          data: initData
+                        };
+                     
+                        _self.$store.dispatch("setComponentData", da);
 
-                      
-                      let lat = dataset.getChildNode(0).getChildNode(0);
-                      let lag = dataset.getChildNode(0).getChildNode(1);
-
-                      for (var i = 0; i < location_count-1; i++) {
-                        let obj = {};
-                        obj['name']= dataset.getChildNode(i).getName();
-                        obj['lat'] = lat.getKernel().getTypedValueByIndex(i);
-                        obj['lag'] = lag.getKernel().getTypedValueByIndex(i);
-
-                        row.push(obj);//将站点信息，名字，经纬度，入到row
-                      }
+                     
                     } else{
                        console.log(dataset.getChildNodeCount())
                         let node_len = dataset.getChildNodeCount();

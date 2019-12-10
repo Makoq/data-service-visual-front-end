@@ -1,10 +1,24 @@
 <template>
   <div>
-    <!-- 新建数据源按钮 -->
     <el-row style="margin-bottom: 20px;">
-      <el-button v-if="currentType!='cloud'" type="primary" @click="addData">{{$t('data_management.add_data_source')}}</el-button>
+      <el-col :span="12">
+         <!-- 新建数据源按钮 -->
+          <el-button v-if="currentType!='cloud'" type="primary" @click="addData">{{$t('data_management.add_data_source')}}</el-button>
+      </el-col>
+      <el-col :span="12">
+        <!-- 数据服务搜索 -->
+          <div   class="searchInput">
+            <el-input placeholder="search data service..." v-model="searchOnlineData" class="input-with-select">
+             
+              <el-button slot="append" @click="searchService()" icon="el-icon-search" ></el-button>
+            </el-input>
+          </div>
+      </el-col>
     </el-row>
-
+    <!-- 发布数据进度条，仅在本地数据列表展示 -->
+    <el-progress v-if="readyProgress" :text-inside="true" :stroke-width="26" :percentage="percentage" status="success" ></el-progress>
+    
+     <el-divider ></el-divider>
     <!-- 数据源列表 -->
     <el-tabs v-model="activeName" @tab-click="tab_click" >
       <!-- UDX Source -->
@@ -28,7 +42,7 @@
 
           <el-table-column :label="$t('data.oper')">
             <template slot-scope="scope">
-              <el-button type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
+              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
               <!-- 将数据抽取部分抛弃，把schema树合并到详情 -->
               <!-- <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button> -->
               <el-button v-if="currentType!='data'" type="text" size="small" @click="getOnlineData(scope.row)" id="btn_share">{{$t('data.fetch')}}</el-button>
@@ -125,7 +139,14 @@ export default {
       //type
       currentType:'',
       //onlinedataid
-      onlineDataId:[]
+      onlineDataId:[],
+      //进度条
+      percentage:0,
+      readyProgress:false,
+      //在线数据服务搜索
+      searchOnlineData:'',
+      selectSearchType:''
+
 
     };
   },
@@ -134,10 +155,10 @@ export default {
        let type=to.path.split("/")
       
        this.currentType=type[type.length-1]
-        console.log("current",this.currentType)
+        
     
     if( this.currentType==='data'){
-
+      this.searchOnlineData=''
       this.udxDataList=[]
       this.total=0
 
@@ -165,6 +186,8 @@ export default {
       this.tabName="Program Service"
 
     }else if( this.currentType==='cloud'){
+      this.searchOnlineData=''
+      this.currentPage=1
 
       this.udxDataList=[]
       this.total=0
@@ -181,8 +204,9 @@ export default {
 
     // let type=window.location.href.split("/")
     let type=this.$route.params.type
-    console.log(type)
+  
     if(type==='data'){
+      
       this.currentType="data"
      
       this.tabName="Data Service"
@@ -218,27 +242,96 @@ export default {
     }
   },
   methods: {
-     publicMyData(row){
-      //  this.$axios.get(`/api/${urlUtils.public_data}`).then(re=>{
-      //     if(re.status===200){
-      //       this.$message('public successful!')
-      //     }else{
-      //       this.$message('err')
-      //     }       
-      //  }) 
+    searchService(){
+      this.currentPage=1
+       if(this.searchOnlineData.length<1){
+          alert("empty search content!")
+          this.onlineDataList()
+        }else{
+
+          if(this.currentType==='cloud'){
+       
+            this.searchOnlineDataService()
+            
+          }else if(this.currentType==='data'){
+            this.searchLocalDataService()
+            
+          }
+        }
+      
+    },
+    searchOnlineDataService(){
       let self=this
+      this.$axios.get(`/pd/${urlUtils.searchOnlieData}?words=${this.searchOnlineData}&page=${this.currentPage}`)
+       .then(re=>{
+         //TODO 
+         let ar=[]
+         re.data.list.forEach((v)=>{
+           ar.push(v.info)
+         })
+         console.log(ar)
+        self.udxDataList=ar
+        //  self.udxDataList=re.data.list
+         self.total=re.data.total
+       })
+    },
+    searchLocalDataService(){
+      let self=this
+       this.$axios.get(`/api/${urlUtils.searchLocalData}?words=${this.searchOnlineData}&page=${this.currentPage}`)
+       .then(re=>{
+         self.udxDataList=re.data.data
+         self.total=re.data.total
+        //  console.log(re)
+       })
+    },  
+     publicMyData(row){
+       let self=this
+       self.readyProgress=true
+       self.percentage=0
+       var timer1=setInterval(()=>{
+         if(self.percentage<30){
+           self.percentage++
+         }else{
+           clearInterval(timer1)
+         }
+       },10)
+      
        this.$axios.post(`/api/${urlUtils.public_data}`,{
         data:row.localPath
        }).then(re=>{
           if(re.status===200){
              
+
+            var timer2=setInterval(()=>{
+              if(self.percentage<60){
+                self.percentage++
+              }else{
+                clearInterval(timer2)
+              }
+              
+            },50)
+
             let formData=new FormData()
             formData.append("info",JSON.stringify(row))
             formData.append("uid",re.data.uid.uid)
 
             self.$axios.post(`/api/${urlUtils.public_data_info}`,formData)
             .then(re=>{
-              console.log(re.data)
+              if(re.status===200){
+                var timer3=setInterval(()=>{
+                  if(self.percentage<=100){
+                    self.percentage++
+                  }else{
+                    clearInterval(timer3)
+                    
+                    self.$message("public success!")
+                    self.readyProgress=false
+                  }   
+                },50)
+
+                
+              }
+              
             })
             
 
@@ -247,18 +340,19 @@ export default {
             this.$message('err')
           }       
        })  
-
-
-
-
      },
+     format(percentage) {
+        return percentage === 100 ? '满' : `${percentage}%`;
+      
+    },
      onlineDataList(){
        let self=this
-       this.currentPage=1
-       this.$axios.get(`/te/${urlUtils.onlineDataList}?page=${self.currentPage}`)
+      //  this.currentPage=1
+       this.$axios.get(`/pd/${urlUtils.onlineDataList}?page=${self.currentPage}`)
        .then(re=>{
-         console.log(re)
-         re.data.forEach(el => {
+         self.total=re.data.total
+         self.udxDataList=[]
+         re.data.list.forEach(el => {
            el.info['server_id']=el.uid
            self.udxDataList.push(el.info)
          
@@ -268,9 +362,9 @@ export default {
      },
      getOnlineData(row){
        //TODO 获取在线数据流
-       console.log("data:",row)
+    
        let uid =row.server_id
-       this.$axios.get(`/te/${urlUtils.dataSteam}?uid=${uid}`,{
+       this.$axios.get(`/pd/${urlUtils.dataSteam}?uid=${uid}`,{
          responseType: 'blob'
        })
        .then(re=>{
@@ -285,11 +379,6 @@ export default {
           document.body.removeChild(alink)
 
        })
-
-
-
-
-
 
      },
      getAllCount(type){
@@ -372,13 +461,23 @@ export default {
     //分页
     handleSizeChange(val) {
       this.pageSize=val
-      this.getDataSource('udx_source')
+      if(this.currentType==='data'){
+        this.getDataSource('udx_source')
+      }else if(this.currentType==='cloud'){
+        this.onlineDataList()
+      }
+      
       
 
     },
     handleCurrentChange(val) {
       this.currentPage=val
-      this.getDataSource('udx_source')
+      if(this.currentType==='data'){
+        this.getDataSource('udx_source')
+      }else if(this.currentType==='cloud'){
+        this.onlineDataList()
+      }
+      // this.getDataSource('udx_source')
     },
     tableRowClassName({row, rowIndex}) {
         if (rowIndex ===1) {
@@ -397,5 +496,14 @@ export default {
 
 .el-table .success-row {
     background: oldlace;
+  }
+  .searchInput{
+    margin-top: 5px;
+  }
+   .el-select .el-input {
+    width: 130px;
+  }
+  .input-with-select .el-input-group__prepend {
+    background-color: #fff;
   }
 </style>

@@ -52,6 +52,7 @@ export default {
       // console.log(urlUtils.chart + "?uid=" + this.user.uid)
       httpUtils.get(this, urlUtils.chart + "?uid=" + this.user.uid, data => {
         this.chartList = data;
+        console.log(data.length)
       });
 
       // this.$http

@@ -69,9 +69,6 @@ export default {
      
       this.updateData()
      
-
-            
-      
   },
   methods: {
 
@@ -80,9 +77,9 @@ export default {
       console.log("method")
         let url=this.canvasdata.columns
        httpUtils.get(this, url, data => {
-         if(!data) {}
+         if(data===undefined) return
          else{
-             var dataset = new UdxDataset();
+        var dataset = new UdxDataset();
         dataset.createDataset();
         dataset.loadFromXmlStream(data);
 
@@ -242,7 +239,7 @@ export default {
 }
 };
 </script>
-<style  >
+<style  scoped>
 
 #img{
      height: 100%;

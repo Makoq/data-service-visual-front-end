@@ -26,11 +26,11 @@ export default {
           icon: 'el-icon-folder',
           path: '/console/workspace',
         },
-        {
-          name: this.$t('navmenu.data_direct_upload'),
-          icon: 'el-icon-upload2',
-          path: '/console/directupload',
-        },
+        // {
+        //   name: this.$t('navmenu.data_direct_upload'),
+        //   icon: 'el-icon-upload2',
+        //   path: '/console/directupload',
+        // },
         {
           name: this.$t('navmenu.cloud_datalist'),
           icon: 'el-icon-cloudy',
