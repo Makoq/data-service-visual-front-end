@@ -21,11 +21,13 @@
        >
       </el-table-column>
     </el-table>
-
-
+<!--     系统状态显示-->
+     <div id="systemChart" ref="chart"></div>
    </div>
 </template>
 <script>
+  import echarts from 'echarts'
+
 export default {
   data() {
     return {
@@ -53,9 +55,111 @@ export default {
         },
 
       ],
+      // 系统状态显示所需参数
+      time: [0.1, 0.2, 0.3, 0.4, 0.2, 0.6, 0.1, 0.2, 0.9, 0.5],
+      cpu: [.1, .4, .1, .3, .8, .7, .5, .4, .6, .7],
+      mem: [0.1, 0.2, 0.3, 0.4, 0.2, 0.6, 0.1, 0.2, 0.9, 0.5],
     };
+  },
+  mounted() {
+    this.drawLine();
+  },
+  methods: {
+    addData: function(shift){
+      this.$http.get('/systemStatus')
+        .then(res => {
+          this.time.push(res.data.timer);
+          this.mem.push(res.data.mem);
+          this.cpu.push(res.data.cpu);
+      }).catch(err => {
+        console.log(err);
+      });
+      if (shift) {
+        this.time.shift();
+        this.mem.shift();
+        this.cpu.shift();
+      }
+    },
+    drawLine: function () {
+      const myChart = echarts.init(this.$refs.chart);
+      // for (let i = 0; i < 10; i++) {
+      //   this.addData();
+      // }
+      myChart.setOption({
+        title: { text: 'cpu及内存占用率' },
+        tooltip: { trigger: 'axis' },
+        legend: {
+          data: ['ROM使用率', 'CPU使用率'],
+        },
+        xAxis: [{
+          boundaryGap: false,
+          data: this.time,
+          splitLine: { show: false },
+          axisLabel: { interval: 0 },
+        }],
+        yAxis: {},
+        series: [
+          {
+            name: 'ROM使用率',
+            type: 'line',
+            data: this.mem,
+            smooth: true,
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                  offset: 0,
+                  color: '#8ec6ad',
+                }, {
+                  offset: 1,
+                  color: '#ffe',
+                }]),
+              },
+            },
+          },
+          {
+            name: 'CPU使用率',
+            type: 'line',
+            data: this.cpu,
+            smooth: true,
+            areaStyle: {
+              normal: {
+                color: new echarts.graphic.LinearGradient(0, 0, 0, 1, [{
+                  offset: 0,
+                  color: '#505765',
+                }, {
+                  offset: 1,
+                  color: '#ffe',
+                }]),
+              },
+            },
+          },
+        ],
+      });
+      // 开始轮询获取数据
+      window.setInterval(() => {
+        setTimeout(() => {
+          this.addData(true);
+          myChart.setOption({
+            xAxis: { data: this.time },
+            series: [
+              {
+                data: this.mem,
+              },
+              {
+                data: this.cpu,
+              },
+            ],
+          });
+        }, 0);
+      },5000);
+    },
   },
 };
 </script>
 <style lang="scss">
+  #systemChart {
+    margin-top: 100px;
+    width: 100%;
+    height: 500px;
+  }
 </style>
