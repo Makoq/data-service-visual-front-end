@@ -3,7 +3,7 @@
     <el-row style="margin-bottom: 20px;">
       <el-col :span="12">
          <!-- 新建数据源按钮 -->
-          <el-button v-if="currentType!='cloud'" type="primary" @click="addData">{{$t('data_management.add_data_source')}}</el-button>
+          <el-button v-if="currentType!='cloud'" type="primary" @click="addData">{{currentType!='udx'?$t('data_management.add_data_source'):$t('data_management.add_data_template')}}</el-button>
       </el-col>
       <el-col :span="12">
         <!-- 数据服务搜索 -->
@@ -28,7 +28,6 @@
         :row-class-name="tableRowClassName"
         >
       
-
           <el-table-column    prop="name" :label="$t('data.name')"></el-table-column>
           <el-table-column prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
           <el-table-column  prop="img" :label="$t('data.img')">
@@ -169,7 +168,9 @@ export default {
       this.getAllCount('udx_source');
 
     }else if(this.currentType==='udx'){
-      this.tabName="UDX Service"
+      this.tabName="Data Template"
+      this.udxDataList=[]
+      this.total=0
     }else if( this.currentType==='process'){
 
       this.udxDataList=[]
@@ -193,7 +194,7 @@ export default {
       this.total=0
 
     //TODO 获取数据处理方案列表
-      this.tabName="Cloud data"
+      this.tabName="Online Data"
       this.onlineDataList()
       
     }
@@ -218,7 +219,10 @@ export default {
       this.currentType='cloud'
       this.onlineDataList()
     }
-    
+    else if(type==='udx'){
+      this.currentType='udx'
+      this.udxDataList=[]
+    }
     else if(type==='process'){
 
      

@@ -70,6 +70,7 @@
           </el-form-item>
           <!-- 处理方法 -->
           <el-form-item :label="$t('addUdxSource.process_methods')" prop="name">
+            
             <el-input v-model="form.processMethods" placeholder="" style="width:320px;">
               <!-- <template slot="prepend">Local Path:</template> -->
             </el-input>

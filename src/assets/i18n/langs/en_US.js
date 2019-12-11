@@ -18,7 +18,7 @@ const en_US = {
     service_status: 'Service State',
     data_management: 'Data Service',
     data_process_service:'Data Process Management',
-    udx_dataService:'Udx Service',
+    udx_dataService:'Data Template',
     data_process_program:'Data Process Program',
     my_visualization: 'My Visualization',
     my_workspace: 'workspace',
@@ -28,7 +28,7 @@ const en_US = {
   data_management: {
     add_data_source: 'New data source',
     source_type: 'Select new data source type',
-
+    add_data_template:'New Data Template',
 
     udx_source: 'Data Service',
     data_process_service: 'Data Process Service',

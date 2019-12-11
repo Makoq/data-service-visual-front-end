@@ -23,7 +23,7 @@ const zh_CN = {
     data_direct_upload:'数据共享',
     service_status: '服务状态',
     data_management: '数据管理',
-    udx_dataService:'udx数据服务',
+    udx_dataService:'数据模板',
     my_visualization: '可视化服务',
     data_process_service:'数据处理服务',
     data_process_program:'数据处理方案',
@@ -33,6 +33,7 @@ const zh_CN = {
 
   data_management: {
     add_data_source: '新建数据源',
+    add_data_template:'新建数据模板',
     source_type: '选择新建数据源类型',
 
     udx_source: '数据服务',
