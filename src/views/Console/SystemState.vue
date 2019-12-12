@@ -26,7 +26,7 @@
    </div>
 </template>
 <script>
-  import echarts from 'echarts'
+import echarts from 'echarts';
 
 export default {
   data() {
@@ -57,7 +57,7 @@ export default {
       ],
       // 系统状态显示所需参数
       time: [0.1, 0.2, 0.3, 0.4, 0.2, 0.6, 0.1, 0.2, 0.9, 0.5],
-      cpu: [.1, .4, .1, .3, .8, .7, .5, .4, .6, .7],
+      cpu: [0.1, 0.4, 0.1, 0.3, 0.8, 0.7, 0.5, 0.4, 0.6, 0.7],
       mem: [0.1, 0.2, 0.3, 0.4, 0.2, 0.6, 0.1, 0.2, 0.9, 0.5],
     };
   },
@@ -65,22 +65,24 @@ export default {
     this.drawLine();
   },
   methods: {
-    addData: function(shift){
-      this.$http.get('/systemStatus')
-        .then(res => {
-          this.time.push(res.data.timer);
-          this.mem.push(res.data.mem);
-          this.cpu.push(res.data.cpu);
-      }).catch(err => {
-        console.log(err);
-      });
+    addData(shift) {
+      try {
+        this.$http.get('/systemStatus')
+          .then((res) => {
+            this.time.push(res.data.timer);
+            this.mem.push(res.data.mem);
+            this.cpu.push(res.data.cpu);
+          });
+      } catch (e) {
+        console.log(e);
+      }
       if (shift) {
         this.time.shift();
         this.mem.shift();
         this.cpu.shift();
       }
     },
-    drawLine: function () {
+    drawLine() {
       const myChart = echarts.init(this.$refs.chart);
       // for (let i = 0; i < 10; i++) {
       //   this.addData();
@@ -138,20 +140,24 @@ export default {
       // 开始轮询获取数据
       window.setInterval(() => {
         setTimeout(() => {
-          this.addData(true);
-          myChart.setOption({
-            xAxis: { data: this.time },
-            series: [
-              {
-                data: this.mem,
-              },
-              {
-                data: this.cpu,
-              },
-            ],
-          });
+          const urlHash = window.location.hash;
+          if (urlHash === '#/console/state') {
+            this.addData(true);
+            myChart.setOption({
+              xAxis: { data: this.time },
+              series: [
+                {
+                  data: this.mem,
+                },
+                {
+                  data: this.cpu,
+                },
+              ],
+            });
+          }
+          // this.addData(true);
         }, 0);
-      },5000);
+      }, 5000);
     },
   },
 };
