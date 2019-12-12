@@ -46,12 +46,13 @@ const zh_CN = {
     tags: '标签',
     data: '提交',
     choose_data: '选取文件',
-    upload_to_server: '上传到服务器',
+    upload_to_server: '创建',
     workspace: '工作空间',
     local_path: '连接参数',
     select_local_file: '文件',
-    process_methods:'处理方法',
-    img:'图片'
+    process_methods:'数据模板',
+    img:'图片',
+    select:'关联模板'
 
   },
   udx_schema: {
@@ -76,7 +77,14 @@ const zh_CN = {
     user: '用户',
     desc: '描述',
     public:'发布',
-    img:'图片'
+    img:'图片',
+
+    content:'内容',
+    date:'时间',
+    choose:'选择',
+    dataTemplate:'数据模板'
+
+
 
   },
   workspace: {

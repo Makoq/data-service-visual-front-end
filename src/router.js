@@ -77,6 +77,13 @@ const router = new Router({
           },
         },
         {
+          path: 'service/dataTemplate',
+          component: () => import('./views/Console/AddDataTemplate.vue'),
+          meta: {
+            title: 'Add Datatemplate',
+          },
+        },
+        {
           path: 'data/udx-info',
           name: 'udxinfo',
           component: () => import('./views/Console/DataInfo.vue'),

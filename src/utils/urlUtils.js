@@ -26,7 +26,10 @@ const urls = {
   searchOnlieData:'onlinefilter',
   //搜索本地数据
   searchLocalData:'localfilter',
-
+  //创建数据模板
+  dataTemplate:'datatemplate',
+  templateList:'templatelist',
+  temCont:'/temcont',
 
   //数据服务详情中的schema
   data_source_detail_schema_file:'/schemafile',

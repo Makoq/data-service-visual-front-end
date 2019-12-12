@@ -20,41 +20,86 @@
     
      <el-divider ></el-divider>
     <!-- 数据源列表 -->
-    <el-tabs v-model="activeName" @tab-click="tab_click" >
+    <el-tabs  v-model="activeName" @tab-click="tab_click" >
+      <el-tab-pane v-if="currentType==='udx'" :label="tabName" name="first">
+        <el-table :data="dataTemplateList"
+        stripe
+        :row-class-name="tableRowClassName"
+        >
+          <el-table-column   prop="name" :label="$t('data.name')"></el-table-column>
+          <el-table-column   prop="tags" :label="$t('data.tags')"></el-table-column>
+
+          
+          <el-table-column   :label="$t('data.oper')">
+            <template slot-scope="scope">
+              <el-button   type="text" size="small" @click="getTemplateContent(scope.row)" id="btn_share">{{$t('data.content')}}</el-button>
+              <el-dialog
+                title="提示"
+                :visible.sync="xmlPreview"
+                width="50%"
+                 >
+                <el-input   type="textarea"  id="xmlPreview"   :disabled="true" v-model="xmlContent" rows="20" placeholder="Please organize content in xml format.." ></el-input>
+                 
+                <!-- <span>{{xmlContent}}</span> -->
+                <span slot="footer" class="dialog-footer">
+                  <el-button @click="xmlPreview = false" type="primary">ok</el-button>
+                  
+                </span>
+              </el-dialog>
+
+            </template>
+          </el-table-column>
+
+
+
+        </el-table>
+      </el-tab-pane>
       <!-- UDX Source -->
-      <el-tab-pane :label="tabName" name="first">
+      <el-tab-pane v-if="currentType!='udx'" :label="tabName" name="first">
         <el-table :data="udxDataList"
         stripe
         :row-class-name="tableRowClassName"
         >
       
-          <el-table-column    prop="name" :label="$t('data.name')"></el-table-column>
-          <el-table-column prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
-          <el-table-column  prop="img" :label="$t('data.img')">
+          <el-table-column   prop="name" :label="$t('data.name')"></el-table-column>
+          <el-table-column  prop="workSpaceName" :label="$t('data.workspace')"></el-table-column>
+          <el-table-column   prop="img" :label="$t('data.img')">
             <template slot-scope="scope">
               <img height="70px" width="120px" style="border: 1px solid"  :src="scope.row.img"/>
             </template>
           </el-table-column>
 
           <el-table-column prop="tags" :label="$t('data.tags')"></el-table-column>
+          <el-table-column   prop="dataTemplate" :label="$t('data.dataTemplate')">
           
 
-          <el-table-column :label="$t('data.oper')">
+          </el-table-column>
+
+          
+
+          <el-table-column  v-if="currentType==='data'" :label="$t('data.oper')">
             <template slot-scope="scope">
-              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
+              <el-button  type="text" size="small" @click="detail(scope.row)">{{$t('data.check')}}</el-button>
               <!-- 将数据抽取部分抛弃，把schema树合并到详情 -->
               <!-- <el-button type="text" size="small" @click="content(scope.row)">{{$t('data.content')}}</el-button> -->
-              <el-button v-if="currentType!='data'" type="text" size="small" @click="getOnlineData(scope.row)" id="btn_share">{{$t('data.fetch')}}</el-button>
 
-              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="share(scope.row)" id="btn_share">{{$t('data.share')}}</el-button>
-              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)" id="btn_del">{{$t('data.delete')}}</el-button>
-              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="editData(scope.row.id)" id="btn_edit">{{$t('data.edit')}}</el-button>
+              <el-button   type="text" size="small" @click="share(scope.row)" id="btn_share">{{$t('data.share')}}</el-button>
+              <el-button   type="text" size="small" @click="deleteData('udx_source',scope.row.id,scope.row.workspace)" id="btn_del">{{$t('data.delete')}}</el-button>
+              <el-button  type="text" size="small" @click="editData(scope.row.id)" id="btn_edit">{{$t('data.edit')}}</el-button>
 
-              <el-button v-if="currentType!='cloud'" type="text" size="small" @click="publicMyData(scope.row)" id="btn_public">{{$t('data.public')}}</el-button>
+              <el-button  type="text" size="small" @click="publicMyData(scope.row)" id="btn_public">{{$t('data.public')}}</el-button>
+            </template>
+          </el-table-column>
 
+           <el-table-column  v-if="currentType==='cloud'" :label="$t('data.oper')">
+            <template slot-scope="scope">
+              <el-button   type="text" size="small" @click="getOnlineData(scope.row)" id="btn_share">{{$t('data.fetch')}}</el-button>
 
             </template>
           </el-table-column>
+
+           
+
           
         </el-table>
    
@@ -144,7 +189,10 @@ export default {
       readyProgress:false,
       //在线数据服务搜索
       searchOnlineData:'',
-      selectSearchType:''
+      selectSearchType:'',
+      dataTemplateList:[],
+      xmlPreview:false,
+      xmlContent:'',
 
 
     };
@@ -154,7 +202,7 @@ export default {
        let type=to.path.split("/")
       
        this.currentType=type[type.length-1]
-        
+        console.log(this.currentType)
     
     if( this.currentType==='data'){
       this.searchOnlineData=''
@@ -168,9 +216,13 @@ export default {
       this.getAllCount('udx_source');
 
     }else if(this.currentType==='udx'){
+      this.total=0
+      this.currentPage=0
+
+      this.templateList()
       this.tabName="Data Template"
       this.udxDataList=[]
-      this.total=0
+
     }else if( this.currentType==='process'){
 
       this.udxDataList=[]
@@ -216,12 +268,21 @@ export default {
       this.getAllCount('udx_source');
 
     }else if(type==='cloud'){
+      this.total=0
+
       this.currentType='cloud'
       this.onlineDataList()
     }
     else if(type==='udx'){
+      this.total=0
+      this.currentPage=0
+      this.templateList()
+      this.tabName="Data Template"
       this.currentType='udx'
       this.udxDataList=[]
+       
+
+
     }
     else if(type==='process'){
 
@@ -275,6 +336,8 @@ export default {
          })
          console.log(ar)
         self.udxDataList=ar
+         self.parseTemName()
+
         //  self.udxDataList=re.data.list
          self.total=re.data.total
        })
@@ -284,11 +347,12 @@ export default {
        this.$axios.get(`/api/${urlUtils.searchLocalData}?words=${this.searchOnlineData}&page=${this.currentPage}`)
        .then(re=>{
          self.udxDataList=re.data.data
+         self.parseTemName()
          self.total=re.data.total
         //  console.log(re)
        })
     },  
-     publicMyData(row){
+    publicMyData(row){
        let self=this
        self.readyProgress=true
        self.percentage=0
@@ -345,11 +409,11 @@ export default {
           }       
        })  
      },
-     format(percentage) {
+    format(percentage) {
         return percentage === 100 ? '满' : `${percentage}%`;
       
     },
-     onlineDataList(){
+    onlineDataList(){
        let self=this
       //  this.currentPage=1
        this.$axios.get(`/pd/${urlUtils.onlineDataList}?page=${self.currentPage}`)
@@ -392,8 +456,23 @@ export default {
     },
     getDataSource(type) {
       httpUtils.get(this, urlUtils.get_source_list + "?type=" + type+"&username="+this.user.username+"&uid="+this.user.uid+"&page="+this.currentPage+"?pageSize="+this.pageSize, data => {
+        
         this.udxDataList = data;
+        this.parseTemName()
       });
+    },
+    parseTemName(){
+      this.udxDataList.forEach(v=>{
+
+          let arr=JSON.parse(v['dataTemplate'])
+          let a=[]
+          arr.forEach(v2=>{
+             a.push(v2['name'])
+          })
+          v['dataTemplate']=a.join(",")
+      })
+         
+
     },
 
     addData() {
@@ -402,12 +481,26 @@ export default {
         this.$router.push({path:"udx-source",query:{type:'data'}});
       } else if (this.currentType === "process") {
         this.$router.push({path:"config-source",query:{type:'process'}});
+      }else if(this.currentType=== "udx"){
+        this.$router.push({path:"dataTemplate",query:{type:'process'}});
+
       } else {
         this.$router.push({path:"config-source",query:{type:'program'}});
       }
 
       // this.selectVisible = true;
        
+    },
+    templateList(){
+      let self=this
+      this.$axios.get('/api/'+urlUtils.templateList+'?page='+this.currentPage)
+      .then(res=>{
+        if(res.status===200){
+          
+          self.dataTemplateList=res.data.list
+          self.total=res.data.total
+        }
+      })
     },
     detail(row){
       
@@ -488,7 +581,25 @@ export default {
           return 'success-row';
         }  
         return '';
-      }
+      },
+
+    getTemplateContent(row){
+      let self=this
+      this.$axios.get('/api/'+urlUtils.temCont+'?uid='+row.uid)
+      .then(res=>{
+        if(res.status===200){
+          self.xmlContent=res.data.xml
+          self.xmlPreview=true
+         
+
+        }
+         
+
+      })
+      
+
+
+    }
      
 
 
@@ -510,4 +621,5 @@ export default {
   .input-with-select .el-input-group__prepend {
     background-color: #fff;
   }
+ 
 </style>

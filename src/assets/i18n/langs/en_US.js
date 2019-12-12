@@ -55,8 +55,10 @@ const en_US = {
     workspace: 'Work Space',
     local_path: 'Local Path',
     select_local_file: 'File',
-    process_methods:'Methods',
-    img:'Image'
+    process_methods:'Templates',
+    img:'Image',
+    select:'Select'
+
   },
   udx_schema: {
     schema_tree: 'Udx Schema Tree',
@@ -79,7 +81,15 @@ const en_US = {
     user: 'User',
     desc: 'Description',
     public:'Public',
-    img:'Img'
+    img:'Img',
+
+    content:'Content',
+    date:'Date',
+    choose:'Choose',
+    dataTemplate:'templates'
+
+
+
 
   },
   system_state: {

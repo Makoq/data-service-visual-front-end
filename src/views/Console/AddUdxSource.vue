@@ -70,10 +70,95 @@
           </el-form-item>
           <!-- 处理方法 -->
           <el-form-item :label="$t('addUdxSource.process_methods')" prop="name">
+
+            <!-- <el-input v-model="form.processMethods" placeholder="" style="width:320px;">
+              
+            </el-input> -->
+
             
-            <el-input v-model="form.processMethods" placeholder="" style="width:320px;">
-              <!-- <template slot="prepend">Local Path:</template> -->
-            </el-input>
+             <el-tag
+                  :key="key"
+                  v-for="(tag,key) in chooseTemps"
+                  closable
+                  :disable-transitions="false"
+                   @close="handleCloseTpm(key)"
+                  >{{tag.name}}
+                </el-tag>
+                <el-button
+                style="margin-left: 10px;"
+                size="small"
+                type="primary"
+                @click="selectTemplate"
+              >{{$t('addUdxSource.select')}}
+            </el-button>
+            <el-dialog
+                title="提示"
+                :visible.sync="selectT"
+                width="50%"
+                v-loading="loading"
+                 >
+
+                 <el-tag
+                 :key="key"
+                  v-for="(tag,key) in chooseTemps"
+                  closable
+                  :disable-transitions="false"
+                  @close="handleCloseTpm(key)"
+                  >
+                  {{tag.name}}
+                </el-tag>
+                 
+
+                    <el-table :data="dataTemplateList"
+                      stripe
+                      :row-class-name="tableRowClassName"
+                      >
+                      <el-table-column   prop="name" :label="$t('data.name')"></el-table-column>
+                      <el-table-column   prop="tags" :label="$t('data.tags')"></el-table-column>
+                      
+                      <el-table-column   :label="$t('data.oper')">
+                        <template slot-scope="scope">
+                          <el-button   type="text" size="small" @click="getTemplateContent(scope.row)" id="btn_share">{{$t('data.content')}}</el-button>
+                          <el-dialog
+                            title="提示"
+                            :visible.sync="xmlPreview"
+                            width="60%"
+                            :modal="false"
+                            >
+                            <el-input   type="textarea"  id="xmlPreview"   :disabled="true" v-model="xmlContent" rows="20" placeholder="Please organize content in xml format.." ></el-input>
+                            <span slot="footer" class="dialog-footer">
+                              <el-button @click="xmlPreview = false" type="primary">ok</el-button>
+                            </span>
+                          </el-dialog>
+
+                          <el-button   type="text" size="small" @click="chooseTemp(scope.row)" id="btn_share">{{$t('data.choose')}}</el-button>
+
+                        </template>
+                      </el-table-column>
+                    </el-table>
+
+                      <el-pagination
+                      @size-change="handleSizeChange"
+                      @current-change="handleCurrentChange"
+                      :current-page="currentPage"
+                      :page-sizes="[10,50,100, 200, 300, 400]"
+                      :page-size="pageSize"
+                      layout="total, sizes, prev, pager, next, jumper"
+                      :total="total">
+                    </el-pagination>
+
+
+
+            
+                <span slot="footer" class="dialog-footer">
+                  <el-button @click="selectT = false" type="primary">ok</el-button> 
+                </span>
+              </el-dialog>
+
+
+
+
+
             
           </el-form-item>
 
@@ -134,7 +219,8 @@ export default {
         desc: "",
         selectPath:'F:/udx/UdxServer/Server/data_dir/testUpload/testUpload.zip',
         workspaceId:'',
-        processMethods:''
+        processMethods:'',
+        template:[]
       },
       value:'',
       inputVisible: false,
@@ -148,7 +234,22 @@ export default {
       dialogImageUrl: '',
       dialogVisible: false,
       imgUrl:'',
-      type:''
+      type:'',
+      //数据模板显示
+      chooseTemps:[],
+      selectT:false,
+      dataTemplateList:[],
+      xmlPreview:false,
+      xmlContent:'',
+
+
+
+      loading:true,
+      currentPage:0,
+      pageSize:10,
+      total:-1,
+
+
 
       
        
@@ -167,6 +268,7 @@ export default {
     // }
   },
   mounted(){
+    this.currentPage=0
     this.type=this.$route.query.type
     console.log(this.type)
     if(this.$route.query.type==='edit'){
@@ -178,6 +280,23 @@ export default {
     this.myWokrspace("workspace")
   },
   methods: {
+    selectTemplate(){
+
+      let self=this
+      this.$axios.get('/api/'+urlUtils.templateList+'?page='+this.currentPage)
+      .then(res=>{
+        if(res.status===200){
+          
+          self.dataTemplateList=res.data.list
+          self.total=res.data.total
+          self.selectT=true
+          self.loading=false
+          self.total=res.data.total
+        }
+      })
+
+      
+    },
     changeImg(file, fileList){
       let type=document.location.href.split("?")
       let real_type=type[type.length-1].split("=")
@@ -230,7 +349,14 @@ export default {
            this.form.desc=data[0].describe
            this.form.selectPath=data[0].localPath
            this.form.workspaceId=data[0].workspace
-        //  this.dialogImageUrl=data[0].img
+           let arr=JSON.parse(data[0].dataTemplate)
+           console.log(arr)
+           let self=this
+           arr.forEach(v=>{
+             self.chooseTemps.push(v)
+           })
+         
+       
          this.imgUrl=data[0].img
           //  document.getElementsByTagName("img")[0].src=data[0].img
           
@@ -278,6 +404,11 @@ export default {
       formData.append("uid", this.user.uid);
       //F:/udx/UdxServer/Server/tmp/testschema
       formData.append("localpath", this.form.selectPath);
+      // let templateUids=[]
+      // this.chooseTemps.forEach(v=>{
+      //   templateUids.push(v.uid)
+      // })
+      formData.append("dataTemplate", JSON.stringify(this.chooseTemps));
 
       formData.append("workspace", this.value);
       formData.append("img", this.imgUrl);
@@ -343,7 +474,9 @@ export default {
     handleClose(tag) {
       this.form.dynamicTags.splice(this.form.dynamicTags.indexOf(tag), 1);
     },
-
+ handleCloseTpm(tag) {
+      this.chooseTemps.splice(this.chooseTemps.indexOf(tag), 1);
+    },
     showInput() {
       this.inputVisible = true;
       this.$nextTick(_ => {
@@ -359,6 +492,49 @@ export default {
       this.inputVisible = false;
       this.inputValue = "";
     },
+    tableRowClassName({row, rowIndex}) {
+            if (rowIndex ===1) {
+              return 'success-row';
+            }  
+            return '';
+          },
+    getTemplateContent(row){
+      let self=this
+      this.$axios.get('/api/'+urlUtils.temCont+'?uid='+row.uid)
+        .then(res=>{
+          if(res.status===200){
+            self.xmlContent=res.data.xml
+            self.xmlPreview=true
+          }
+        })
+    },
+    handleSizeChange(val){
+       this.pageSize=val
+    },
+     handleCurrentChange(val) {
+       this.selectTemplate()
+     },
+     chooseTemp(row){
+       let obj={},flag=true
+        
+        for(let i=0;i<this.chooseTemps.length;i++){
+          if(this.chooseTemps[i]['uid']===row.uid){
+            flag=false;
+            this.$message("have chosen this template!")
+            break;
+          }
+        }
+        if(flag){
+          obj['name']=row.name
+          obj['uid']=row.uid
+          this.chooseTemps.push(obj)
+        }
+       
+        
+
+     },
+
+
 
     //用户的工作空间
     myWokrspace(type){
@@ -367,8 +543,6 @@ export default {
       });
 
       console.log(this.form.myWokrspace)
-
-
     }
 
 

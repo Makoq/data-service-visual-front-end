@@ -36,15 +36,16 @@ export default {
           icon: 'el-icon-cloudy',
           path: '/console/service/cloud',
         },
-        {
-          name: this.$t('navmenu.data_management'),
-          icon: 'el-icon-s-management',
-          path: '/console/service/data',
-        },
+       
         {
           name: this.$t('navmenu.udx_dataService'),
           icon: 'el-icon-link',
           path: '/console/service/udx',
+        },
+         {
+          name: this.$t('navmenu.data_management'),
+          icon: 'el-icon-s-management',
+          path: '/console/service/data',
         },
 
         {
