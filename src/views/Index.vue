@@ -20,8 +20,8 @@
 </template>
 
 <script>
-/* eslint-disable */
-import md5 from "js-md5";
+
+import md5 from 'js-md5';
 
 export default {
   data() {

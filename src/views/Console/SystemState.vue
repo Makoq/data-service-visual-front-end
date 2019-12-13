@@ -1,68 +1,56 @@
 <template>
    <div>
-
-   <el-table
-      :data="atateData"
-      style="width: 100%">
-      <el-table-column
-        prop="item"
-        :label="$t('system_state.item')"
-        width="220">
-      </el-table-column>
-      <el-table-column
-        prop="content"
-        :label="$t('system_state.cont')"
-
-        width="380">
-      </el-table-column>
-      <el-table-column
-        prop="operation"
-        :label="$t('system_state.oper')"
-       >
-      </el-table-column>
-    </el-table>
-<!--     系统状态显示-->
+     <h2>Local System Information</h2>
+     <span><b>Hostname:</b> {{sysInfo.hostname}}</span>
+     <span><b>Type:</b> {{sysInfo.osType}}</span>
+     <span><b>Version:</b> {{sysInfo.release}}</span>
+     <span><b>Memory:</b> {{sysInfo.totalMem}}G</span>
+     <span><b>Temporary directory:</b> {{sysInfo.tmpdir}}</span>
+     <hr/>
+     <h2>Browser</h2>
+     <span><b>Type:</b> {{broInfo.type}}</span>
+     <span><b>Version:</b> {{broInfo.version}}</span>
+     <hr/>
+     <!--     系统状态显示-->
      <div id="systemChart" ref="chart"></div>
    </div>
 </template>
 <script>
 import echarts from 'echarts';
+import Browser from '../../../public/js/echart/browser';
 
 export default {
   data() {
     return {
-      atateData: [
-        {
-          item: '版本',
-          content: 'v1.0',
-
-        },
-        {
-          item: '文件存储路径',
-          content: 'F:\\udx\\UdxServer\\Server\\tmp',
-
-        },
-        {
-          item: '数据库',
-          content: 'MongoDB',
-
-        },
-
-        {
-          item: '数据库名',
-          content: 'VgeConfigurableDataDB',
-
-        },
-
-      ],
       // 系统状态显示所需参数
       time: [0.1, 0.2, 0.3, 0.4, 0.2, 0.6, 0.1, 0.2, 0.9, 0.5],
       cpu: [0.1, 0.4, 0.1, 0.3, 0.8, 0.7, 0.5, 0.4, 0.6, 0.7],
       mem: [0.1, 0.2, 0.3, 0.4, 0.2, 0.6, 0.1, 0.2, 0.9, 0.5],
+      sysInfo: {
+        hostname: '',
+        osType: '',
+        release: '',
+        tmpdir: '',
+        totalMem: '',
+      },
+      broInfo: {
+        type: '',
+        version: '',
+      },
     };
   },
   mounted() {
     this.drawLine();
+    this.$http.get('/systemInfo').then((res) => {
+      const info = res.data;
+      this.sysInfo.hostname = info.hostname;
+      this.sysInfo.osType = info.osType;
+      this.sysInfo.release = info.release;
+      this.sysInfo.tmpdir = info.tmpdir;
+      this.sysInfo.totalMem = info.totalMem;
+    });
+    this.broInfo.type = Browser.client.name;
+    this.broInfo.version = Browser.client.version;
   },
   methods: {
     addData(shift) {
@@ -84,14 +72,11 @@ export default {
     },
     drawLine() {
       const myChart = echarts.init(this.$refs.chart);
-      // for (let i = 0; i < 10; i++) {
-      //   this.addData();
-      // }
       myChart.setOption({
         title: { text: 'cpu及内存占用率' },
         tooltip: { trigger: 'axis' },
         legend: {
-          data: ['ROM使用率', 'CPU使用率'],
+          data: ['内存使用率', 'CPU使用率'],
         },
         xAxis: [{
           boundaryGap: false,
@@ -102,7 +87,7 @@ export default {
         yAxis: {},
         series: [
           {
-            name: 'ROM使用率',
+            name: '内存使用率',
             type: 'line',
             data: this.mem,
             smooth: true,
@@ -155,9 +140,8 @@ export default {
               ],
             });
           }
-          // this.addData(true);
         }, 0);
-      }, 5000);
+      }, 10000);
     },
   },
 };
@@ -167,5 +151,8 @@ export default {
     margin-top: 100px;
     width: 100%;
     height: 500px;
+  }
+  span {
+    margin-right: 30px;
   }
 </style>

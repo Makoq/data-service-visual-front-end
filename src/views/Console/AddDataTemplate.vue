@@ -1,6 +1,5 @@
 <template  >
   <div>
-    
     <el-form ref="form" :model="form" label-width="120px" :rules="rules">
 
         <el-form-item label="name" style="width:50%">
@@ -32,7 +31,7 @@
 
         <el-form-item>
             <el-button type="primary" @click="onSubmit">create</el-button>
-             
+
         </el-form-item>
     </el-form>
   </div>
@@ -57,12 +56,12 @@ export default {
         inputVisible: false,
         inputValue:''
 
-             
-        
+
+
     };
   },
   mounted() {
-  
+
   },
   methods: {
     onSubmit() {
@@ -71,12 +70,12 @@ export default {
         this.$axios.post('/api/'+urlUtils.dataTemplate,this.form)
         .then(res=>{
             if(res.status===200){
-                
+
                 self.$message("create succceddfull!!")
-                  
-                
+
+
             }
-            
+
         })
       },
     handleClose(tag) {

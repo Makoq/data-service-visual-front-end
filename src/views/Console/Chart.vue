@@ -5,8 +5,8 @@
         el-table-column(property="key")
         el-table-column(property="value")
 
-    el-row(:gutter="36")
-      el-col(:span="6" v-for="item in chartList" :key="item.id")
+    el-row(:gutter="36"  v-for = "(page, index) of pages" :key="index")
+      el-col(:span="6" v-for="item in page" :key="item.id")
         el-card(:body-style="{ padding: '0px' }" shadow="hover" @click.native="editChart(item.id)")
           img.image(:src="item.img")
           div(style="padding: 14px;")
@@ -20,11 +20,11 @@
                 el-dropdown-item(@click.native="deleteChart(item.id)") Delete
                 el-dropdown-item(@click.native="viewChart(item.id)" divided) View
                 el-dropdown-item(@click.native="openChartAnalyse(item)") Statistics
-      el-col(:span="6")
-        el-card(:body-style="{ padding: '0px' }" shadow="hover" @click.native="addNewChart")
-          .add-card
-            i.el-icon-circle-plus
-</template>
+    el-col(:span="24")
+      el-card(:body-style="{ padding: '0px' }" shadow="hover" @click.native="addNewChart")
+        .add-card
+          i.el-icon-circle-plus
+</template>s
 
 
 <script>
@@ -47,12 +47,25 @@ export default {
   mounted() {
     this.getData();
   },
+  computed: {
+    // 判断数据行数，用于循环el-row
+    pages() {
+      const pages = [];
+      this.chartList.forEach((item, index) =>{
+        const page = Math.floor(index / 4);
+        if(!pages[page]){
+          pages[page] = [];
+        }
+        pages[page].push(item)
+      })
+      return pages
+    }
+  },
   methods: {
     getData() {
       // console.log(urlUtils.chart + "?uid=" + this.user.uid)
       httpUtils.get(this, urlUtils.chart + "?uid=" + this.user.uid, data => {
         this.chartList = data;
-        console.log(data.length)
       });
 
       // this.$http
