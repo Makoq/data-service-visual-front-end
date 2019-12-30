@@ -9,7 +9,7 @@
       <el-upload
           class="upload-demo"
           ref="upload"
-          action="/te/publicdata"
+          action="/te/randomsource"
           :data="form"
           :before-upload="before"
           :on-remove="handleRemove"
@@ -24,7 +24,16 @@
     </el-form>
 
 
-    <!-- <input type="file" id="file" multiple="multiple" onchange="handleFile()"> -->
+    <form :action="UploadOneServlet" method="post" name="f_upload" enctype="multipart/form-data">
+        name<input type="text" name="name" /><br>
+        origination<input type="text" name="origination" /><br>
+        serverNode<input type="text" name="serverNode" /><br>
+        userId<input type="text" name="userId" /><br>
+
+
+        <input type="file" name="ogmsdata" multiple="multiple" /><br>
+        <input type="submit" value="上传" />
+    </form>
     
 
   </div>
@@ -40,7 +49,7 @@ import vueCanvas from '../components/visualComponents/vueCanvas';
 export default {
   data() {
     return {
-      uploadurl:'/te/publicdata',
+       UploadOneServlet:'/te/randomsource',
       form:{
       
         desc:'my data'
@@ -71,7 +80,11 @@ export default {
      
       console.log("bef",file)
     },
-     
+     upload2(){
+
+       let f=document.getElementById("file2").file
+       console.log("ff",f)
+     }
   }
 };
 </script>

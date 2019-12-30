@@ -41,10 +41,12 @@ export default {
     return {
       chartList: [],
       analyseData: [],
-      analyseVisible: false
+      analyseVisible: false,
+      user:''
     };
   },
   mounted() {
+    
     this.getData();
   },
   computed: {

@@ -877,33 +877,51 @@ export default {
                 
                 }  else if (_self.currentElement.data.type == "chart") {
                 //schema只有同级的若干个节点的情况 chart
+                if(_self.currentElement.data.settings.type === "pie"){
+                 
+                  let landuse= dataset.getChildNode(0)
+                  let landuse_child_count= dataset.getChildNode(0).getChildNodeCount()
+                  var col=["k","v"],row=[]
+                  for(let i=0;i<landuse_child_count;i++){
+                    let obj={}
+                   
 
-                let node_len = dataset.getChildNodeCount();
-                let arr_len = dataset
-                  .getChildNode(0)
-                  .getKernel()
-                  .getArrayCount();
+                    obj["k"]=landuse.getChildNode(i).getName();
+                    obj["v"]=landuse.getChildNode(i).getKernel().getTypedValue()
 
-                //取结点操作
-                let col = [],
-                  row = [];
-                for (let j = 0; j < node_len; j++) {
-                  col.push(dataset.getChildNode(j).getName());
-                }
-
-                for (let i = 0; i < arr_len; i++) {
-                  let obj = {};
-                  for (let j = 0; j < node_len; j++) {
-                    obj[col[j]] = dataset
-                      .getChildNode(j)
-                      .getKernel()
-                      .getTypedValueByIndex(i);
+                    row.push(obj)
                   }
-                  row.push(obj);
-                }
-                //当前点击的组件索引
-                let index = _self.$store.state.currentElementIndex;
+                   console.log("pie",row,col)
 
+                }else{
+                    let node_len = dataset.getChildNodeCount();
+                    let arr_len = dataset
+                      .getChildNode(0)
+                      .getKernel()
+                      .getArrayCount();
+
+                    //取结点操作
+                    var col = [],
+                      row = [];
+                    for (let j = 0; j < node_len; j++) {
+                      col.push(dataset.getChildNode(j).getName());
+                    }
+
+                    for (let i = 0; i < arr_len; i++) {
+                      let obj = {};
+                      for (let j = 0; j < node_len; j++) {
+                        obj[col[j]] = dataset
+                          .getChildNode(j)
+                          .getKernel()
+                          .getTypedValueByIndex(i);
+                      }
+                      row.push(obj);
+                    }
+                }
+                
+                //当前点击的组件索引
+                var index = _self.$store.state.currentElementIndex;
+                console.log("ind",index,_self.$store.state.chartData.elements[index].data.settings.type)
                 //初始化数据
                 let initData = {
                   type: "chart",

@@ -26,7 +26,7 @@
       //  document.getElementById('mapid').id="mapid"+this.id
       //  let _map="mapid"+this.id
 
-       this.map= L.map("mapid").setView([33.49771311230842, 109.45744048529967],8);
+       this.map= L.map("mapid").setView([33.49771311230842, 109.45744048529967],4);
         L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
         
           }).addTo(self.map)
@@ -49,6 +49,7 @@
     },
     watch:{
       Update:function(){
+        debugger
         let index = this.$store.state.currentElementIndex;
 
         let udx_data=this.$store.state.chartData.elements[index].data.datacon.data;
@@ -69,6 +70,7 @@
     },
     computed:{
         Update(){
+          debugger
                 let index = this.$store.state.currentElementIndex;
                 if(index<0) return
                 return this.$store.state.chartData.elements[index].data;
