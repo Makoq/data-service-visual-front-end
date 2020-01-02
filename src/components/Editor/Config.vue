@@ -876,7 +876,7 @@ export default {
                     }
                 
                 }  else if (_self.currentElement.data.type == "chart") {
-                //schema只有同级的若干个节点的情况 chart
+                // 在chart类型中只有pie是使用进哥的数据，其他类型的chart还是用数据模板
                 if(_self.currentElement.data.settings.type === "pie"){
                  
                   let landuse= dataset.getChildNode(0)
