@@ -103,7 +103,7 @@
           .title 数据源获取
           el-row(:gutter="20")
             el-col(:span="20") 
-              el-input(v-model="data_src")
+              el-input(v-model="data_src" type="textarea" rows="4")
           el-row(:gutter="20")
             el-col(:span="20") 
               el-button(@click="testLineChart(data_src)") data
@@ -175,7 +175,7 @@
           .title 数据源获取
           el-row(:gutter="20")
             el-col(:span="20") 
-              el-input(v-model="data_src")
+              el-input(v-model="data_src" type="textarea" rows="4")
           el-row(:gutter="20")
             el-col(:span="20") 
               el-button(@click="testLineChart(data_src)") data
@@ -206,8 +206,8 @@
         .config-box
           .title 数据源获取
           el-row(:gutter="20")
-            el-col(:span="20") 
-              el-input(v-model="data_src")
+            el-col(:span="24") 
+              el-input(v-model="data_src" type="textarea" rows="4")
           el-row(:gutter="20")
             el-col(:span="20") 
               el-button(@click="testLineChart(data_src)") data
@@ -269,7 +269,7 @@
           el-row(:gutter="20")
           .title 模拟数据
             el-col(:span="20") 
-              el-input(v-model="data_sum")
+              el-input(v-model="data_sum" type="textarea" rows="4")
           el-row(:gutter="20")
             el-col(:span="20") 
               el-button(@click="testLineChart(data_src,data_sum)") data
@@ -441,9 +441,11 @@ import { mapState, mapGetters } from "vuex";
 import { all } from "q";
 import { constants } from "crypto";
 
-import proj4 from 'proj4'
+import proj4 from 'proj4';
+ 
 
 
+ 
 export default {
   components: {
     vueJsonEditor
@@ -462,7 +464,7 @@ export default {
       },
       thisKey: "general",
       connectList: [],
-      data_src:  "http://localhost:8897/testChart?file=SWAT_MASK&type=chart",
+      data_src:  "http://111.229.14.128:8899/data?uid=07e48438-e5f7-4543-b578-b9de49cafa77",
       data_sum:"http://localhost:8897/testChart?file=testSimulation&type=chart",
       color_bar: [], //color色带
       color_bar_value: "",
@@ -690,13 +692,16 @@ export default {
         //非leaflet组件的数据
         let typ=_self.currentElement.data.type
         console.log(typ)
-         httpUtils.get(this, obs, data => {
+          const params = new URLSearchParams();
+          params.append("url",obs)
+         this.$axios.post('/api/dataUrl',params).then(res=>{
+           let data=res.data.data
               var dataset = new UdxDataset();
               dataset.createDataset();
               dataset.loadFromXmlStream(data);
 
               if (_self.currentElement.data.type === "mycanvas") {
-                 this.data_src="http://localhost:8897/testChart?file=SWAT_DEM&type=chart"
+                //  this.data_src="http://localhost:8897/testChart?file=SWAT_DEM&type=chart"
                 //拿到最大最小值
                 var min = Number.MIN_VALUE,
                   max = Number.MAX_VALUE;
@@ -953,9 +958,14 @@ export default {
                 _self.$store.dispatch("setComponentData", da);
               }
 
+         })
+          // httpUtils.get(this, obs, data => {
+            
               
-        });
-      }
+          // });
+      
+      
+     }
      
     },
     //选择色带后显示

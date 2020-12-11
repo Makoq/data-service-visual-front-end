@@ -42,7 +42,7 @@ const urls = {
 
   chart: '/chart', // 创建 chart
 
-  server_url: 'http://localhost:8897',
+  server_url: 'http://172.21.213.4:8897',
 };
 
 export default urls; 0;

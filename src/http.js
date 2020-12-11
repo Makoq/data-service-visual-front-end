@@ -29,7 +29,7 @@ const instance = axios.create({
 axios.defaults.withCredentials = true;// 携带cookie,默认不携带
 
 // 请求地址
-instance.defaults.baseURL = urlUtils.server_url; // 'http://localhost:8897';
+instance.defaults.baseURL = '/api/'; // 'http://localhost:8897';
 
 // // 设置post请求头
 // instance.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';

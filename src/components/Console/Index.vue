@@ -3,8 +3,8 @@
     el-aside(width="0px")
       //- NavMenu
     el-container
-      el-header(height="70px")
-        PageHeader
+      el-header(height="0px")
+        //- PageHeader
       el-main
         router-view(:user="user")
 </template>

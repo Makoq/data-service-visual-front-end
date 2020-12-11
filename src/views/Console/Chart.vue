@@ -42,7 +42,7 @@ export default {
       chartList: [],
       analyseData: [],
       analyseVisible: false,
-      user:''
+       
     };
   },
   mounted() {

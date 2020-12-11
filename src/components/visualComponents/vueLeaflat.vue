@@ -49,7 +49,7 @@
     },
     watch:{
       Update:function(){
-        debugger
+         
         let index = this.$store.state.currentElementIndex;
 
         let udx_data=this.$store.state.chartData.elements[index].data.datacon.data;
@@ -70,7 +70,7 @@
     },
     computed:{
         Update(){
-          debugger
+         
                 let index = this.$store.state.currentElementIndex;
                 if(index<0) return
                 return this.$store.state.chartData.elements[index].data;
