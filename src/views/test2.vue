@@ -49,7 +49,7 @@ import vueCanvas from '../components/visualComponents/vueCanvas';
 export default {
   data() {
     return {
-       UploadOneServlet:'/te/randomsource',
+       UploadOneServlet:'/pd/randomsource',
       form:{
       
         desc:'my data'

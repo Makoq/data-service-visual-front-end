@@ -10,6 +10,7 @@ const router = new Router({
     {
       path: '/',
       name: 'index',
+     
       component: () => import('./views/Index.vue'),
       meta: {
         title: 'OpenGMS | Configured Visualization Platform',
@@ -17,6 +18,7 @@ const router = new Router({
     },
     {
       path: '/console',
+      redirect:'/console/chart',
       component: () => import('./components/Console/Index.vue'),
       children: [
         {

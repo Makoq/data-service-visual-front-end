@@ -29,8 +29,8 @@ export default {
       show: false, // 是否显示登录框
       tab: "login",
       form: {
-        user: "",
-        password: ""
+        user: "lan",
+        password: "123"
       }
     };
   },

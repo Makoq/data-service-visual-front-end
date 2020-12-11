@@ -1,7 +1,7 @@
 <template lang="pug">
   el-container
-    el-aside(width="240px")
-      NavMenu
+    el-aside(width="0px")
+      //- NavMenu
     el-container
       el-header(height="70px")
         PageHeader
